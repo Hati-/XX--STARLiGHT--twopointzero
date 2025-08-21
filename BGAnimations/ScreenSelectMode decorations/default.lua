@@ -11,9 +11,13 @@ local t = Def.ActorFrame{
 			InitCommand=function(s) s:Center() end,
 		};
 		Def.Sprite{
-			Texture=THEME:GetPathB("","_Logo/project_xxlogo.png"),
 			InitCommand=function(s)
-			  s:xy(_screen.cx+80,_screen.cy+16):blend(Blend.Add):diffusealpha(0):queuecommand("Anim")
+			  if Branding() == "project_" then
+				s:Load(THEME:GetPathB("","_Logo/project_xxlogo.png"))
+			  else
+				s:Load(THEME:GetPathB("","_Logo/xxlogo.png"))
+			  end
+			  s:xy(_screen.cx+102,_screen.cy+16):blend(Blend.Add):diffusealpha(0):queuecommand("Anim")
 			end,
 			AnimCommand=function(s) s:diffusealpha(0):sleep(1):linear(0.75):diffusealpha(0.3):sleep(0.1):linear(0.4):diffusealpha(0):queuecommand("Anim") end,
 			OffCommand=function(s) s:stoptweening() end,

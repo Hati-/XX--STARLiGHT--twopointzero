@@ -141,14 +141,15 @@ function OptionsListOrPlayerOptions()
 	end
 end
 
---[[function Branding()
+function Branding()
 	--I'm too lazy to rename the actual files so uhhhh string.lower to the rescue LMAO
 	if GAMESTATE:GetCoinMode() == "CoinMode_Home" then
-		return string.lower(ThemePrefs.Get("Branding").."_")
+		-- return string.lower(ThemePrefs.Get("Branding").."_")
+		return "ddr_"
 	else
 		return "project_"
 	end
-end]]
+end
 
 function SMUsePO()
 	if ThemePrefs.Get("OLOrPO") == "Player Options" then
