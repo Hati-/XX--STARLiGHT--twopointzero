@@ -427,18 +427,6 @@ local function Scroller(pn)
 		end,
 		Def.ActorFrame{
 			Name="ScrollerItem1",
-			DifficultyPanel()..{
-				InitCommand=function(s) s:y(-260) end
-			},
-			Def.BitmapText{
-				Font="_stagetext",
-				Text="DIFFICULTY INFORMATION",
-				Name="Header",
-				InitCommand=function(s) s:zoom(0.7):y(-290):DiffuseAndStroke(color("#dff0ff"),color("0,0.7,1,0.5")) end,
-			},
-		},
-		Def.ActorFrame{
-			Name="ScrollerItem2",
 			RadarPanel()..{
 				InitCommand=function(s) s:y(-165):zoom(0.8) end,
 			},
@@ -451,7 +439,7 @@ local function Scroller(pn)
 		},
 		-- scores
 		Def.ActorFrame{
-			Name="ScrollerItem3",
+			Name="ScrollerItem2",
 			RivalsPanel()..{
 				InitCommand=function(s) s:y(-260) end,
 			},
@@ -462,32 +450,44 @@ local function Scroller(pn)
 				InitCommand=function(s) s:zoom(0.7):y(-290):DiffuseAndStroke(color("#dff0ff"),color("0,0.7,1,0.5")) end,
 			},
 		},
+		Def.ActorFrame{
+			Name="ScrollerItem3",
+			DifficultyPanel()..{
+				InitCommand=function(s) s:y(-260) end
+			},
+			Def.BitmapText{
+				Font="_stagetext",
+				Text="DIFFICULTY INFORMATION",
+				Name="Header",
+				InitCommand=function(s) s:zoom(0.7):y(-290):DiffuseAndStroke(color("#dff0ff"),color("0,0.7,1,0.5")) end,
+			},
+		},
 	}
 	return t
 end
 
 local t = Def.ActorFrame{
-	InitCommand=function(s,p) XPOS(s,0) s:visible(false)
+	InitCommand=function(s,p) XPOS(s,0) s:visible(true)
 	end,
 	OffCommand=function(s) s:sleep(0.5):decelerate(0.3):addx(pn==PLAYER_1 and -500 or 500) end,
 	BeginCommand=function(s) s:playcommand("Set") end,
 	CurrentSongChangedMessageCommand=function(s,p) s:queuecommand("Set") end,
 	["CurrentSteps"..ToEnumShortString(pn).."ChangedMessageCommand"]=function(s,p) s:queuecommand("Set") end,
 	["CurrentTrail"..ToEnumShortString(pn).."ChangedMessageCommand"]=function(s,p) s:queuecommand("Set") end,
-	CodeMessageCommand=function(s,p)
+	-- CodeMessageCommand=function(s,p)
 		
-		if p.PlayerNumber == pn then
-			if p.Name == "OpenPanes1" or p.Name == "OpenPanesEFUp" then
-				if keyset[pn] == false then
-					keyset[pn] = true
-				else
-					keyset[pn] = false
-				end
-				s:visible(keyset[pn])
-				SOUND:PlayOnce(THEME:GetPathS("MusicWheel","expand"))
-			end
-		end
-	end,
+	-- 	if p.PlayerNumber == pn then
+	-- 		if p.Name == "OpenPanes1" or p.Name == "OpenPanesEFUp" then
+	-- 			if keyset[pn] == false then
+	-- 				keyset[pn] = true
+	-- 			else
+	-- 				keyset[pn] = false
+	-- 			end
+	-- 			s:visible(keyset[pn])
+	-- 			SOUND:PlayOnce(THEME:GetPathS("MusicWheel","expand"))
+	-- 		end
+	-- 	end
+	-- end,
 	Def.Sprite{
 		Texture="backer.png",
 	},
@@ -497,11 +497,11 @@ local t = Def.ActorFrame{
 	Scroller(pn)..{
 		InitCommand=function(s) s:addy(90) end,
 	},
-	Def.BitmapText{
-		Font="_stagetext",
-		Text="[PRESS ARROW PANELS TO CHANGE WINDOWS]",
-		InitCommand=function(s) s:zoom(0.5):y(240):DiffuseAndStroke(color("#dff0ff"),color("0,0.7,1,0.5")) end,
-	},
+	-- Def.BitmapText{
+	-- 	Font="_stagetext",
+	-- 	Text="[PRESS ARROW PANELS TO CHANGE WINDOWS]",
+	-- 	InitCommand=function(s) s:zoom(0.5):y(240):DiffuseAndStroke(color("#dff0ff"),color("0,0.7,1,0.5")) end,
+	-- },
 }
 
 return t
