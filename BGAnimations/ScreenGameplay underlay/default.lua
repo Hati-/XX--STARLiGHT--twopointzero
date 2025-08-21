@@ -1,4 +1,55 @@
-local t = Def.ActorFrame {};
+------- DANCESTAGE SELECTION -------
+
+local DanceStagesDir = GetAllDanceStagesNames()
+table.remove(DanceStagesDir,IndexKey(DanceStagesDir,"DEFAULT"))
+table.remove(DanceStagesDir,IndexKey(DanceStagesDir,"RANDOM"))
+local DanceStageSelected = GetUserPref("SelectDanceStage")
+
+if not GAMESTATE:IsDemonstration() then
+	if DanceStageSelected == "DEFAULT" then
+		DanceStage = DanceStageSong()
+	elseif DanceStageSelected == "RANDOM" then
+		DanceStage = DanceStagesDir[math.random(#DanceStagesDir)]
+	else
+		DanceStage = GetUserPref("SelectDanceStage")
+	end;
+else
+	DanceStage = DanceStageSong()
+end
+
+------- VIDEO/BACKGROUND VS STAGE  -------
+
+local SBG = GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred")
+if (not HasVideo() and PotentialModSong()) then
+  --SBG:StaticBackground(false)
+  PREFSMAN:SetPreference('SongBackgrounds', true)
+elseif (HasVideo() and not VideoStage() and VoverS()) then
+  --SBG:StaticBackground(false)
+  PREFSMAN:SetPreference('SongBackgrounds', true)
+elseif (HasVideo() and not VideoStage() and not VoverS()) then
+  --SBG:StaticBackground(true)
+  PREFSMAN:SetPreference('SongBackgrounds', false)
+else
+  --SBG:StaticBackground(true)
+  PREFSMAN:SetPreference('SongBackgrounds', false)
+end
+SBG:RandomBGOnly(false)
+
+
+------- RANDOM CHARACTER -------
+
+local CharaRandom = GetAllCharacterNames()
+table.remove(CharaRandom,IndexKey(CharaRandom,"Random"))
+table.remove(CharaRandom,IndexKey(CharaRandom,"None"))
+
+for pn in ivalues(GAMESTATE:GetEnabledPlayers()) do
+    if GetUserPref("SelectCharacter"..pn) == "Random" then
+        WritePrefToFile("CharaRandom"..pn,CharaRandom[math.random(#CharaRandom)]);
+    end
+end
+
+
+local t = Def.ActorFrame{};
 local style = GAMESTATE:GetCurrentStyle():GetStyleType()
 local st = GAMESTATE:GetCurrentStyle():GetStepsType();
 local show_cutins = GAMESTATE:GetCurrentSong() and (not GAMESTATE:GetCurrentSong():HasBGChanges()) or true;
@@ -11,6 +62,26 @@ local x_table = {
   PlayerNumber_P1 = {SCREEN_CENTER_X+428},
   PlayerNumber_P2 = {SCREEN_CENTER_X-428}
 }
+
+local function FilterUpdate(self)
+	local song = GAMESTATE:GetCurrentSong();
+	if song then
+
+
+		local start = song:GetFirstBeat();
+		local last = song:GetLastBeat();
+		
+		if (GAMESTATE:GetSongBeat() >= last) then
+			self:visible(false);
+		elseif (GAMESTATE:GetSongBeat() >= start-16) then
+			self:visible(true);
+		else
+			self:visible(false);
+		end;
+
+
+	end;
+end;
 	
 --toasty loader
 for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
@@ -20,10 +91,14 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 	else
 		song = GAMESTATE:GetCurrentSong()
 	end
-	if show_cutins and st ~= 'StepsType_Dance_Double' and ThemePrefs.Get("CutIns") == true and song:HasBGChanges() == false then
+  if st ~= 'StepsType_Dance_Double' and ThemePrefs.Get("CutIns") == true and (
+		(not HasVideo() and not song:HasBGChanges())
+		or (HasVideo() and VideoStage())
+		or (HasVideo() and not VideoStage() and GetUserPref("CutInOverVideo") == "ON")
+	) then
 		--use ipairs here because i think it expects P1 is loaded before P2
-		if #Characters.GetAllCharacterNames() ~= 0 then
-			t[#t+1] = Def.ActorFrame {
+		if FILEMAN:DoesFileExist("/Characters/"..WhichRead(pn).."/Cut-In") then
+			t[#t+1] = Def.ActorFrame{
 				loadfile(THEME:GetPathB("ScreenGameplay","underlay/Cutin.lua"))(pn) .. {
 					OnCommand=function(s) s:setsize(450,SCREEN_HEIGHT) end,
 					InitCommand=function(self)
@@ -49,33 +124,36 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 	local style=GAMESTATE:GetCurrentStyle(pn)
 	local alf = pPrefs.filter
 	local NumColumns = GAMESTATE:GetCurrentStyle():ColumnsPerPlayer()
-	local width=(style:GetWidth(pn)*(NumColumns/1.7))
 
+	local width=(style:GetWidth(pn)*(NumColumns/1.7))
 	if style:GetStyleType() == 'StyleType_OnePlayerTwoSides' then
 		width = style:GetWidth(pn)*(NumColumns/3.7)
 	end
-
 	local X
-
 	if PREFSMAN:GetPreference("Center1Player") and GAMESTATE:GetNumPlayersEnabled() == 1 then
 		X = _screen.cx
 	else
 		X = ScreenGameplay_X(pn)
 	end
 
-	local DS = Def.ActorFrame {};
+  local DS = Def.ActorFrame{};
 
 	--Danger Sidebars
 	for i=1,2 do
-		DS[#DS+1] = Def.ActorFrame {
+    DS[#DS+1] = Def.ActorFrame{
 			InitCommand=function(s)
-				s:x(i==1 and ((-width/2)-10) or ((width/2)+10)):visible(false)
-				if show_danger then s:visible(true) end
+        s:x(i==1 and ((-width/2)-10) or ((width/2)+10))
+				s:visible(show_danger)
 			end,
-			Def.Sprite {
+      Def.Sprite{
 				Texture="rope",
 				InitCommand=function(s)
-					s:customtexturerect(0,0,1,2):zoomtoheight(_screen.h):diffuseshift():effectcolor1(Color.White):effectcolor2(Alpha(Color.White,0.5)):effectperiod(0.5)
+          s:customtexturerect(0,0,1,2)
+					:zoomtoheight(_screen.h)
+          :diffuseshift()
+					:effectcolor1(Color.White)
+					:effectcolor2(Alpha(Color.White,0.5))
+					:effectperiod(0.5)
 					if GAMESTATE:PlayerIsUsingModifier(pn,'reverse') then
 						s:texcoordvelocity(0,-0.5)
 					elseif not GAMESTATE:PlayerIsUsingModifier(pn,'reverse') then
@@ -83,23 +161,25 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 					end;
 				end,
 			},
-			Def.ActorFrame {
+      Def.ActorFrame{
 				InitCommand=function(s) s:rotationz(i==2 and 180 or 0) end,
-				Def.Sprite {
+        Def.Sprite{
 					Texture="text",
 				};
-				Def.Sprite {
+        Def.Sprite{
 					Texture="text",
 					InitCommand=function(s)
-						s:heartbeat():effectmagnitude(1.5,1,0):effectperiod(0.5)
+            s:heartbeat():effectmagnitude(1.5,1,0):effectperiod(0.5)
 					end,
 				};
 			};
 		};
 	end
 
-	t[#t+1] = Def.ActorFrame {
-		InitCommand=function(s) s:xy(X,_screen.cy):diffusealpha(0) end,
+  t[#t+1] = Def.ActorFrame{
+    InitCommand=function(s)
+      s:xy(X,_screen.cy):diffusealpha(0)
+		end,
 		CurrentSongChangedMessageCommand=function(s) s:diffusealpha(0):sleep(BeginReadyDelay()+SongMeasureSec()):linear(0.2):diffusealpha(1):queuecommand("ShowBars") end,
 		ChangeCourseSongInMessageCommand=function(s) s:playcommand('FilterOff') end,
 		OffCommand=function(s) s:playcommand('FilterOff') end,
@@ -141,13 +221,13 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 			s:sleep(dif):linear(0.2):diffusealpha(0):queuecommand("DisableBars")
 		end,
 		
-		Def.Quad {
+    Def.Quad{
 			InitCommand=function(s)
-				s:diffuse(filter_color):fadeleft(1/32):faderight(1/32)
+        s:diffuse(filter_color):fadeleft(1/32):faderight(1/32)
 			end,
 			BeginCommand=function(s) s:playcommand("CurrentSongChangedMessage") end,
 			CurrentSongChangedMessageCommand=function(s,p)
-				s:setsize(width,_screen.h)
+        s:setsize(width,_screen.h)
 				if screen == "ScreenDemonstration" then
 					s:diffusealpha(0.5)
 				else
@@ -157,7 +237,7 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 			HealthStateChangedMessageCommand= function(s, param)
 				if param.PlayerNumber == pn then
 					s:linear(0.1)
-					if param.HealthState == "HealthState_Danger" and show_danger then
+          if param.HealthState == "HealthState_Danger" and show_danger then
 						s:diffuse(color("#ff1b00")):diffusealpha(0.75)
 					elseif param.HealthState == "HealthState_Dead" then
 						if GAMESTATE:GetPlayerState(pn):GetPlayerOptions('ModsLevel_Current'):FailSetting() == 'FailType_Immediate' then
@@ -193,12 +273,12 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 				notefield:SetBpmBars(false)
 			end,
 		},
-		DS .. {
+    DS .. {
 			InitCommand=function(s) s:hibernate(math.huge) end,
 			HealthStateChangedMessageCommand=function(s,p)
 				if p.PlayerNumber == pn then
 					if p.HealthState=='HealthState_Danger' then
-						s:hibernate(0):linear(0.1):diffusealpha(1)
+            s:hibernate(0):linear(0.1):diffusealpha(1)
 					else
 						s:linear(0.1):diffusealpha(0):hibernate(math.huge)
 					end

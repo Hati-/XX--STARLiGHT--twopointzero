@@ -44,15 +44,19 @@ local fixedNS = OPTIONSLIST_NOTESKINS
 table.insert(fixedNS,"EXIT")
 
 
-local fixedChar = Characters.GetAllCharacterNames()
-if #fixedChar > 1 then
-    table.insert(fixedChar, 1, "OFF")
-    if SN3Debug then SCREENMAN:SystemMessage("Found "..#fixedChar.." characters!") end
-    table.insert(fixedChar, 2, "RANDOM")
-else
-    --if SN3Debug then SCREENMAN:SystemMessage("Found no characters! :<") end
-end
-table.insert(fixedChar, "EXIT")
+-- local fixedChar = Characters.GetAllCharacterNames()
+-- if #fixedChar > 1 then
+--     table.insert(fixedChar, 1, "OFF")
+--     if SN3Debug then SCREENMAN:SystemMessage("Found "..#fixedChar.." characters!") end
+--     table.insert(fixedChar, 2, "RANDOM")
+-- else
+--     --if SN3Debug then SCREENMAN:SystemMessage("Found no characters! :<") end
+-- end
+-- table.insert(fixedChar, "EXIT")
+local fixedChar = GetAllCharacterNames()
+table.insert(fixedChar,#fixedChar+1,"OKAY")
+local DanceStagesList = GetAllDanceStagesNames()
+table.insert(DanceStagesList,#DanceStagesList+1,"OKAY")
 
 local NumMini = fornumrange(-100,100,5)
 table.insert(NumMini, "EXIT")
@@ -60,18 +64,34 @@ table.insert(NumMini, "EXIT")
 local NumRate = fornumrange(10,200,5)
 table.insert(NumRate,"EXIT")
 
-local _CHAR, _NSKIN, _MINI, _RATE = {},{},{},{};
+local _CHAR, _DS, _NSKIN, _MINI, _RATE = {},{},{},{},{};
+
+
 for i=1,#fixedChar do
     local CurrentCharacter = fixedChar[i];
     _CHAR[i] = Def.ActorFrame{
         Def.Sprite{
-            Texture="longoptionIcon",
-            InitCommand=function(s) s:zoom(1.5) end,
+            Texture="cards/BAR.png",
+            InitCommand=function(s) s:zoom(0.6):y(-220+12) end,
         };
         Def.BitmapText{
-            Font="_avenirnext lt pro bold/20px",
+            Font="_avenirnext lt pro bold/46px",
             Text=CurrentCharacter,
-            InitCommand=function(s) s:zoom(1.5) end,
+            InitCommand=function(s) s:zoom(0.9):addy(30) end,
+        }
+    }
+end
+for i=1,#DanceStagesList do
+    local CurrentStage = DanceStagesList[i];
+    _DS[i] = Def.ActorFrame{
+        Def.Sprite{
+            Texture="cards/BAR.png",
+            InitCommand=function(s) s:zoom(0.6):y(-220+12) end,
+        };
+        Def.BitmapText{
+            Font="_avenirnext lt pro bold/46px",
+            Text=CurrentStage,
+            InitCommand=function(s) s:zoom(0.7):addy(33) end,
         }
     }
 end
@@ -194,9 +214,169 @@ local function GetMiniIndex(Mini)
     return index[Mini]
 end
 
+local function getSelectionImage(key, getAssetPath, specialKeyImages)
+    local image
+    for specialKey, specialImage in pairs(specialKeyImages) do
+        if not (specialKey == '_UNKNOWN' or key == '_OKAY') then
+            if key == specialKey then
+                image = specialImage
+                break
+            end
+        end
+    end
+    if not image then
+        local assetImage = getAssetPath(key, true)
+        local assetData = getAssetPath(key)
+        if FILEMAN:DoesFileExist(assetImage) then -- If has card image
+            assert(FILEMAN:DoesFileExist(assetData))
+            image = assetImage
+        elseif FILEMAN:DoesFileExist(assetData) then -- If missing card image but has asset data
+            image = specialKeyImages._UNKNOWN
+        end
+    end
+    assert(image)
+    return image
+end
+
+local function getUserPrefKeyFunc(prefName)
+    if prefName == 'Characters' then
+        return function(pn) return ResolveCharacterName(pn) end
+    end
+    return function(pn) return GetUserPref(prefName) end
+end
+
+local SelectionTable = {
+    Characters = {
+        getAssetPath = function(name, isImg)
+            return '/Characters/' ..name.. (isImg and '/Card.png' or '/Model.txt')
+        end,
+        specialKeyImages = {
+            _UNKNOWN = THEME:GetPathB("ScreenSelectMusic", "decorations/_shared/_OptionsList/cards/Unknown.png"),
+            _OKAY    = THEME:GetPathB("ScreenSelectMusic", "decorations/_shared/_OptionsList/cards/Okay.png"),
+            Random   = THEME:GetPathB("ScreenSelectMusic", "decorations/_shared/_OptionsList/cards/Random.png"),
+        }
+    },
+    DanceStages = {
+        getAssetPath = function(name, isImg)
+            return '/DanceStages/' ..name.. (isImg and '/Card.png' or '/LoaderA.lua')
+        end,
+        specialKeyImages = {
+            _UNKNOWN = THEME:GetPathB("ScreenSelectMusic", "decorations/_shared/_OptionsList/cards/DSU.png"),
+            _OKAY    = THEME:GetPathB("ScreenSelectMusic", "decorations/_shared/_OptionsList/cards/DSO.png"),
+            RANDOM   = THEME:GetPathB("ScreenSelectMusic", "decorations/_shared/_OptionsList/cards/DSR.png"),
+            DEFAULT  = THEME:GetPathB("ScreenSelectMusic", "decorations/_shared/_OptionsList/cards/DSAC.png"),
+        }
+    }
+}
+
 for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
     local OptionsListActor, OptionsListMenu
     local numRows
+    
+    -- I would have this outside the for-loop, but it's too tightly coupled with pn, OptionsListActor, and OptionsListMenu
+    local function createSelectionScroller(menuName, actors, keys, getUserPrefKey, getAssetPath, specialKeyImages)
+        return Def.ActorFrame{
+            InitCommand=function(self) 
+                self:y(-200):zoom(1):diffusealpha(0) 
+            end,
+            OptionsMenuChangedMessageCommand=function(self,params)
+                if params.Player == pn then
+                    if params.Menu == menuName then
+                        self:playcommand("On")
+                        self:stoptweening():linear(.3):diffusealpha(1);
+                    else
+                        self:diffusealpha(0);
+                    end;
+                end;
+            end;
+
+            Def.Sprite{
+                Name="Sprite",
+                InitCommand=function(self)
+                    self:xy(240,220-20):diffusealpha(0):halign(0.985):zoom(0.6)
+                end,
+                OnCommand=function(self)
+                    local key = getUserPrefKey(pn)
+                    local image = getSelectionImage(key, getAssetPath, specialKeyImages)
+                    self:Load(image)
+                end,
+                OptionsMenuChangedMessageCommand=function(self,params)
+                    local selectedKey = getUserPrefKey(pn)
+                    if params.Player == pn then
+                        if selectedKey ~= "" then
+                            self:queuecommand("On")
+                            self:stoptweening():linear(.3);
+                            self:diffusealpha(1);
+                        else
+                            self:diffusealpha(1);
+                        end;
+                    end;
+                end,
+                AdjustCommand=function(self,params)
+                    if params.Player == pn and OptionsListMenu == menuName then
+                        if params.Selection < (#keys-1) and params.Selection > -1 then
+                            self:diffusealpha(1)
+                            local key = keys[params.Selection+1]
+                            local image = getSelectionImage(key, getAssetPath, specialKeyImages)
+                            self:stoptweening():linear(.3);
+                            self:Load(image)
+                            self:diffusealpha(1)
+                        else
+                            self:Load(specialKeyImages._OKAY)
+                            self:diffusealpha(1)
+                        end
+                    end
+                end,
+            };
+            Def.ActorScroller{
+                Name="Scroller",
+                NumItemsToDraw=1;
+                SecondsPerItem=1/200;
+                children = actors;
+                InitCommand=function(self)
+                    self:y(410):zoom(1)
+                    self:SetLoop(false):SetWrap(true)
+                    :SetDrawByZPosition(true):SetFastCatchup(true)
+                end,
+                OptionsMenuChangedMessageCommand=function(self,params)
+                    if params.Player == pn then
+                        local index = IndexKey(keys, getUserPrefKey(pn))
+                        if index ~= nil then
+                            self:SetCurrentAndDestinationItem(index-1)
+                        else
+                            self:SetCurrentAndDestinationItem(0)
+                        end
+                    end;
+                end;
+                TransformFunction=function(self, offset, itemIndex, numItems)
+                    -- self:x(100 * offset)
+                    local sign = offset == 0 and 1 or offset/math.abs(offset)
+                    self:x((offset*240*math.cos((math.pi/6*offset))+math.min(math.abs(offset),1)*sign*0))
+                    :z((offset*-62*3*math.sin((math.pi/6)*offset))+(math.min(math.abs(offset),1)*0))
+                    :rotationy(offset*(360/(6*1.135)))
+                    
+                end,
+                AdjustCommand=function(self,params)
+                    if params.Player == pn and OptionsListMenu == menuName then
+                        self:SetDestinationItem(params.Selection)
+                    end
+                end,
+            };
+
+            Def.Sprite{
+                Texture="arrow",
+                InitCommand=function(self) self:xy(-280,230-20):zoom(2):diffusealpha(1):bounce():effectmagnitude(3,0,0):effectperiod(1) end,
+                OptionsListLeftMessageCommand=function(self) self:finishtweening():diffuse(color("#8080ff")):sleep(0.3):linear(0.4):diffuse(color("1,1,1,1")) end,
+            };
+
+            Def.Sprite{
+                Texture="arrow",
+                InitCommand=function(self) self:xy(280,230-20):basezoom(2):zoomx(-1):diffusealpha(1):bounce():effectmagnitude(-3,0,0):effectperiod(1) end,
+                OptionsListRightMessageCommand=function(self) self:finishtweening():diffuse(color("#8080ff")):sleep(0.3):linear(0.4):diffuse(color("1,1,1,1")) end,
+            };
+        };
+    end
+    
     --if (string.find(ProductVersion(), "LTS")) then
         --if SN3Debug then
         --    SCREENMAN:SystemMessage("LTS or below detected! Changing OptionsList actor call!")
@@ -207,7 +387,7 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
                 CodeMessageCommand=function(self, params)
                     if ((params.Name == "OpenOpList" and not MenuButtonsOnly) or
                         params.Name == "OpenOpListButton") and params.PlayerNumber == pn and not IsMenuOpen[pn] then
-                        SCREENMAN:GetTopScreen():OpenOptionsList(p.PlayerNumber)
+                        SCREENMAN:GetTopScreen():OpenOptionsList(params.PlayerNumber)
                         MESSAGEMAN:Broadcast("OptionsListPlaySound")
                     end
              end
@@ -265,9 +445,19 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
         OptionsMenuChangedMessageCommand=function(self, params)
             if params.Player == pn then
                 OptionsListMenu = params.Menu
-                numRows = tonumber(THEME:GetMetric("ScreenOptionsMaster",OptionsListMenu))
-                if params.Menu ~= "SongMenu" and params.Menu ~= "AdvMenu" and params.Menu ~= "RemMenu" then
-                    if params.Menu == "NoteSkins" or params.Menu == "Characters" or params.Menu == "Mini" or params.Menu == "MusicRate" then
+                numRows = tonumber(THEME:GetMetric("ScreenOptionsMaster", OptionsListMenu))
+                if OptionsListMenu ~= "SongMenu" and OptionsListMenu ~= "AdvMenu" and OptionsListMenu ~= "RemMenu" then
+                    if OptionsListMenu == "NoteSkins"
+                    or OptionsListMenu == "Characters"
+                    or OptionsListMenu == "DanceStage"
+                    or OptionsListMenu == "Mate1"
+                    or OptionsListMenu == "Mate2"
+                    or OptionsListMenu == "Mate3"
+                    or OptionsListMenu == "Mate4"
+                    or OptionsListMenu == "Mate5"
+                    or OptionsListMenu == "Mate6"
+                    or OptionsListMenu == "Mini"
+                    or OptionsListMenu == "MusicRate" then
                         OptionsListActor:stoptweening():diffusealpha(0)
                     else
                         OptionsListActor:stoptweening():diffusealpha(1)
@@ -284,20 +474,31 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
         OptionsListLeftMessageCommand=function(self, params) self:playcommand("Adjust", params) end,
         OptionsListRightMessageCommand=function(self, params) self:playcommand("Adjust", params) end,
         OptionsListStartMessageCommand=function(self, params) self:playcommand("Adjust", params) end,
-        OptionsListQuickChangeMessageCommand=function(self, params) self:playcommand("Adjust", params) end,
+        
+        -- If we're doing START+LEFT or START+RIGHT to change a setting without entering the setting's submenu then
+        -- OptionsListMenu and params.Selection is wrong. Don't run AdjustCommand on this ActorFrame if that's the case. 
+        OptionsListQuickChangeMessageCommand=function(self, params) params.Type = 'OptionsListQuickChange'; self:playcommand("Adjust", params) end,
 
         -- To avoid overflowing the list, we will hide the outer parts and
         -- dynamically move the entire list's vertical position relative
         -- to what the player is currently selecting
         AdjustCommand=function(self, params)
+            if params.Type == 'OptionsListQuickChange' then
+                return
+            end
+            
             if params.Player == pn then
                 local base_y = 350
 
-                -- Edge case since we don't need to scroll in Speed Mods
-                if params.Selection + 1 > 5 and OptionsListMenu == "NoteSkins" then
+                -- Handle scrolling in different options menus
+                if OptionsListMenu == "CharaDS" then
+                    OptionsListActor:stoptweening():y(base_y + 305)
+                elseif OptionsListMenu == "DMates" then
+                    OptionsListActor:stoptweening():y(base_y + 60)
+                elseif OptionsListMenu == "NoteSkins" and params.Selection + 1 > 5 then
                     OptionsListActor:stoptweening():linear(0.1):y(base_y - (22 * (params.Selection - 5)))
                 elseif params.Selection + 1 > 9 then
-                    OptionsListActor:stoptweening():linear(0.1):y(base_y - (22 * (params.Selection - 9)))
+                    OptionsListActor:stoptweening():linear(0.1):y(base_y - (22 * (params.Selection - 7)))
                 else
                     OptionsListActor:stoptweening():linear(0.1):y(base_y)
                 end
@@ -325,7 +526,18 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
                             self:GetChild("Explanation"):GetChild("ExpText"):settext("")
                         end
                     else
-                        if OptionsListMenu == "Mini" or OptionsListMenu == "Characters" or OptionsListMenu == "NoteSkins" or OptionsListMenu == "MusicRate" then
+                        -- XXX: Isn't this redundant? As this code branch only runs if OptionsListMenu == "Exit"
+                        if OptionsListMenu == "Mini"
+                        or OptionsListMenu == "Characters"
+                        or OptionsListMenu == "DanceStage"
+                        or OptionsListMenu == "Mate1"
+                        or OptionsListMenu == "Mate2"
+                        or OptionsListMenu == "Mate3"
+                        or OptionsListMenu == "Mate4"
+                        or OptionsListMenu == "Mate5"
+                        or OptionsListMenu == "Mate6"
+                        or OptionsListMenu == "NoteSkins"
+                        or OptionsListMenu == "MusicRate" then
                             self:GetChild("Explanation"):GetChild("ExpText"):settext(THEME:GetString("OptionExplanations",OptionsListMenu))
                         end
                     end
@@ -353,7 +565,7 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
 
         Def.ActorFrame{
             Name="Explanation",
-            InitCommand=function(s) s:y(396) end,
+            InitCommand=function(s) s:y(401) end,
             OnCommand=function(s) s:diffusealpha(1):sleep(0.05):diffusealpha(0):sleep(0.05):diffusealpha(1):sleep(0.05):diffusealpha(0):sleep(0.05):diffusealpha(1):sleep(0.05):diffusealpha(0):sleep(0.05):linear(0.05):diffusealpha(1) end,
 		    OffCommand=function(s) s:diffusealpha(1):sleep(0.05):diffusealpha(0):sleep(0.05):diffusealpha(1):sleep(0.05):diffusealpha(0):sleep(0.05):diffusealpha(1):sleep(0.05):diffusealpha(0):sleep(0.05) end,
 		    Def.Sprite{ Texture="exp.png", };
@@ -440,128 +652,12 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
 
         -- Masks that will hide the off limits portion of the list, shhh
         Def.Quad {
-            InitCommand=function(self) self:setsize(620, 360):xy(0, -332):valign(1):MaskSource() end,
+            InitCommand=function(self) self:setsize(620, 360):xy(0, -285):valign(1):MaskSource() end,
         },
-
         Def.Quad {
-            InitCommand=function(self) self:setsize(620, 360):xy(0, 332):valign(0):MaskSource() end,
+            InitCommand=function(self) self:setsize(620, 360):xy(0, 336):valign(0):MaskSource() end,
         },
-        --Characters
-        Def.ActorFrame{
-            InitCommand=function(s) s:y(-100):zoom(1):diffusealpha(0) end,
-            OptionsMenuChangedMessageCommand=function(self,params)
-                if params.Player == pn then
-                    if params.Menu == "Characters" then
-                        self:playcommand("On")
-                        self:stoptweening():linear(.3):diffusealpha(1);
-                    else
-                        self:diffusealpha(0);
-                    end;
-                end;
-            end;
-            Def.Sprite{
-                Name="Character Sprite",
-                InitCommand=function(s) s:xy(308,100):diffusealpha(0):fadebottom(0.2)
-                    :faderight(0.1):fadeleft(0.1):halign(1)
-                end,
-                OnCommand=function(s)
-                    local charName = ResolveCharacterName(pn)
-                    if charName ~= "" and Characters.GetAssetPath(charName, "comboA.png") ~= nil then
-                        s:Load(Characters.GetAssetPath(charName, "comboA.png"))
-                        s:scaletoclipped(220,640)
-                    end
-                end,
-                OptionsMenuChangedMessageCommand=function(self,params)
-                    local charName = ResolveCharacterName(pn)
-                    if params.Player == pn then
-                        if charName ~= "" then
-                            self:queuecommand("On")
-                            self:stoptweening():linear(.3):diffusealpha(0.7);
-                        else
-                            self:diffusealpha(0);
-                        end;
-                    end;
-                end,
-                AdjustCommand=function(self,params)
-                    if params.Player == pn and OptionsListMenu == "Characters" then
-                        if params.Selection < #Characters.GetAllCharacterNames() and params.Selection > 1 then
-                            self:diffusealpha(1)
-                            local charName = Characters.GetAllCharacterNames()[params.Selection-1]
-                            if charName ~= "" then
-                                local charVer = (Characters.GetConfig(charName).version)
-                                self:Load(Characters.GetAssetPath(charName, "comboA.png"))
-                                self:diffusealpha(0.7)
-                                 self:scaletoclipped(220,640)
-                            else
-                                self:diffusealpha(0)
-                            end
-                        else
-                            self:diffusealpha(0)
-                        end
-                    end
-                end,
-            };
-            Def.BitmapText{
-                Font="_avenirnext lt pro bold/36px",
-                InitCommand=function(s) s:y(180):maxwidth(500):strokecolor(Color.Black) end,
-                OnCommand=function(self)
-                    self:settext("Select\n"..ResolveCharacterName(pn).."\nas your dancer.")
-                end,
-                AdjustCommand=function(self,params)
-                    if params.Player == pn and OptionsListMenu == "Characters" then
-                        if Characters.GetAllCharacterNames()[params.Selection-1] ~= nil then
-                            self:settext("Select\n"..Characters.GetAllCharacterNames()[params.Selection-1].. "\nas your dancer.")
-                        elseif params.Selection == 0 then
-                            self:settext("Dancer is disabled.")
-                        elseif params.Selection == 1 and (#fixedChar > 1 and fixedChar[1] ~= "OFF") then
-                            self:settext("A random dancer is selected.")
-                        else
-                            self:settext("")
-                        end
-                    end
-                end,
-            };
-            Def.ActorScroller{
-                Name="Character Scroller",
-                NumItemsToDraw=3;
-                SecondsPerItem=0.2;
-                children = _CHAR;
-                InitCommand=function(s)
-                    s:SetLoop(true):SetWrap(true)
-                    :SetDrawByZPosition(true):SetFastCatchup(true)
-                end,
-                OptionsMenuChangedMessageCommand=function(self,params)
-                    if params.Player == pn then
-                        if GetCharIndex(ResolveCharacterName(pn)) ~= nil then
-                            self:SetCurrentAndDestinationItem(GetCharIndex(ResolveCharacterName(pn))-1)
-                        else
-                            self:SetCurrentAndDestinationItem(0)
-                        end
-                    end;
-                end;
-                TransformFunction=function(s,offset,itemIndex,numItems)
-                    local sign = offset == 0 and 1 or offset/math.abs(offset)
-                    s:x((offset*240*math.cos((math.pi/6*offset))+math.min(math.abs(offset),1)*sign*0))
-                    :z((offset*-62*3*math.sin((math.pi/6)*offset))+(math.min(math.abs(offset),1)*0))
-                    :rotationy(offset*(360/(6*1.135)))
-                end,
-                AdjustCommand=function(self,params)
-                    if params.Player == pn and OptionsListMenu == "Characters" then
-                        self:SetDestinationItem(params.Selection)
-                    end
-                end,
-            };
-            Def.Sprite{
-                Texture="arrow",
-                InitCommand=function(s) s:x(-260):zoom(2):diffusealpha(1):bounce():effectmagnitude(3,0,0):effectperiod(1) end,
-                OptionsListLeftMessageCommand=function(s) s:finishtweening():diffuse(color("#8080ff")):sleep(0.3):linear(0.4):diffuse(color("1,1,1,1")) end,
-            };
-            Def.Sprite{
-                Texture="arrow",
-                InitCommand=function(s) s:x(260):basezoom(2):zoomx(-1):diffusealpha(1):bounce():effectmagnitude(-3,0,0):effectperiod(1) end,
-                OptionsListRightMessageCommand=function(s) s:finishtweening():diffuse(color("#8080ff")):sleep(0.3):linear(0.4):diffuse(color("1,1,1,1")) end,
-            };
-        };
+        
         --Mini
         Def.ActorFrame{
             InitCommand=function(s) s:y(-100):zoom(1):diffusealpha(0) end,
@@ -802,6 +898,218 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
                 OptionsListRightMessageCommand=function(s) s:finishtweening():diffuse(color("#8080ff")):sleep(0.3):linear(0.4):diffuse(color("1,1,1,1")) end,
             };
         };
+        Def.ActorFrame{
+            InitCommand=function(s) s:y(-295):zoom(1):diffusealpha(0) end,
+            OptionsMenuChangedMessageCommand=function(self,params)
+                if params.Player == pn then
+                    if params.Menu == "CharaDS" or params.Menu == "DMates" then
+                        self:playcommand("On")
+                        self:stoptweening():linear(.3):diffusealpha(1);
+                    else
+                        self:diffusealpha(0);
+                    end;
+                end;
+            end;
+            
+            Def.ActorFrame{
+                InitCommand =function(s) s:y(45) end,
+                AdjustCommand=function(s, params)
+                    if not (params.Type == 'OptionsListQuickChange' and OptionsListMenu == "DMates") then return end
+                    -- Special case for when we use START+LEFT or START+RIGHT to change the character
+                    -- We should probably do some check so we don't always update all 6 mate sprites when only one needs to update
+                    -- Perhaps cache the current key for each mate and check for difference?
+                    for i=1, 6 do
+                        local name = 'Mate' .. i
+                        local key = getUserPrefKeyFunc(name)(pn)
+                        local image = getSelectionImage(key, SelectionTable.Characters.getAssetPath, SelectionTable.Characters.specialKeyImages)
+                        s:GetChild(name .. 'Sprite'):Load(image)
+                    end
+                end,
+                Def.BitmapText{
+                    Font="_avenirnext lt pro bold/20px",
+                    Text="Mate 1",
+                    InitCommand=function(s) s:xy(-227,-60):zoom(0.9) end,
+                };
+                Def.Sprite{
+                    Name="Mate1Sprite",
+                    OnCommand=function(s)
+                        local key = getUserPrefKeyFunc('Mate1')(pn)
+                        local image = getSelectionImage(key, SelectionTable.Characters.getAssetPath, SelectionTable.Characters.specialKeyImages)
+                        s:Load(image)
+                        s:zoom(0.1):x(-227)
+                    end,
+                };
+                Def.BitmapText{
+                    Font="_avenirnext lt pro bold/20px",
+                    Text="Mate 2",
+                    InitCommand=function(s) s:xy(-135,-60):zoom(0.9) end,
+                };
+                Def.Sprite{
+                    Name="Mate2Sprite",
+                    OnCommand=function(s)
+                        local key = getUserPrefKeyFunc('Mate2')(pn)
+                        local image = getSelectionImage(key, SelectionTable.Characters.getAssetPath, SelectionTable.Characters.specialKeyImages)
+                        s:Load(image)
+                        s:zoom(0.1):x(-135)
+                    end,
+                };
+                Def.BitmapText{
+                    Font="_avenirnext lt pro bold/20px",
+                    Text="Mate 3",
+                    InitCommand=function(s) s:xy(-45,-60):zoom(0.9) end,
+                };
+                Def.Sprite{
+                    Name="Mate3Sprite",
+                    OnCommand=function(s)
+                        local key = getUserPrefKeyFunc('Mate3')(pn)
+                        local image = getSelectionImage(key, SelectionTable.Characters.getAssetPath, SelectionTable.Characters.specialKeyImages)
+                        s:Load(image)
+                        s:zoom(0.1):x(-45)
+                    end,
+                };
+                Def.BitmapText{
+                    Font="_avenirnext lt pro bold/20px",
+                    Text="Mate 4",
+                    InitCommand=function(s) s:xy(45,-60):zoom(0.9) end,
+                };
+                Def.Sprite{
+                    Name="Mate4Sprite",
+                    OnCommand=function(s)
+                        local key = getUserPrefKeyFunc('Mate4')(pn)
+                        local image = getSelectionImage(key, SelectionTable.Characters.getAssetPath, SelectionTable.Characters.specialKeyImages)
+                        s:Load(image)
+                        s:zoom(0.1):x(45)
+                    end,
+                };
+                Def.BitmapText{
+                    Font="_avenirnext lt pro bold/20px",
+                    Text="Mate 5",
+                    InitCommand=function(s) s:xy(135,-60):zoom(0.9) end,
+                };
+                Def.Sprite{
+                    Name="Mate5Sprite",
+                    OnCommand=function(s)
+                        local key = getUserPrefKeyFunc('Mate5')(pn)
+                        local image = getSelectionImage(key, SelectionTable.Characters.getAssetPath, SelectionTable.Characters.specialKeyImages)
+                        s:Load(image)
+                        s:zoom(0.1):x(135)
+                    end,
+                };
+                Def.BitmapText{
+                    Font="_avenirnext lt pro bold/20px",
+                    Text="Mate 6",
+                    InitCommand=function(s) s:xy(227,-60):zoom(0.9) end,
+                };
+                Def.Sprite{
+                    Name="Mate6Sprite",
+                    OnCommand=function(s)
+                        local key = getUserPrefKeyFunc('Mate6')(pn)
+                        local image = getSelectionImage(key, SelectionTable.Characters.getAssetPath, SelectionTable.Characters.specialKeyImages)
+                        s:Load(image)
+                        s:zoom(0.1):x(227)
+                    end,
+                };
+            };
+            
+            Def.ActorFrame{
+                InitCommand = function(s) s:y(275) end,
+                OptionsMenuChangedMessageCommand=function(self,params)
+                    if params.Player == pn then
+                        if params.Menu == "CharaDS" then
+                            self:playcommand("On")
+                            self:stoptweening():linear(.3):diffusealpha(1);
+                        else
+                            self:diffusealpha(0);
+                        end;
+                    end;
+                end;
+                Def.ActorFrame{
+                    InitCommand = function(s) s:x(-140) end,
+                    AdjustCommand=function(s, params)
+                        if not (params.Type == 'OptionsListQuickChange' and OptionsListMenu == "CharaDS") then return end
+                        -- Special case for when we use START+LEFT or START+RIGHT to change the character
+                        local key = getUserPrefKeyFunc('Characters')(pn)
+                        local image = getSelectionImage(key, SelectionTable.Characters.getAssetPath, SelectionTable.Characters.specialKeyImages)
+                        s:GetChild('Sprite'):Load(image)
+                        s:GetChild('Text'):settext(key)
+                    end,
+                    Def.BitmapText{
+                        Font="_avenirnext lt pro bold/25px",
+                        Text="Player Character",
+                        InitCommand=function(s) s:y(-158) end,
+                    };
+                    Def.Sprite{
+                        Name='Sprite',
+                        OnCommand=function(s)
+                            local key = getUserPrefKeyFunc('Characters')(pn)
+                            local image = getSelectionImage(key, SelectionTable.Characters.getAssetPath, SelectionTable.Characters.specialKeyImages)
+                            s:Load(image)
+                            s:zoom(0.30)
+                        end,
+                    };
+                    Def.Sprite{
+                        Texture="cards/BAR.png",
+                        InitCommand=function(s) s:zoom(0.30) end,
+                    };
+                    Def.BitmapText{
+                        Name='Text',
+                        Font="_avenirnext lt pro bold/20px",
+                        OnCommand=function(s) 
+                            local key = getUserPrefKeyFunc('Characters')(pn)
+                            s:settext(key)
+                            s:y(120):zoom(1)
+                        end,
+                    };
+                };
+                Def.ActorFrame{
+                    InitCommand = function(s) s:x(140) end,
+                    AdjustCommand=function(s, params)
+                        if not (params.Type == 'OptionsListQuickChange' and OptionsListMenu == "CharaDS") then return end
+                        -- Special case for when we use START+LEFT or START+RIGHT to change the stage
+                        local key = getUserPrefKeyFunc('SelectDanceStage')(pn)
+                        local image = getSelectionImage(key, SelectionTable.DanceStages.getAssetPath, SelectionTable.DanceStages.specialKeyImages)
+                        s:GetChild('Sprite'):Load(image)
+                        s:GetChild('Text'):settext(key)
+                    end,
+                    Def.BitmapText{
+                        Font="_avenirnext lt pro bold/25px",
+                        Text="Dance Stage",
+                        InitCommand=function(s) s:y(-158) end,
+                    };
+                    Def.Sprite{
+                        Name="Sprite",
+                        OnCommand=function(s)
+                            local key = getUserPrefKeyFunc('SelectDanceStage')(pn)
+                            local image = getSelectionImage(key, SelectionTable.DanceStages.getAssetPath, SelectionTable.DanceStages.specialKeyImages)
+                            s:Load(image)
+                            s:zoom(0.30)
+                        end,
+                    };
+                    Def.Sprite{
+                        Texture="cards/BAR.png",
+                        InitCommand=function(s) s:zoom(0.30) end,
+                    };
+                    Def.BitmapText{
+                        Name="Text",
+                        Font="_avenirnext lt pro bold/20px",
+                        OnCommand=function(s) 
+                            local key = getUserPrefKeyFunc('SelectDanceStage')(pn)
+                            s:settext(key)
+                            s:y(120):zoom(1)
+                        end,
+                    };
+                };
+            };
+        };
+        
+        createSelectionScroller('Characters', _CHAR,     fixedChar, getUserPrefKeyFunc('Characters'),       SelectionTable.Characters.getAssetPath,  SelectionTable.Characters.specialKeyImages),
+        createSelectionScroller('Mate1',      _CHAR,     fixedChar, getUserPrefKeyFunc('Mate1'),            SelectionTable.Characters.getAssetPath,  SelectionTable.Characters.specialKeyImages),
+        createSelectionScroller('Mate2',      _CHAR,     fixedChar, getUserPrefKeyFunc('Mate2'),            SelectionTable.Characters.getAssetPath,  SelectionTable.Characters.specialKeyImages),
+        createSelectionScroller('Mate3',      _CHAR,     fixedChar, getUserPrefKeyFunc('Mate3'),            SelectionTable.Characters.getAssetPath,  SelectionTable.Characters.specialKeyImages),
+        createSelectionScroller('Mate4',      _CHAR,     fixedChar, getUserPrefKeyFunc('Mate4'),            SelectionTable.Characters.getAssetPath,  SelectionTable.Characters.specialKeyImages),
+        createSelectionScroller('Mate5',      _CHAR,     fixedChar, getUserPrefKeyFunc('Mate5'),            SelectionTable.Characters.getAssetPath,  SelectionTable.Characters.specialKeyImages),
+        createSelectionScroller('Mate6',      _CHAR,     fixedChar, getUserPrefKeyFunc('Mate6'),            SelectionTable.Characters.getAssetPath,  SelectionTable.Characters.specialKeyImages),
+        createSelectionScroller('DanceStage', _DS, DanceStagesList, getUserPrefKeyFunc('SelectDanceStage'), SelectionTable.DanceStages.getAssetPath, SelectionTable.DanceStages.specialKeyImages),
     }
 end
 
