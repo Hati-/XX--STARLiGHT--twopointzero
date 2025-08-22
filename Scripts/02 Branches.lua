@@ -85,7 +85,7 @@ end
 Branch.TitleMenu = function()
 	local coinMode = GAMESTATE:GetCoinMode()
 	if coinMode == 'CoinMode_Home' then
-		return "ScreenSelectMode"
+		return "ScreenLogo"
 	else
 		return "ScreenWarning"
 	end
