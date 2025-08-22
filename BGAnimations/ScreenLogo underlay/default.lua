@@ -189,7 +189,7 @@ return Def.ActorFrame{
           SCREENMAN:GetTopScreen():SetNextScreenName(Branch.StartGame()):StartTransitioningScreen("SM_GoToNextScreen")
           self:queuecommand("Anim")
         else
-          SCREENMAN:GetTopScreen():SetNextScreenName("ScreenSelectMode"):StartTransitioningScreen("SM_GoToNextScreen")
+          SCREENMAN:GetTopScreen():SetNextScreenName(Branch.StartGame()):StartTransitioningScreen("SM_GoToNextScreen")
           MESSAGEMAN:Broadcast("StartPressedLogo")
         end
         SOUND:PlayOnce(THEME:GetPathS("","Common start"))
