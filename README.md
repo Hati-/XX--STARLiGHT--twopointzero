@@ -1,3 +1,7 @@
+This branch is for my personal use only.<br>
+Due to some of the modifications here this variant should **NOT be used in public areas under any circumstances**;<br>
+See [Copyright info](#copyright-info) below.
+
 <h1 align="center">
   <br>
   <img src="https://github.com/MidflightDigital/XX--STARLiGHT--twopointzero/blob/main/newxxlogo.png?raw=true" alt="STARLiGHT Logo" width="600">
