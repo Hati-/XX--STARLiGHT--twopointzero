@@ -1,6 +1,6 @@
 local player = ...
 -- local defaultName = "STARLGHT"
-local defaultName = "Anonymous"
+local defaultName = "ANONYMOUS"
 
 local CHARACTER_MAP = {
 {"A","B","C","D","E","F","G","H","I","J"},
