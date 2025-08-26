@@ -1,1227 +1,1213 @@
+local songDanceStageTable = {
+  ------ DDR 1st ------
+  ["Butterfly"]                                                     = '(X2) BIG SCREEN', 
+  ["Have You Never Been Mellow"]                                    = '(X2) BIG SCREEN', 
+  ["KUNG FU FIGHTING"]                                              = '(X2) MOVIE LIGHT', 
+  ["LET'S GET DOWN"]                                                = '(X2) MOVIE LIGHT', 
+  ["Little Bitch"]                                                  = '(X2) MOVIE LIGHT', 
+  ["MAKE IT BETTER"]                                                = '(X) DANCING RAYS', 
+  ["My Fire (UKS Remix)"]                                           = '(X2) MOVIE LIGHT', 
+  ["PARANOiA"]                                                      = '(X) CRYSTALDIUM', 
+  ["STRICTLY BUSINESS"]                                             = '(X) DANCING RAYS', 
+  ["That's The Way (I Like It)"]                                    = '(X2) MOVIE LIGHT', 
+  ["TRIP MACHINE"]                                                  = '(X) CRYSTALDIUM', 
+
+  ------ DDR 2ndMIX ------
+  ["AM-3P"]                                                         = '(X2) CYBER', 
+  ["BAD GIRLS"]                                                     = '(X2) BIG SCREEN', 
+  ["Boom Boom Dollar (Red Monster Mix)"]                            = '(X2) MOVIE LIGHT', 
+  ["Boys"]                                                          = '(X2) BIG SCREEN', 
+  ["BRILLIANT 2U"]                                                  = '(X) CAPTURE ME', 
+  ["BRILLIANT 2U(Orchestra Groove)"]                                = '(X2) CYBER', 
+  ["DUB-I-DUB"]                                                     = '(X2) BIG SCREEN', 
+  ["EL RITMO TROPICAL"]                                             = '(X2) BOOM LIGHT', 
+  ["GET UP'N MOVE"]                                                 = '(X2) MOVIE LIGHT', 
+  ["HERO"]                                                          = '(X2) CYBER', 
+  ["I Believe In Miracles (The Lisa Marie Experience Radio Edit)"]  = '(X2) BIG SCREEN', 
+  ["IF YOU WERE HERE"]                                              = '(X2) BIG SCREEN', 
+  ["LOVE"]                                                          = '(X) DANCING RAYS', 
+  ["LOVE IS THE POWER"]                                             = '(X) DANCING RAYS', 
+  ["MAKE A JAM!"]                                                   = '(X) DAWN STREETS', 
+  ["MAKE IT BETTER (So-REAL Mix)"]                                  = '(X2) MOVIE LIGHT', 
+  ["PARANOiA KCET ～clean mix～"]                                   = '(A) BOOM DARK', 
+  ["PARANOiA MAX～DIRTY MIX～"]                                     = '(X) CAPTURE ME', 
+  ["PUT YOUR FAITH IN ME"]                                          = '(X) BOOM BOOM BOOM', 
+  ["PUT YOUR FAITH IN ME (Jazzy Groove)"]                           = '(X2) MOVIE LIGHT', 
+  ["Smoke"]                                                         = '(X2) MOVIE LIGHT', 
+  ["SP-TRIP MACHINE～JUNGLE MIX～"]                                 = '(X) CRYSTALDIUM', 
+  ["stomp to my beat"]                                              = '(X2) MOVIE LIGHT', 
+  ["TUBTHUMPING"]                                                   = '(X) DAWN STREETS', 
+
+  ------ DDR 2ndMIX CLUB Version 1 ------
+  ["e-motion"]                                                      = '(X) BOOM BOOM BOOM', 
+  ["GENOM SCREAMS"]                                                 = '(X2) CYBER', 
+
+  ------ DDR 3rdMIX ------
+  ["AFRONOVA"]                                                      = '(X) BOOM BOOM BOOM', 
+  ["AFTER THE GAME OF LOVE"]                                        = '(X) DANCING RAYS', 
+  ["BOOM BOOM DOLLAR (K.O.G. G3 MIX)"]                              = '(X) DANCING RAYS', 
+  ["BUMBLE BEE"]                                                    = '(X2) BOOM LIGHT', 
+  ["butterfly (UPSWING MIX)"]                                       = '(X) DANCING RAYS', 
+  ["CAPTAIN JACK (GRANDALE REMIX)"]                                 = '(X2) CYBER', 
+  ["CUTIE CHASER"]                                                  = '(X) LOVE SWEETS', 
+  ["DAM DARIRAM"]                                                   = '(X2) CYBER', 
+  ["DEAD END"]                                                      = '(A) BOOM DARK', 
+  ["DROP THE BOMB"]                                                 = '(X2) CYBER', 
+  ["DYNAMITE RAVE"]                                                 = '(X2) CYBER', 
+  ["GRADIUSIC CYBER ～AMD G5 MIX～"]                                = '(X2) CYBER', 
+  ["KEEP ON MOVIN\'"]                                               = '(X2) BOOM LIGHT', 
+  ["La Señorita"]                                                   = '(X2) BOOM LIGHT', 
+  ["La Señorita Virtual"]                                           = '(X) CRYSTALDIUM', 
+  ["LOVE THIS FEELIN\'"]                                            = '(X2) CYBER', 
+  ["LUV TO ME (AMD MIX)"]                                           = '(X) DANCING RAYS', 
+  ["PARANOiA Rebirth"]                                              = '(X) CRYSTALDIUM', 
+  ["Silent Hill"]                                                   = '(X) DANCING RAYS', 
+  ["think ya better D"]                                             = '(X) CAPTURE ME', 
+  ["TRIP MACHINE～luv mix～"]                                       = '(X) CRYSTALDIUM', 
+  ["TURN ME ON (HEAVENLY MIX)"]                                     = '(X2) CLUB', 
+
+  ------ DDR 4thMIX ------
+  ["B4U"]                                                           = '(X2) CYBER', 
+  ["BABY BABY GIMME YOUR LOVE"]                                     = '(X) DANCING RAYS', 
+  ["BURNIN' THE FLOOR"]                                             = '(X2) CLUB', 
+  ["CAN'T STOP FALLIN' IN LOVE"]                                    = '(X2) CYBER', 
+  ["CELEBRATE NITE"]                                                = '(X) CAPTURE ME', 
+  ["Don't Stop!～AMD 2nd MIX～"]                                    = '(X2) BOOM LIGHT', 
+  ["DROP OUT"]                                                      = '(X) BOOM BOOM BOOM', 
+  ["era (nostalmix)"]                                               = '(X) CAPTURE ME', 
+  ["HIGHER"]                                                        = '(X2) BOOM LIGHT', 
+  ["Holic"]                                                         = '(X2) CYBER', 
+  ["HYSTERIA"]                                                      = '(X) CAPTURE ME', 
+  ["LEADING CYBER"]                                                 = '(X) BOOM BOOM BOOM', 
+  ["LOVE AGAIN TONIGHT～For Melissa MIX～"]                         = '(X) DANCING RAYS', 
+  ["MY SUMMER LOVE"]                                                = '(X2) BOOM LIGHT', 
+  ["ORION.78(AMeuro-MIX)"]                                          = '(X) CAPTURE ME', 
+  ["PARANOIA EVOLUTION"]                                            = '(X) CRYSTALDIUM', 
+  ["SEXY PLANET"]                                                   = '(X2) CYBER', 
+  ["SUPER STAR"]                                                    = '(X) DAWN STREETS', 
+  ["TRIP MACHINE CLIMAX"]                                           = '(X) CRYSTALDIUM', 
+  ["WILD RUSH"]                                                     = '(X) CRYSTALDIUM', 
+  [".59"]                                                           = '(X) CRYSTALDIUM', 
+
+  ------ DDR 5thMIX ------
+  ["サナ・モレッテ・ネ・エンテ"]                                    = '(X) DANCING RAYS', -- SANA MOLLETE NE ENTE
+  ["ABSOLUTE"]                                                      = '(X2) BOOM LIGHT', 
+  ["Abyss"]                                                         = '(X) CRYSTALDIUM', 
+  ["AFRONOVA PRIMEVAL"]                                             = '(X) BOOM BOOM BOOM', 
+  ["BROKEN MY HEART"]                                               = '(X2) CYBER', 
+  ["CAN'T STOP FALLIN' IN LOVE ～SPEED MIX～"]                      = '(X) CRYSTALDIUM', 
+  ["DXY!"]                                                          = '(X2) CYBER', 
+  ["ECSTASY"]                                                       = '(X) BOOM BOOM BOOM', 
+  ["Electro Tuned ( the SubS Mix )"]                                = '(X) CAPTURE ME', 
+  ["Healing Vision"]                                                = '(X) CRYSTALDIUM', 
+  ["INSERTiON"]                                                     = '(X) CAPTURE ME', 
+  ["PARANOiA ETERNAL"]                                              = '(X) CAPTURE ME', 
+  ["STILL IN MY HEART"]                                             = '(X) BOOM BOOM BOOM', 
+
+  ------ DDRMAX ------
+  ["CANDY☆"]                                                       = '(X) LOVE SWEETS', 
+  ["exotic ethnic"]                                                 = '(X) BOOM BOOM BOOM', 
+  ["Healing Vision ～Angelic mix～"]                                = '(X) CRYSTALDIUM', 
+  ["Let the beat hit em!(CLASSIC R&B STYLE)"]                       = '(X) DANCING RAYS', 
+  ["MAX 300"]                                                       = '(X2) MOVIE DARK', 
+  ["ORION.78～civilization mix～"]                                  = '(X) DANCING RAYS', 
+
+  ------ DDRMAX2 ------
+  ["革命"]                                                          = '(A) BOOM DARK', -- KAKUMEI
+  ["AFRONOVA(FROM NONSTOP MEGAMIX)"]                                = '(X2) CLUB', 
+  ["AM-3P(AM EAST mix)"]                                            = '(X) DANCING RAYS', 
+  ["B4U(B4 ZA BEAT MIX)"]                                           = '(X2) CYBER', 
+  ["BRE∀K DOWN！"]                                                  = '(X2) BOOM LIGHT', 
+  ["BRILLIANT 2U(K.O.G G3 MIX)"]                                    = '(X2) CYBER', 
+  ["BURNIN' THE FLOOR(BLUE FIRE mix)"]                              = '(X) CRYSTALDIUM', 
+  ["BURNING HEAT！（3 Option MIX）"]                                = '(X2) CYBER', 
+  ["CANDY♡"]                                                       = '(X) LOVE SWEETS', 
+  ["CELEBRATE NITE(EURO TRANCE STYLE)"]                             = '(X) CRYSTALDIUM', 
+  ["D2R"]                                                           = '(X) CAPTURE ME', 
+  ["DESTINY"]                                                       = '(X) CAPTURE ME', 
+  ["DIVE TO THE NIGHT"]                                             = '(X) CAPTURE ME', 
+  ["DROP OUT(FROM NONSTOP MEGAMIX)"]                                = '(X2) CYBER', 
+  ["ECSTASY (midnight blue mix)"]                                   = '(X) CRYSTALDIUM', 
+  ["HIGHER(next morning mix)"]                                      = '(X2) BOOM LIGHT', 
+  ["HYSTERIA 2001"]                                                 = '(X) DAWN STREETS', 
+  ["i feel ..."]                                                    = '(X) CRYSTALDIUM', 
+  ["MAXX UNLIMITED"]                                                = '(A) BOOM DARK', 
+  ["MY SUMMER LOVE(TOMMY'S SMILE MIX)"]                             = '(X2) BOOM LIGHT', 
+  ["rain of sorrow"]                                                = '(X) BOOM BOOM BOOM', 
+  ["Secret Rendez-vous"]                                            = '(X) DANCING RAYS', 
+  ["SEXY PLANET(FROM NONSTOP MEGAMIX)"]                             = '(X) CRYSTALDIUM', 
+  ["Silent Hill (3rd christmas mix)"]                               = '(X) DANCING RAYS', 
+  ["STILL IN MY HEART(MOMO MIX)"]                                   = '(X) CRYSTALDIUM', 
+  ["SUPER STAR(FROM NONSTOP MEGAMIX)"]                              = '(X2) CYBER', 
+  ["Sweet Sweet ♥ Magic"]                                          = '(X) LOVE SWEETS', 
+  ["TSUGARU"]                                                       = '(X) BOOM BOOM BOOM', 
+  ["TSUGARU (APPLE MIX)"]                                           = '(X) CAPTURE ME', 
+  ["WILD RUSH(FROM NONSTOP MEGAMIX)"]                               = '(X) CRYSTALDIUM', 
+
+  ------ DDR EXTREME ------
+  ["蒼い衝動 ～for EXTREME～"]                                      = '(X2) CYBER', -- BLUE IMPULSE ~for EXTREME~
+  ["桜"]                                                            = '(X) CRYSTALDIUM', -- SAKURA
+  ["大見解"]                                                        = '(X2) CYBER', -- DAIKENKAI
+  ["三毛猫ロック"]                                                  = '(X) DANCING RAYS', -- CALICO CAT ROCK
+  ["A"]                                                             = '(X2) CYBER', 
+  ["Across the nightmare"]                                          = '(X) BOOM BOOM BOOM', 
+  ["air"]                                                           = '(X) CRYSTALDIUM', 
+  ["AM-3P -303 BASS MIX-"]                                          = '(X) BOOM BOOM BOOM', 
+  ["bag"]                                                           = '(X) CAPTURE ME', 
+  ["BE LOVIN"]                                                      = '(X2) CYBER', 
+  ["Colors ～for EXTREME～"]                                        = '(X2) CYBER', 
+  ["CUTIE CHASER(MORNING MIX)"]                                     = '(X) DANCING RAYS', 
+  ["Dance Dance Revolution"]                                        = '(X) DANCING RAYS', 
+  ["Destiny lovers"]                                                = '(X2) BOOM LIGHT', 
+  ["DROP THE BOMB(SyS.F. Mix)"]                                     = '(X) CRYSTALDIUM', 
+  ["Frozen Ray ～for EXTREME～"]                                    = '(X) CRYSTALDIUM', 
+  ["Gamelan de Couple"]                                             = '(X2) BOOM LIGHT', 
+  ["GRADUATION ～それぞれの明日～"]                                 = '(X2) BOOM LIGHT', 
+  ["Happy Wedding"]                                                 = '(X) DANCING RAYS', 
+  ["Heaven is a '57 metallic gray ～gimmix～"]                      = '(X) DANCING RAYS', 
+  ["HYPER EUROBEAT"]                                                = '(X) DANCING RAYS', 
+  ["I'm gonna get you!"]                                            = '(X) BOOM BOOM BOOM', 
+  ["jane jana"]                                                     = '(X2) BOOM LIGHT', 
+  ["JET WORLD"]                                                     = '(X) CAPTURE ME', 
+  ["KISS KISS KISS"]                                                = '(X) DANCING RAYS', 
+  ["Kiss me all night long"]                                        = '(X2) CYBER', 
+  ["LA BAMBA"]                                                      = '(X2) BOOM LIGHT', 
+  ["L'amour et la liberté(DDR Ver.)"]                               = '(X2) CYBER', 
+  ["LOVE♥SHINE"]                                                   = '(X2) BOOM LIGHT', 
+  ["♥Love²シュガ→♥"]                                              = '(X) LOVE SWEETS', 
+  ["Miracle Moon ～L.E.D.LIGHT STYLE MIX～"]                        = '(X) DANCING RAYS', 
+  ["PARANOIA survivor"]                                             = '(X) BOOM BOOM BOOM', 
+  ["PARANOIA survivor MAX"]                                         = '(A) BOOM DARK', 
+  ["Pink Rose"]                                                     = '(X2) CYBER', 
+  ["SO IN LOVE"]                                                    = '(X) DANCING RAYS', 
+  ["STAY (Organic house Version)"]                                  = '(X2) BOOM LIGHT', 
+  ["stoic (EXTREME version)"]                                       = '(X2) CYBER', 
+  ["sync (EXTREME version)"]                                        = '(X2) CYBER', 
+  ["TEARS"]                                                         = '(X) CRYSTALDIUM', 
+  ["The Least 100sec"]                                              = '(X) BOOM BOOM BOOM', 
+  ["The legend of MAX"]                                             = '(A) BOOM DARK', 
+  ["TRIP MACHINE survivor"]                                         = '(X) CRYSTALDIUM', 
+  ["Twin Bee -Generation X-"]                                       = '(X2) CYBER', 
+  ["V ～for EXTREME～"]                                             = '(X) CAPTURE ME', 
+  ["VANITY ANGEL"]                                                  = '(X2) CYBER', 
+  ["xenon"]                                                         = '(X) BOOM BOOM BOOM', 
+  ["1998"]                                                          = '(X2) CYBER', 
+  ["321STARS"]                                                      = '(X) BOOM BOOM BOOM', 
+
+  ------ DDR SuperNOVA ------
+  ["怒れる大きな白い馬"]                                            = '(X2) CYBER', -- Tino's White Horse
+  ["カゲロウ"]                                                      = '(X) BOOM BOOM BOOM', -- KAGEROW (Dragonfly)
+  ["月光蝶"]                                                        = '(A) BOOM DARK', -- Gekkou chou
+  ["この子の七つのお祝いに"]                                        = '(X) BOOM BOOM BOOM', -- Konoko no nanatsu no oiwaini
+  ["男々道"]                                                        = '(X) CAPTURE ME', -- DanDanDO(The true MAN's Road)
+  ["チカラ"]                                                        = '(X2) BOOM LIGHT', -- CHIKARA
+  ["虹色"]                                                          = '(X) CAPTURE ME', -- NIJIIRO
+  ["華爛漫 -Flowers-"]                                              = '(X) CRYSTALDIUM', -- Hana Ranman -Flowers-
+  ["ヒマワリ"]                                                      = '(X2) BOOM LIGHT', -- Himawari
+  ["夢幻ノ光"]                                                      = '(X2) CYBER', -- Mugen
+  ["A Stupid Barber"]                                               = '(X) BOOM BOOM BOOM', 
+  ["AA"]                                                            = '(X2) CYBER', 
+  ["Bad Routine"]                                                   = '(X) BOOM BOOM BOOM', 
+  ["Baile Le Samba"]                                                = '(X) DANCING RAYS', 
+  ["BALLAD FOR YOU～想いの雨～"]                                    = '(X) DANCING RAYS', 
+  ["Brazilian Anthem"]                                              = '(X) BOOM BOOM BOOM', 
+  ["cachaca"]                                                       = '(X2) BOOM LIGHT', 
+  ["Can Be Real"]                                                   = '(X) DANCING RAYS', 
+  ["CAN'T STOP FALLIN' IN LOVE -super euro version-"]               = '(X) CRYSTALDIUM', 
+  ["CENTAUR"]                                                       = '(X) BOOM BOOM BOOM', 
+  ["CHAOS"]                                                         = '(A) BOOM DARK', 
+  ["CURUS"]                                                         = '(X) CRYSTALDIUM', 
+  ["DoLL"]                                                          = '(X) DANCING RAYS', 
+  ["Dragon Blade"]                                                  = '(X) BOOM BOOM BOOM', 
+  ["Fascination ～eternal love mix～"]                              = '(A) BOOM DARK', 
+  ["Fascination MAXX"]                                              = '(A) BOOM DARK', 
+  ["Flow"]                                                          = '(X2) CYBER', 
+  ["Flow (True Style)"]                                             = '(X) CRYSTALDIUM', 
+  ["Fly away"]                                                      = '(X2) BOOM LIGHT', 
+  ["Forever Sunshine"]                                              = '(X2) BOOM LIGHT', 
+  ["Freedom"]                                                       = '(X2) CYBER', 
+  ["Funk Boogie"]                                                   = '(X) DAWN STREETS', 
+  ["GORGEOUS 2012"]                                                 = '(X) DANCING RAYS', 
+  ["HAPPY☆ANGEL"]                                                  = '(X2) BOOM LIGHT', 
+  ["Healing-D-Vision"]                                              = '(A) BOOM DARK', 
+  ["I Need You"]                                                    = '(X) DANCING RAYS', 
+  ["iFUTURELIST(DDR VERSION)"]                                      = '(X) BOOM BOOM BOOM', 
+  ["INNOCENCE OF SILENCE"]                                          = '(X) CRYSTALDIUM', 
+  ["INSIDE YOUR HEART"]                                             = '(X2) CYBER', 
+  ["Jam & Marmalade"]                                               = '(X) CAPTURE ME', 
+  ["KEEP ON MOVIN' ～DMX MIX～"]                                    = '(X2) BOOM LIGHT', 
+  ["LA BAMBA"]                                                      = '(X) DANCING RAYS', 
+  ["LOGICAL DASH"]                                                  = '(X) CAPTURE ME', 
+  ["LOVE IS ORANGE"]                                                = '(X) DANCING RAYS', 
+  ["Make A Difference"]                                             = '(X2) BOOM LIGHT', 
+  ["MARIA(I believe...)"]                                           = '(X2) CYBER', 
+  ["MAX 300 (Super-Max-Me Mix)"]                                    = '(A) BOOM DARK', 
+  ["MAXIMIZER"]                                                     = '(X2) CYBER', 
+  ["MIDNIGHT SPECIAL"]                                              = '(X) BOOM BOOM BOOM', 
+  ["Mind Parasite"]                                                 = '(X2) CYBER', 
+  ["Monkey Punk"]                                                   = '(X) BOOM BOOM BOOM', 
+  ["MOON"]                                                          = '(X) DANCING RAYS', 
+  ["murmur twins"]                                                  = '(X2) BOOM LIGHT', 
+  ["My Only Shining Star"]                                          = '(X) CAPTURE ME', 
+  ["No.13"]                                                         = '(X) CAPTURE ME', 
+  ["PARANOiA-Respect-"]                                             = '(X) CAPTURE ME', 
+  ["PASSION OF LOVE"]                                               = '(X) BOOM BOOM BOOM', 
+  ["Polovtsian Dances And Chorus"]                                  = '(X2) CYBER', 
+  ["PUT YOUR FAITH IN ME ～SATURDAY NIGHT MIX～"]                   = '(X) DANCING RAYS', 
+  ["Quick Master"]                                                  = '(X) CRYSTALDIUM', 
+  ["Quickening"]                                                    = '(X2) CYBER', 
+  ["rainbow flyer"]                                                 = '(X2) BOOM LIGHT', 
+  ["rainbow rainbow"]                                               = '(X) BOOM BOOM BOOM', 
+  ["RED ZONE"]                                                      = '(X2) CYBER', 
+  ["Saturday Night Love"]                                           = '(X) DANCING RAYS', 
+  ["Scorching Moon"]                                                = '(X) DAWN STREETS', 
+  ["SEDUCTION"]                                                     = '(X2) CYBER', 
+  ["SEDUCTION(Vocal Remix)"]                                        = '(X) CRYSTALDIUM', 
+  ["Ska Ska No.3"]                                                  = '(X) DAWN STREETS', 
+  ["Star Gate Heaven"]                                              = '(X) BOOM BOOM BOOM', 
+  ["STARS☆☆☆(2nd NAOKI's style)"]                                = '(X2) CYBER', 
+  ["THE SHINING POLARIS"]                                           = '(X) CRYSTALDIUM', 
+  ["TIERRA BUENA"]                                                  = '(X) CAPTURE ME', 
+  ["TOMORROW"]                                                      = '(X) BOOM BOOM BOOM', 
+  ["Tomorrow Perfume"]                                              = '(X2) BOOM LIGHT', 
+  ["TRUE♥LOVE"]                                                    = '(X) LOVE SWEETS', 
+  ["Try 2 Luv. U"]                                                  = '(X) DANCING RAYS', 
+  ["un deux trois"]                                                 = '(X2) CYBER', 
+  ["Under the Sky"]                                                 = '(X2) BOOM LIGHT', 
+  ["Xepher"]                                                        = '(X) CRYSTALDIUM', 
+  ["You gotta move it (feat. Julie Rugaard)"]                       = '(X) BOOM BOOM BOOM', 
+
+  ------ DDR SuperNOVA 2 ------
+  ["A thing called LOVE"]                                           = '(X2) BOOM LIGHT', 
+  ['AM-3P ("CHAOS" Special)']                                       = '(X) CRYSTALDIUM', 
+  ["Arrabbiata"]                                                    = '(X) CRYSTALDIUM', 
+  ['B4U ("VOLTAGE" Special)']                                       = '(X) CRYSTALDIUM', 
+  ["Blind Justice ～Torn souls, Hurt Faiths ～"]                    = '(X) CRYSTALDIUM', 
+  ["Bloody Tears(IIDX EDITION)"]                                    = '(X2) CYBER', 
+  ['BRILLIANT 2U ("STREAM" Special)']                               = '(X) CAPTURE ME', 
+  ["CaptivAte～誓い～"]                                             = '(X) CRYSTALDIUM', 
+  ['D2R ("FREEZE" Special)']                                        = '(X) CRYSTALDIUM', 
+  ['DEAD END ("GROOVE RADAR" Special)']                             = '(A) BOOM DARK', 
+  ["dream of love"]                                                 = '(X) DANCING RAYS', 
+  ['DYNAMITE RAVE ("AIR" Special)']                                 = '(X) CRYSTALDIUM', 
+  ["Electrified"]                                                   = '(X2) CYBER', 
+  ["Every Day, Every Night(NM STYLE)"]                              = '(X) DANCING RAYS', 
+  ["Feelings Won't Fade(Extend Trance Mix)"]                        = '(X2) CYBER', 
+  ["FIRE"]                                                          = '(X) BOOM BOOM BOOM', 
+  ["Flow (Jammin' Ragga Mix)"]                                      = '(X) DANCING RAYS', 
+  ["Fly away -mix del matador-"]                                    = '(X2) BOOM LIGHT', 
+  ["Freeway Shuffle"]                                               = '(X) CRYSTALDIUM', 
+  ["GIRIGILI門前雀羅"]                                              = '(X) DAWN STREETS', 
+  ["L'amour et la liberté(Darwin & DJ Silver remix)"]               = '(X) CRYSTALDIUM', 
+  ["MARS WAR 3"]                                                    = '(X) CAPTURE ME', 
+  ["MOONSTER"]                                                      = '(X) DANCING RAYS', 
+  ["Music In The Rhythm"]                                           = '(X2) CYBER', 
+  ["NGO"]                                                           = '(A) BOOM DARK', 
+  ["PARANOiA ～HADES～"]                                            = '(A) BOOM DARK', 
+  ["Pluto"]                                                         = '(A) BOOM DARK', 
+  ["Pluto Relinquish"]                                              = '(X) CRYSTALDIUM', 
+  ["Poseidon"]                                                      = '(X) CAPTURE ME', 
+  ["Raspberry♡Heart(English version)"]                             = '(X2) BOOM LIGHT', 
+  ["Saturn"]                                                        = '(X) BOOM BOOM BOOM', 
+  ["Shades of Grey"]                                                = '(X) CAPTURE ME', 
+  ["Silver Platform - I wanna get your heart -"]                    = '(X) CRYSTALDIUM', 
+  ["SOUL CRASH"]                                                    = '(X) BOOM BOOM BOOM', 
+  ["Star Gate Heaven (FUTURE LOVE Mix)"]                            = '(X) CRYSTALDIUM', 
+  ["STARS☆☆☆（Re-tuned by HΛL） - DDR EDITION -"]                = '(X) BOOM BOOM BOOM', 
+  ["stealth"]                                                       = '(X) CAPTURE ME', 
+  ["SUNKiSS♥DROP"]                                                 = '(X) LOVE SWEETS', 
+  ["switch"]                                                        = '(X) CRYSTALDIUM', 
+  ["Trim"]                                                          = '(X) CRYSTALDIUM', 
+  ["TRIP MACHINE PhoeniX"]                                          = '(A) BOOM DARK', 
+  ["Trust -DanceDanceRevolution mix-"]                              = '(X2) BOOM LIGHT', 
+  ["Unreal"]                                                        = '(X2) CYBER', 
+  ["Uranus"]                                                        = '(X) CRYSTALDIUM', 
+  ["Vem brincar"]                                                   = '(X) DANCING RAYS', 
+  ["Venus"]                                                         = '(X) BOOM BOOM BOOM', 
+  ["volcano"]                                                       = '(X) BOOM BOOM BOOM', 
+  ["Votum stellarum -forest #25 DDR RMX-"]                          = '(X) CRYSTALDIUM', 
+  ["Why not"]                                                       = '(X) BOOM BOOM BOOM', 
+
+  ------ DDR X ------
+  ["スキ☆メロ"]                                                    = '(X) LOVE SWEETS', -- Suki Melo
+  ["ポリリズム"]                                                    = '(X) LOVE SWEETS', -- PORIRIZUMU
+  ["世界は踊る"]                                                    = '(X) CRYSTALDIUM', -- SEKAI HA ODORU
+  ["凛として咲く花の如く"]                                          = '(X2) BOOM LIGHT', -- Rin To Shite Saku Hana No Gotoku
+  ["旅人"]                                                          = '(X2) BOOM LIGHT', -- Tabibito
+  ["零 - ZERO -"]                                                   = '(X) BOOM BOOM BOOM', -- ZERO
+  ["革命(X-Special)"]                                               = '(X) CAPTURE ME', -- KAKUMEI(X-Special)
+  ["A Geisha's Dream"]                                              = '(X) DANCING RAYS', 
+  ["AFRONOVA(X-Special)"]                                           = '(X) CRYSTALDIUM', 
+  ["Always on My Mind"]                                             = '(X) DANCING RAYS', 
+  ["Beautiful Inside (Cube::Hard Mix)"]                             = '(X) CRYSTALDIUM', 
+  ["Big Girls Don't Cry"]                                           = '(X) LOVE SWEETS', 
+  ["Blue Rain"]                                                     = '(X2) CYBER', 
+  ["Boys (2008 X-edit)"]                                            = '(X) DANCING RAYS', 
+  ["Butterfly (2008 X-edit)"]                                       = '(X) DANCING RAYS', 
+  ["CANDY☆(X-Special)"]                                            = '(X) CRYSTALDIUM', 
+  ["Chance and Dice"]                                               = '(X) CAPTURE ME', 
+  ["Dance Celebration"]                                             = '(X) DAWN STREETS', 
+  ["Dance Celebration (System 7 Remix)"]                            = '(X) BOOM BOOM BOOM', 
+  ["Dance Dance Revolution(X-Special)"]                             = '(REPLICANT) LIGHT PURPLE', 
+  ["Dance Floor"]                                                   = '(X) DANCING RAYS', 
+  ["dazzle"]                                                        = '(X) CRYSTALDIUM', 
+  ["Dream Machine"]                                                 = '(X2) BOOM LIGHT', 
+  ["DUB-I-DUB (2008 X-edit)"]                                       = '(X) LOVE SWEETS', 
+  ["Feel"]                                                          = '(X) BOOM BOOM BOOM', 
+  ["Flight of the Phoenix"]                                         = '(X) CRYSTALDIUM', 
+  ["Flourish"]                                                      = '(X) DANCING RAYS', 
+  ["GET UP'N MOVE (2008 X-edit)"]                                   = '(X) DAWN STREETS', 
+  ["Ghetto Blasta Deluxe"]                                          = '(X) BOOM BOOM BOOM', 
+  ["Happy"]                                                         = '(X) BOOM BOOM BOOM', 
+  ["Healing Vision(X-Special)"]                                     = '(X) CRYSTALDIUM', 
+  ["Here It Goes Again"]                                            = '(X) DANCING RAYS', 
+  ["Horatio"]                                                       = '(X) BOOM BOOM BOOM', 
+  ["Inspiration"]                                                   = '(X) CAPTURE ME', 
+  ["INTO YOUR HEART (Ruffage remix)"]                               = '(X) DANCING RAYS', 
+  ["Koko Soko"]                                                     = '(X) DANCING RAYS', 
+  ["Lift You Up"]                                                   = '(X) DANCING RAYS', 
+  ["LOVING YOU (Epidemik remix)"]                                   = '(X2) BOOM LIGHT', 
+  ["Make Me Cry"]                                                   = '(X) CRYSTALDIUM', 
+  ["Malacca"]                                                       = '(X2) CYBER', 
+  ["MAX 300(X-Special)"]                                            = '(REPLICANT) LIGHT PURPLE', 
+  ["MAXX UNLIMITED(X-Special)"]                                     = '(X) CRYSTALDIUM', 
+  ["on the bounce"]                                                 = '(X) CRYSTALDIUM', 
+  ["On The Break"]                                                  = '(X) CAPTURE ME', 
+  ["PARANOiA ETERNAL(X-Special)"]                                   = '(X) CRYSTALDIUM', 
+  ["PARANOIA EVOLUTION(X-Special)"]                                 = '(X) CRYSTALDIUM', 
+  ["PARANOiA MAX～DIRTY MIX～(X-Special)"]                          = '(X) CAPTURE ME', 
+  ["PARANOiA Rebirth(X-Special)"]                                   = '(X) CRYSTALDIUM', 
+  ["PARANOiA(X-Special)"]                                           = '(X) CRYSTALDIUM', 
+  ["Party Lights"]                                                  = '(X) DANCING RAYS', 
+  ["Playa (Original Mix)"]                                          = '(X) DANCING RAYS', 
+  ["Put 'Em Up"]                                                    = '(X) DANCING RAYS', 
+  ["puzzle"]                                                        = '(X) CAPTURE ME', 
+  ["Reach Up"]                                                      = '(X) CRYSTALDIUM', 
+  ["SABER WING"]                                                    = '(X2) CYBER', 
+  ["SABER WING (Akira Ishihara Headshot mix)"]                      = '(X) CRYSTALDIUM', 
+  ["S・A・G・A"]                                                    = '(X) BOOM BOOM BOOM', 
+  ["Slip Out"]                                                      = '(X) DANCING RAYS', 
+  ["Slip Out (bounce in beat mix)"]                                 = '(X2) BOOM LIGHT', 
+  ["SP-TRIP MACHINE～JUNGLE MIX～(X-Special)"]                      = '(X) CRYSTALDIUM', 
+  ["SUPER SAMURAI"]                                                 = '(X2) CLUB', 
+  ["Swingin\'"]                                                     = '(X) DAWN STREETS', 
+  ["Taj He Spitz"]                                                  = '(X) DAWN STREETS', 
+  ["Taj He Spitz (Tommie Sunshine's Brooklyn Fire Re-Touch)"]       = '(X) DAWN STREETS', 
+  ["Take A Chance"]                                                 = '(X) DANCING RAYS', 
+  ["The flower in your smile"]                                      = '(X2) BOOM LIGHT', 
+  ["The legend of MAX(X-Special)"]                                  = '(X) CRYSTALDIUM', 
+  ["Ticket to Bombay"]                                              = '(X) DANCING RAYS', 
+  ["Till the lonely's gone"]                                        = '(X) DANCING RAYS', 
+  ["TimeHollow"]                                                    = '(X) CRYSTALDIUM', 
+  ["Tracers (4Beat Remix)"]                                         = '(X) CAPTURE ME', 
+  ["Trickster"]                                                     = '(X) DANCING RAYS', 
+  ["Trigger"]                                                       = '(X) CAPTURE ME', 
+  ["TRIP MACHINE CLIMAX(X-Special)"]                                = '(X) CRYSTALDIUM', 
+  ["TRIP MACHINE(X-Special)"]                                       = '(X) CRYSTALDIUM', 
+  ["U Can't Touch This"]                                            = '(X) DANCING RAYS', 
+  ["Übertreffen"]                                                   = '(X) DANCING RAYS', 
+  ["Waiting 4 u"]                                                   = '(X2) CYBER', 
+  ["We Come Alive"]                                                 = '(X) DANCING RAYS', 
+  ["We've Got To Make It Tonight"]                                  = '(X) DANCING RAYS', 
+  ["will"]                                                          = '(X) CRYSTALDIUM', 
+  ["Xmix1 (Midnight Dawn)"]                                         = '(X) BOOM BOOM BOOM', 
+  ["Xmix2 (Beats 'n Bangs)"]                                        = '(X) DAWN STREETS', 
+  ["Xmix3 (Stomp Dem Groove)"]                                      = '(X) CRYSTALDIUM', 
+  ["Xmix4 (Linear Momentum)"]                                       = '(X) BOOM BOOM BOOM', 
+  ["Xmix5 (Overcrush)"]                                             = '(X) DANCING RAYS', 
+  ["30 Lives (Up-Up-Down-Dance Mix)"]                               = '(X2) BOOM LIGHT', 
+
+  ------ DDR X2 ------
+  ["不沈艦CANDY"]                                                   = '(X2) MOVIE LIGHT', -- YELLOW CANDY
+  ["冥"]                                                            = '(X2) MOVIE LIGHT', -- Mei
+  ["A Brighter Day"]                                                = '(X2) CYBER', 
+  ["aftershock!!"]                                                  = '(X2) CYBER', 
+  ["All My Love"]                                                   = '(X2) BIG SCREEN', 
+  ["Anti-Matter"]                                                   = '(REPLICANT) LIGHT PURPLE', 
+  ["BALLAD THE FEATHERS"]                                           = '(X2) MOVIE LIGHT', 
+  ["Be your wings"]                                                 = '(X) DANCING RAYS', 
+  ["Bonafied Lovin\'"]                                              = '(X) DAWN STREETS', 
+  ["CG Project"]                                                    = '(X2) CYBER', 
+  ["Crazy Control"]                                                 = '(X) DAWN STREETS', 
+  ["DAFT PUNK IS PLAYING AT MY HOUSE"]                              = '(X) DANCING RAYS', 
+  ["Dazzlin' Darlin"]                                               = '(X2) BOOM LIGHT', 
+  ["Dazzlin' Darlin-秋葉工房mix-"]                                  = '(X) CRYSTALDIUM', 
+  ["Decade"]                                                        = '(X2) MOVIE LIGHT', 
+  ["ΔMAX"]                                                          = '(X2) CYBER', 
+  ["dirty digital"]                                                 = '(A) BOOM DARK', 
+  ["DROP"]                                                          = '(X2) BOOM LIGHT', 
+  ["Dummy"]                                                         = '(X2) CYBER', 
+  ["ETERNITY"]                                                      = '(X2) BOOM LIGHT', 
+  ["Everytime We Touch"]                                            = '(X2) CLUB', 
+  ["EZ DO DANCE"]                                                   = '(X) DANCING RAYS', 
+  ["Feel Good Inc"]                                                 = '(X2) CYBER', 
+  ["FIRE FIRE"]                                                     = '(X2) MOVIE LIGHT', 
+  ["Freeze"]                                                        = '(X) CRYSTALDIUM', 
+  ["going up"]                                                      = '(X) BOOM BOOM BOOM', 
+  ["GOLD RUSH"]                                                     = '(X) DANCING RAYS', 
+  ["Gotta Dance"]                                                   = '(X) DANCING RAYS', 
+  ["Heatstroke"]                                                    = '(X) DANCING RAYS', 
+  ["Hide-away"]                                                     = '(X) DANCING RAYS', 
+  ["ICE ICE BABY"]                                                  = '(X2) CYBER', 
+  ["IF YOU WERE HERE (L.E.D.-G STYLE REMIX)"]                       = '(X2) CYBER', 
+  ["I'm so Happy"]                                                  = '(X2) BOOM LIGHT', 
+  ["in love wit you"]                                               = '(X) DANCING RAYS', 
+  ["KIMONO♥PRINCESS"]                                              = '(X2) BIG SCREEN', 
+  ["KISS KISS KISS 秋葉工房 MIX"]                                   = '(X2) MOVIE LIGHT', 
+  ["La libertad"]                                                   = '(X2) BOOM LIGHT', 
+  ["La receta"]                                                     = '(X) BOOM BOOM BOOM', 
+  ["Leaving…"]                                                      = '(X2) MOVIE DARK', 
+  ["Love Again"]                                                    = '(X2) CLUB', 
+  ["MAX LOVE"]                                                      = '(X) LOVE SWEETS', 
+  ["Melody Life"]                                                   = '(X2) BOOM LIGHT', 
+  ["more more more"]                                                = '(X2) CLUB', 
+  ["New Decade"]                                                    = '(REPLICANT) LIGHT PURPLE', 
+  ["oarfish"]                                                       = '(X2) CYBER', 
+  ["only my railgun"]                                               = '(X) CRYSTALDIUM', 
+  ["Pierce The Sky"]                                                = '(REPLICANT) LIGHT BLUE', 
+  ["Pluto The First"]                                               = '(A) BOOM DARK', 
+  ["Poseidon(kors k mix)"]                                          = '(X2) MOVIE LIGHT', 
+  ["POSSESSION"]                                                    = '(REPLICANT) LIGHT PURPLE', 
+  ["real-high-SPEED"]                                               = '(X2) BOOM LIGHT', 
+  ["resonance"]                                                     = '(X2) CYBER', 
+  ["roppongi EVOLVED ver.A"]                                        = '(X2) CYBER', 
+  ["roppongi EVOLVED ver.B"]                                        = '(X2) CYBER', 
+  ["roppongi EVOLVED ver.C"]                                        = '(X2) CYBER', 
+  ["roppongi EVOLVED ver.D"]                                        = '(X2) MOVIE LIGHT', 
+  ["Sacred Oath"]                                                   = '(X2) CYBER', 
+  ["sakura storm"]                                                  = '(X2) BIG SCREEN', 
+  ["Sakura Sunrise"]                                                = '(REPLICANT) LIGHT BLUE', 
+  ["Second Heaven"]                                                 = '(X2) MOVIE LIGHT', 
+  ["She is my wife"]                                                = '(X2) BOOM LIGHT', 
+  ["Shine"]                                                         = '(X2) BOOM LIGHT', 
+  ["☆shining☆"]                                                   = '(X2) BIG SCREEN', 
+  ["Shiny World"]                                                   = '(REPLICANT) LIGHT BLUE', 
+  ["Sky Is The Limit"]                                              = '(X2) MOVIE LIGHT', 
+  ["smooooch･∀･"]                                                   = '(X2) CYBER', 
+  ["someday..."]                                                    = '(X2) BIG SCREEN', 
+  ["Super Driver"]                                                  = '(X2) CYBER', 
+  ["SUPER EUROBEAT <GOLD MIX>"]                                     = '(X2) BOOM LIGHT', 
+  ["Taking It To The Sky"]                                          = '(X2) BOOM LIGHT', 
+  ["TENSHI"]                                                        = '(X2) CYBER', 
+  ["Theory of Eternity"]                                            = '(X) CRYSTALDIUM', 
+  ["THIS NIGHT"]                                                    = '(X) DANCING RAYS', 
+  ["Time After Time"]                                               = '(X) DANCING RAYS', 
+  ["Valkyrie dimension"]                                            = '(REPLICANT) DARK PURPLE', 
+  ["VANESSA"]                                                       = '(X2) MOVIE DARK', 
+  ["WH1TE RO5E"]                                                    = '(X2) MOVIE LIGHT', 
+  ["What Will Come of Me"]                                          = '(X) BOOM BOOM BOOM', 
+  ["You are a Star"]                                                = '(X2) CYBER', 
+  ["Your Angel"]                                                    = '(X) CRYSTALDIUM', 
+  ["ZETA～素数の世界と超越者～"]                                    = '(X2) MOVIE LIGHT', -- ZETA ~The World of Prime Numbers and the Transcendental Being~
+  ["888"]                                                           = '(X2) CYBER', 
+
+  ------ DDR X3 vs 2ndMIX ------
+  ["アルストロメリア (walk with you remix)"]                        = '(X2) BOOM LIGHT', -- Alstroemeria (walk with you remix)
+  ["紅焔"]                                                          = '(X) CRYSTALDIUM', -- Kouen
+  ["雫"]                                                            = '(A) BOOM DARK', -- Shizuku
+  ["隅田川夏恋歌"]                                                  = '(X) CRYSTALDIUM', -- Sumidagawa karenka
+  ["天上の星 ～黎明記～"]                                           = '(X2) CYBER', -- Tenjou no Hoshi -Reimeiki-
+  ["コネクト"]                                                      = '(X2) CYBER', -- Connect
+  ["ヘビーローテーション"]                                          = '(X) LOVE SWEETS', -- Heavy Rotation
+  ["ビューティフル レシート"]                                       = '(X2) BOOM LIGHT', -- Beautiful Receipt
+  ["女々しくて"]                                                    = '(X) DANCING RAYS', -- Memeshikute
+  ["繚乱ヒットチャート"]                                            = '(X2) MOVIE LIGHT', -- Ryouran Hit Chart
+  ["恋閃繚乱"]                                                      = '(X) CRYSTALDIUM', -- Rensen ryouran
+  ["Amalgamation"]                                                  = '(A) BOOM DARK', 
+  ["BRILLIANT 2U (AKBK MIX)"]                                       = '(X2) CYBER', 
+  ["Chronos"]                                                       = '(X2) CLUB', 
+  ["COME BACK TO MY HEART"]                                         = '(X2) CYBER', 
+  ["Cosmic Hurricane"]                                              = '(X) CRYSTALDIUM', 
+  ["CRAZY♥LOVE"]                                                   = '(X) BOOM BOOM BOOM', 
+  ["Diamond Dust"]                                                  = '(X) CRYSTALDIUM', 
+  ["dreaming can make a wish come true"]                            = '(X2) CLUB', 
+  ["ever snow"]                                                     = '(X) CRYSTALDIUM', 
+  ["Fever"]                                                         = '(X2) CLUB', 
+  ["Find You Again"]                                                = '(X2) CLUB', 
+  ["FLOWER"]                                                        = '(X) CRYSTALDIUM', 
+  ["future gazer"]                                                  = '(X2) BOOM LIGHT', 
+  ["Get Back Up!"]                                                  = '(X2) CLUB', 
+  ["Go For The Top"]                                                = '(REPLICANT) LIGHT BLUE', 
+  ["Haunted Rhapsody"]                                              = '(X2) CLUB', 
+  ["HEART BEAT FORMULA"]                                            = '(X2) BOOM LIGHT', 
+  ["HEARTBREAK (Sound Selektaz remix)"]                             = '(X2) CLUB', 
+  ["I/O"]                                                           = '(X2) CYBER', 
+  ["In The Air"]                                                    = '(X2) BOOM LIGHT', 
+  ["IN THE ZONE"]                                                   = '(X) DAWN STREETS', 
+  ["KEEP ON MOVIN' (Y&Co. DJ BOSS remix)"]                          = '(X2) BOOM LIGHT', 
+  ["Let's Get Away"]                                                = '(X) CRYSTALDIUM', 
+  ["London EVOLVED Ver.A"]                                          = '(X2) CLUB', 
+  ["London EVOLVED Ver.B"]                                          = '(X2) CLUB', 
+  ["London EVOLVED Ver.C"]                                          = '(X2) CLUB', 
+  ["LOVE & JOY"]                                                    = '(X2) BOOM LIGHT', 
+  ["LOVE IS THE POWER -Re:born-"]                                   = '(X) DANCING RAYS', 
+  ["MAGIC PARADE"]                                                  = '(X) CRYSTALDIUM', 
+  ["Mermaid girl"]                                                  = '(X) CRYSTALDIUM', 
+  ["message"]                                                       = '(X2) BOOM LIGHT', 
+  ["NEPHILIM DELTA"]                                                = '(A) BOOM DARK', 
+  ["New Beginning"]                                                 = '(X) CRYSTALDIUM', 
+  ["New York EVOLVED (Type A)"]                                     = '(A) BOOM DARK', 
+  ["New York EVOLVED (Type B)"]                                     = '(A) BOOM DARK', 
+  ["New York EVOLVED (Type C)"]                                     = '(A) BOOM DARK', 
+  ["osaka EVOLVED -毎度、おおきに！- (TYPE1)"]                      = '(X2) CLUB', 
+  ["osaka EVOLVED -毎度、おおきに！- (TYPE2)"]                      = '(X2) CLUB', 
+  ["osaka EVOLVED -毎度、おおきに！- (TYPE3)"]                      = '(X2) CLUB', 
+  ["PARANOiA (kskst mix)"]                                          = '(A) BOOM DARK', 
+  ["PARANOiA Revolution"]                                           = '(X2) MOVIE DARK', 
+  ["Private Eye"]                                                   = '(X) CRYSTALDIUM', 
+  ["Programmed Universe"]                                           = '(X2) CYBER', 
+  ["PUT YOUR FAITH IN ME (DA's Twinkly Disco Remix)"]               = '(X) DANCING RAYS', 
+  ["REBORN MAGIC"]                                                  = '(X2) CYBER', 
+  ["Rescue Me"]                                                     = '(X2) CLUB', 
+  ["Resurrection"]                                                  = '(X) CRYSTALDIUM', 
+  ["REVOLUTIONARY ADDICT"]                                          = '(REPLICANT) LIGHT BLUE', 
+  ["Rhythms Inside"]                                                = '(X2) CLUB', 
+  ["Seasons"]                                                       = '(X) DANCING RAYS', 
+  ["Seule"]                                                         = '(X) BOOM BOOM BOOM', 
+  ["Share The Love"]                                                = '(X2) BOOM LIGHT', 
+  ["SigSig"]                                                        = '(X2) CLUB', 
+  ["SILVER☆DREAM"]                                                 = '(X) CRYSTALDIUM', 
+  ["snow prism"]                                                    = '(X) CRYSTALDIUM', 
+  ["Something Special"]                                             = '(X) DANCING RAYS', 
+  ["STRAIGHT JET"]                                                  = '(X2) BOOM LIGHT', 
+  ["Take A Step Forward"]                                           = '(X2) CYBER', 
+  ["The Heavens Above"]                                             = '(X) CRYSTALDIUM', 
+  ["TIME"]                                                          = '(X2) BOOM LIGHT', 
+  ["Tohoku EVOLVED"]                                                = '(X) CRYSTALDIUM', 
+  ["tokyoEVOLVED (TYPE1)"]                                          = '(X2) CLUB', 
+  ["tokyoEVOLVED (TYPE2)"]                                          = '(X2) CLUB', 
+  ["tokyoEVOLVED (TYPE3)"]                                          = '(X2) CLUB', 
+  ["Tribe"]                                                         = '(X) DANCING RAYS', 
+  ["TRIP MACHINE (xac nanoglide mix)"]                              = '(A) BOOM DARK', 
+  ["TRIP MACHINE EVOLUTION"]                                        = '(X2) MOVIE DARK', 
+  ["TWINKLE♡HEART"]                                                = '(X2) BOOM LIGHT', 
+  ["UNBELIEVABLE (Sparky remix)"]                                   = '(X2) CYBER', 
+  ["Until the End"]                                                 = '(A) BOOM DARK', 
+  ["Wicked Plastik"]                                                = '(X2) CYBER', 
+  ["Wings of an Angel (Fly With Me)"]                               = '(X) CRYSTALDIUM', 
+
+  ------ DDR 2013 ------
+  ["つけまつける"]                                                  = '(X) DANCING RAYS', -- Tsukematsukeru
+  ["ふりそでーしょん"]                                              = '(X) DANCING RAYS', -- Furisodation
+  ["ウッーウッーウマウマ(ﾟ∀ﾟ)(Speedcake Remix)"]                      = '(X) DANCING RAYS', -- U-u-uma uma (Speedcake Remix)
+  ["お米の美味しい炊き方、そしてお米を食べることによるその効果。"]  = '(X2) CYBER', -- Okome no oishii takikata, soshite okome wo taberu koto ni yoru sono kouka
+  ["オリオンをなぞる"]                                              = '(X) DANCING RAYS', -- Orion wo nazoru
+  ["からふるぱすてる"]                                              = '(X2) BIG SCREEN', -- Colorful Pastel
+  ["キケンな果実"]                                                  = '(X2) BOOM LIGHT', -- Kiken na kajitsu
+  ["ジョジョ～その血の運命～"]                                      = '(X) DANCING RAYS', -- JoJo ~Sono Chi no Sadame~
+  ["ずっとみつめていて (Ryu☆Remix)"]                               = '(X) DANCING RAYS', -- Zutto Mitsu Meteite (Ryu Remix)
+  ["晴天Bon Voyage"]                                                = '(X) CRYSTALDIUM', -- Seiten Bon Voyage
+  ["創世ノート"]                                                    = '(X2) BOOM LIGHT', -- Sousei Note
+  ["ちくわパフェだよ☆CKP"]                                         = '(X) LOVE SWEETS', -- Chikuwa parfait da yo CKP
+  ["†渚の小悪魔ラヴリィ～レイディオ†"]                              = '(X) DANCING RAYS', -- Nagisa no koakuma lovely~radio
+  ["虹色の花"]                                                      = '(X) BOOM BOOM BOOM', -- Nijiiro no hana
+  ["フー・フローツ"]                                                = '(X) CRYSTALDIUM', -- Who Floats
+  ["マジLOVE1000%"]                                                 = '(X) DANCING RAYS', -- Maji LOVE 1000%
+  ["めうめうぺったんたん！！"]                                      = '(X) LOVE SWEETS', -- Meumeupettantan!!
+  ["ラキラキ"]                                                      = '(X2) BOOM LIGHT', -- Lucky Lucky
+  ["凛として咲く花の如く ～ひなビタ♪ edition～"]                   = '(X) LOVE SWEETS', -- Rin to shite saku hana no gotoku ~HinaBitter edition~
+  ["ロンドンは夜8時(LON 8PM - TYO 4AM)"]                            = '(X) DANCING RAYS', -- London wa Yoru 8 Ji (LON 8PM - TYO 4AM)
+  ["折れないハート"]                                                = '(X) DANCING RAYS', -- Orenai Heart
+  ["ACROSS WORLD"]                                                  = '(X2) BOOM LIGHT', 
+  ["Ah La La La"]                                                   = '(X) DANCING RAYS', 
+  ["Air Heroes"]                                                    = '(X) DANCING RAYS', 
+  ["Another Phase"]                                                 = '(A) BOOM DARK', 
+  ["Back In Your Arms"]                                             = '(X2) CLUB', 
+  ["Beautiful Dream"]                                               = '(X2) BOOM LIGHT', 
+  ["Blew My Mind"]                                                  = '(A) BOOM DARK', 
+  ["Bombay Bomb"]                                                   = '(X) DANCING RAYS', 
+  ["BRIGHT STREAM"]                                                 = '(X) DANCING RAYS', 
+  ["Burst The Gravity"]                                             = '(X) DANCING RAYS', 
+  ["Children of the Beat"]                                          = '(X) DANCING RAYS', 
+  ["Chinese Snowy Dance"]                                           = '(X2) BOOM LIGHT', 
+  ["Choo Choo TRAIN"]                                               = '(X) DANCING RAYS', 
+  ["Condor"]                                                        = '(X) DANCING RAYS', 
+  ["Confession"]                                                    = '(X) DANCING RAYS', 
+  ["Desert Journey"]                                                = '(X) DANCING RAYS', 
+  ["Diamond Night"]                                                 = '(X) DANCING RAYS', 
+  ["Elemental Creation"]                                            = '(A) BOOM DARK', 
+  ["Empathetic"]                                                    = '(X) CRYSTALDIUM', 
+  ["escape"]                                                        = '(X) DANCING RAYS', 
+  ["Everything I Need"]                                             = '(X) DANCING RAYS', 
+  ["Find The Way"]                                                  = '(X2) BOOM LIGHT', 
+  ["GAIA"]                                                          = '(X2) CYBER', 
+  ["heron"]                                                         = '(X2) CYBER', 
+  ["Hoping To Be Good"]                                             = '(X) DANCING RAYS', 
+  ["JOKER"]                                                         = '(X) LOVE SWEETS', 
+  ["LOVE & JOY -Risk Junk MIX-"]                                    = '(X) DANCING RAYS', 
+  ["Magnetic"]                                                      = '(X2) CYBER', 
+  ["Mickey Mouse March(Eurobeat Version)"]                          = '(X) DANCING RAYS', 
+  ["Monkey Business"]                                               = '(A) BOOM DARK', 
+  ["New Generation"]                                                = '(X) DANCING RAYS', 
+  ["New Gravity"]                                                   = '(X) DANCING RAYS', 
+  ["nightbird lost wing"]                                           = '(X) CRYSTALDIUM', 
+  ["PRANA"]                                                         = '(X) CRYSTALDIUM', 
+  ["printemps"]                                                     = '(X) CRYSTALDIUM', 
+  ["Qipchãq"]                                                       = '(X) CRYSTALDIUM', 
+  ["Right on time (Ryu☆Remix)"]                                    = '(X) DANCING RAYS', 
+  ["RЁVOLUTIФN"]                                                    = '(X) DANCING RAYS', 
+  ["sola"]                                                          = '(X2) BOOM LIGHT', 
+  ["Somehow You Found Me"]                                          = '(X) DANCING RAYS', 
+  ["south"]                                                         = '(X) DANCING RAYS', 
+  ["Spanish Snowy Dance"]                                           = '(X) DANCING RAYS', 
+  ["Starry HEAVEN"]                                                 = '(X) DANCING RAYS', 
+  ["Straight Oath"]                                                 = '(X) DANCING RAYS', 
+  ["STULTI"]                                                        = '(X2) CYBER', 
+  ["Sucka Luva"]                                                    = '(X) CRYSTALDIUM', 
+  ["Summer Fairytale"]                                              = '(X) DANCING RAYS', 
+  ["Sweet Rain"]                                                    = '(X) DANCING RAYS', 
+  ["Synergy For Angels"]                                            = '(X2) CYBER', 
+  ["Tell me what to do"]                                            = '(X) DANCING RAYS', 
+  ["The Island Song"]                                               = '(X) DANCING RAYS', 
+  ["THE REASON"]                                                    = '(X) DANCING RAYS', 
+  ["The Wind of Gold"]                                              = '(X2) CYBER', 
+  ["Top The Charts"]                                                = '(X) DANCING RAYS', 
+  ["Triple Journey -TAG EDITION-"]                                  = '(X) CRYSTALDIUM', 
+  ["WILD SIDE"]                                                     = '(X) DANCING RAYS', 
+  ["Windy Fairy"]                                                   = '(X2) CYBER', 
+  ["Wow Wow VENUS"]                                                 = '(X) DANCING RAYS', 
+  ["You"]                                                           = '(X) DANCING RAYS', 
+
+  ------ DDR 2014 ------
+  ["朝色の紙飛行機"]                                                = '(X2) CYBER', -- Asa-iro no kami hikouki
+  ["妖隠し -あやかしかくし-"]                                       = '(A) BOOM DARK', -- Ayakashi kakushi
+  ["阿波おどり -Awaodori- やっぱり踊りはやめられない"]              = '(X2) BOOM LIGHT', -- Awa odori -Awaodori- yappari odori wa yame rarenai
+  ["エンドルフィン"]                                                = '(X2) CYBER', -- Endorphin
+  ["御千手メディテーション"]                                        = '(X2) CYBER', -- Osenju meditation
+  ["乙女繚乱 舞い咲き誇れ"]                                         = '(X) LOVE SWEETS', -- Otome ryouran mai sakihokore
+  ["女言葉の消失"]                                                  = '(X2) BOOM LIGHT', -- Onna kotoba no shoushitsu
+  ["クリムゾンゲイト"]                                              = '(A) BOOM DARK', -- Crimson Gate
+  ["激アツ☆マジヤバ☆チアガール"]                                  = '(X2) BOOM LIGHT', -- Gekiatsu majiyaba cheer girl
+  ["幻想系世界修復少女"]                                            = '(X) CRYSTALDIUM', -- Gensoukei sekai shuufuku shoujo
+  ["恋はどう？モロ◎波動OK☆方程式！！"]                             = '(X) LOVE SWEETS', -- Koi hadou Moro Hadou OK Houteishiki!!
+  ["漆黒のスペシャルプリンセスサンデー"]                            = '(X) BOOM BOOM BOOM', -- Shikkoku no special princess sundae
+  ["灼熱Beach Side Bunny"]                                          = '(X2) BOOM LIGHT', -- Shakunetsu Beach Side Bunny
+  ["セツナトリップ"]                                                = '(X2) BOOM LIGHT', -- Setsuna Trip
+  ["地方創生☆チクワクティクス"]                                    = '(X) LOVE SWEETS', -- Chihou sousei chikuwactics
+  ["ちゅ～いん☆バニー"]                                            = '(X) LOVE SWEETS', -- Chewin' Bunny
+  ["チョコレートスマイル"]                                          = '(X) LOVE SWEETS', -- Chocolate Smile
+  ["デッドボヲルdeホームラン"]                                      = '(X) DANCING RAYS', -- Deadball de homerun
+  ["天空の華"]                                                      = '(A) BOOM DARK', -- Tenkuu no hana
+  ["ドーパミン"]                                                    = '(A) BOOM DARK', -- Dopamine
+  ["ドキドキ☆流星トラップガール!!"]                                = '(X) CRYSTALDIUM', -- Dokidoki ryuusei trap girl!!
+  ["突撃！ガラスのニーソ姫！"]                                      = '(X) CRYSTALDIUM', -- Totsugeki! Glass no kneeso hime!
+  ["轟け！恋のビーンボール！！"]                                    = '(X2) BOOM LIGHT', -- Todoroke! Koi no beanball!!
+  ["嘆きの樹"]                                                      = '(A) BOOM DARK', -- Nageki no ki
+  ["夏色DIARY -DDR mix-"]                                           = '(X) BOOM BOOM BOOM', -- SUMMER DIARY -DDR mix-
+  ["爆なな☆てすとロイヤー"]                                        = '(X) LOVE SWEETS', -- Bakunana Testroyer
+  ["はなまるぴっぴはよいこだけ"]                                    = '(X) DANCING RAYS', -- Hanamaru pippi wa yoiko dake
+  ["パ→ピ→プ→Yeah!"]                                                = '(X) LOVE SWEETS', -- Pa pi pu Yeah!
+  ["バンブーソード・ガール"]                                        = '(X2) CYBER', -- Bamboo Sword Girl
+  ["ビビットストリーム"]                                            = '(X) DANCING RAYS', -- BeBeatStream
+  ["星屑のキロク"]                                                  = '(X) CRYSTALDIUM', -- Hoshikuzu no kiroku
+  ["ホメ猫☆センセーション"]                                        = '(X) LOVE SWEETS', -- Home neko sensation
+  ["マインド・ゲーム"]                                              = '(X2) BOOM LIGHT', -- Mind Game
+  ["回レ！雪月花"]                                                  = '(X2) BIG SCREEN', -- Maware! Setsugetsuka
+  ["ミライプリズム"]                                                = '(X) CRYSTALDIUM', -- Mirai prism
+  ["滅亡天使 † にこきゅっぴん"]                                     = '(X) LOVE SWEETS', -- Metsubou tenshi nikokyuppin
+  ["野球の遊び方　そしてその歴史　～決定版～"]                      = '(X) DANCING RAYS', -- Yakyuu no asobikata soshite sono rekishi ~ketteiban~
+  ["ヤマトなでなで♡かぐや姫"]                                      = '(X) CRYSTALDIUM', -- Yamato nadenade Kaguya-hime
+  ["ラクガキスト"]                                                  = '(X) DAWN STREETS', -- Luckgakist
+  ["海神"]                                                          = '(A) BOOM DARK', -- Wadatsumi
+  ["Adularia"]                                                      = '(X2) CYBER', 
+  ["ÆTHER"]                                                         = '(X) CRYSTALDIUM', 
+  ["AWAKE"]                                                         = '(X) CRYSTALDIUM', 
+  ["chaos eater"]                                                   = '(A) BOOM BLUE', 
+  ["Cleopatrysm"]                                                   = '(X) CRYSTALDIUM', 
+  ["Daily Lunch Special"]                                           = '(X) CRYSTALDIUM', 
+  ["Dance Partay"]                                                  = '(X) DANCING RAYS', 
+  ["Destination"]                                                   = '(A) BOOM GREEN', 
+  ["Din Don Dan"]                                                   = '(X) DANCING RAYS', 
+  ["Dispersion Star"]                                               = '(X2) CYBER', 
+  ["Do The Evolution"]                                              = '(X2) BOOM LIGHT', 
+  ["Dreamin\'"]                                                     = '(X) CRYSTALDIUM', 
+  ["EGOISM 440"]                                                    = '(REPLICANT) RED', 
+  ["Electronic or Treat!"]                                          = '(X) BOOM BOOM BOOM', 
+  ["Elysium"]                                                       = '(X) DANCING RAYS', 
+  ["Engraved Mark"]                                                 = '(X) BOOM BOOM BOOM', 
+  ["esrev:eR"]                                                      = '(X) DANCING RAYS', 
+  ["Follow Tomorrow"]                                               = '(X2) BOOM LIGHT', 
+  ["FUJIMORI -祭- FESTIVAL"]                                        = '(X2) BOOM LIGHT', 
+  ["FUNKY SUMMER BEACH"]                                            = '(A) BOOM DARK', 
+  ["Go↓Go↑Girls&Boys!"]                                             = '(X2) BOOM LIGHT', 
+  ["Habibe (Antuh muhleke)"]                                        = '(X) CRYSTALDIUM', 
+  ["HAPPY☆LUCKY☆YEAPPY"]                                          = '(A) BOOM WHITE', 
+  ["HEART BEAT FORMULA (Vinyl Mix)"]                                = '(X) LOVE SWEETS', 
+  ["HYENA"]                                                         = '(X2) CYBER', 
+  ["Idola"]                                                         = '(A) BOOM DARK', 
+  ["IMANOGUILTS"]                                                   = '(A) BOOM DARK', 
+  ["In The Breeze"]                                                 = '(X) BOOM BOOM BOOM', 
+  ["JOMANDA"]                                                       = '(X) CRYSTALDIUM', 
+  ["KHAMEN BREAK"]                                                  = '(X2) CYBER', 
+  ["M.A.Y.U."]                                                      = '(X2) CYBER', 
+  ["MAX.(period)"]                                                  = '(REPLICANT) DARK BLUE', 
+  ["neko＊neko"]                                                    = '(X) LOVE SWEETS', 
+  ["Nostalgia Is Lost"]                                             = '(X) CRYSTALDIUM', 
+  ["One Sided Love"]                                                = '(X2) BOOM LIGHT', 
+  ["Over The “Period”"]                                             = '(REPLICANT) RED', 
+  ["Party Lights (Tommie Sunshine's Brooklyn Fire Remix)"]          = '(X) DANCING RAYS', 
+  ["Plan 8"]                                                         = '(A) BOOM DARK', 
+  ["POSSESSION(EDP Live Mix)"]                                      = '(X2) MOVIE LIGHT', 
+  ["PRANA+REVOLUTIONARY ADDICT (U1 DJ Mix)"]                        = '(X) LOVE SWEETS', 
+  ["PUNISHER"]                                                      = '(X2) CYBER', 
+  ["Remain"]                                                        = '(A) BOOM DARK', 
+  ["Romancing Layer"]                                               = '(X2) CYBER', 
+  ["SABER WING (satellite silhouette remix)"]                       = '(X) CRYSTALDIUM', 
+  ["Sakura Mirage"]                                                 = '(X) CRYSTALDIUM', 
+  ["Samurai Shogun vs. Master Ninja"]                               = '(A) BOOM RED', 
+  ["Sand Blow"]                                                     = '(A) BOOM YELLOW', 
+  ["Scarlet Moon"]                                                  = '(X) DANCING RAYS', 
+  ["second spring storm"]                                           = '(X) DANCING RAYS', 
+  ["SPECIAL SUMMER CAMPAIGN!"]                                      = '(X2) BOOM LIGHT', 
+  ["Squeeze"]                                                       = '(X2) CYBER', 
+  ["Starlight Fantasia"]                                            = '(X) CRYSTALDIUM', 
+  ["Starlight Fantasia (Endorphins Mix)"]                           = '(X) LOVE SWEETS', 
+  ["starmine"]                                                      = '(X2) BIG SCREEN', 
+  ["Stella Sinistra"]                                               = '(X) CRYSTALDIUM', 
+  ["Strobe♡Girl"]                                                  = '(X) LOVE SWEETS', 
+  ["Struggle"]                                                      = '(X) CRYSTALDIUM', 
+  ["Summer fantasy (Darwin remix)"]                                 = '(X) BOOM BOOM BOOM', 
+  ["SUPER HERO"]                                                    = '(X) BOOM BOOM BOOM', 
+  ["Thank You Merry Christmas"]                                     = '(X) DANCING RAYS', 
+  ["The Lonely Streets"]                                            = '(X) DAWN STREETS', 
+  ["Truare!"]                                                       = '(A) BOOM DARK', 
+  ["True Blue"]                                                     = '(X) CRYSTALDIUM', 
+  ["TSUBASA"]                                                       = '(X) CRYSTALDIUM', 
+  ["VEGA"]                                                          = '(X) CRYSTALDIUM', 
+  ["8000000"]                                                       = '(X) DANCING RAYS', 
+  ["IX"]                                                            = '(A) BOOM DARK', 
+
+  ------ U.M.U × BEMANI ------
+  ["僕は君に恋をした"]                                              = '(X2) BIG SCREEN', -- Boku wa kimi ni koi wo shita
+  ["Che Che Chelip～魔法のコトバ～"]                                = '(X2) BIG SCREEN', -- Che Che Chelip ~mahou no kotoba~
+  ["ドリームキャッチャー"]                                          = '(X2) BIG SCREEN', -- DREAM CATCHER
+  ["HAPPY☆きたかた"]                                               = '(X2) BIG SCREEN', -- HAPPY kitakata
+  ["川崎純情音頭"]                                                  = '(X2) BIG SCREEN', -- Kawasaki junjo ondo
+  ["キライじゃないのぉ"]                                            = '(X2) BIG SCREEN', -- Kiraijanaino
+  ["ルシャナの気持ち"]                                              = '(X2) BIG SCREEN', -- Le Siana no kimochi
+  ["ラブラブキュートなハピハピサンデー"]                            = '(X2) BIG SCREEN', -- Love love cute na happy happy sunday
+  ["マーメイド"]                                                    = '(X2) BIG SCREEN', -- Mermaid
+  ["MITOれて！いばらきっしゅだ～りん"]                              = '(X2) BIG SCREEN', -- MITOrete! Ibarakisshuda~rin
+  ["乙女の真骨頂"]                                                  = '(X2) BIG SCREEN', -- Otome no shinkocchou
+  ["らいらら"]                                                      = '(X2) BIG SCREEN', -- Rairara
+  ["瞬間 I LOVE YOU"]                                               = '(X2) BIG SCREEN', -- Shunkan I LOVE YOU
+  ["ザッツ！KAIYODO"]                                               = '(X2) BIG SCREEN', -- That's! KAIYODO
+  ["We are チャリンコエンジェルス"]                                 = '(X2) BIG SCREEN', -- We are Charinko Angels
+  ["A to Z"]                                                        = '(X2) BIG SCREEN', 
+  ["Boom! Boom! Miracle Emotion"]                                   = '(X2) BIG SCREEN', 
+  ["CAPTIVE"]                                                       = '(X2) BIG SCREEN', 
+  ["Dong! Dong!"]                                                   = '(X2) BIG SCREEN', 
+  ["Everybody Say EDOGAWA"]                                         = '(X2) BIG SCREEN', 
+  ["Field on!"]                                                     = '(X2) BIG SCREEN', 
+  ["HeartLatte"]                                                    = '(X2) BIG SCREEN', 
+  ["LoveLove DokiDoki"]                                             = '(X2) BIG SCREEN', 
+  ["LUCKY-YO!!"]                                                    = '(X2) BIG SCREEN', 
+  ["my cosmic world"]                                               = '(X2) BIG SCREEN', 
+  ["MY HERO"]                                                       = '(X2) BIG SCREEN', 
+
+  ------ DDR A ------
+  ["愛言葉"]                                                        = '(X) LOVE SWEETS', -- Ai kotoba
+  ["天ノ弱"]                                                        = '(X2) BOOM LIGHT', -- Ama no jyaku
+  ["ありふれたせかいせいふく"]                                      = '(X) BOOM BOOM BOOM', -- Arifureta sekai seifuku
+  ["いーあるふぁんくらぶ"]                                          = '(X) DANCING RAYS', -- Yi-er fanclub
+  ["イーディーエム・ジャンパーズ"]                                  = '(X2) BOOM LIGHT', -- EDM jumpers
+  ["色は匂へど散りぬるを"]                                          = '(X) BOOM BOOM BOOM', -- Iro wa nio e do chirinuru wo
+  ["エイリアンエイリアン"]                                          = '(X) DANCING RAYS', -- Alien Alien
+  ["エキサイティング!!も・ちゃ・ちゃ☆"]                            = '(X) LOVE SWEETS', -- Exciting!! Mo-cha-cha
+  ["おねがいダーリン"]                                              = '(X) LOVE SWEETS', -- Onegai darling
+  ["朧"]                                                            = '(X2) BOOM LIGHT', -- Oboro
+  ["朧 (dj TAKA Remix)"]                                            = '(X) CRYSTALDIUM', -- Oboro (dj TAKA Remix)
+  ["きゅん×きゅんばっきゅん☆LOVE"]                                 = '(X) BOOM BOOM BOOM', -- Kyun kyun bakkyun LOVE
+  ["倉野川音頭"]                                                    = '(X2) BOOM LIGHT', -- Kuranogawa ondo
+  ["黒髪乱れし修羅となりて～凛 edition～"]                          = '(X) CRYSTALDIUM', -- Kurokami midareshi shura to narite ~Rin edition~
+  ["君氏危うくも近うよれ"]                                          = '(X) BOOM BOOM BOOM', -- Kunshi ayauku mo chikou yore
+  ["恋時雨"]                                                        = '(X) BOOM BOOM BOOM', -- Koishigure
+  ["恋する☆宇宙戦争っ!!"]                                          = '(X2) BOOM LIGHT', -- Koisuru uchuu sensou!!
+  ["恋のパズルマジック"]                                            = '(X) CRYSTALDIUM', -- Koi no puzzle magic
+  ["この青空の下で"]                                                = '(X) CRYSTALDIUM', -- Kono aozora no shita de
+  ["さよならトリップ ～夏陽 EDM edition～"]                         = '(X) CRYSTALDIUM', -- Sayonara trip ~Natsuhi EDM edition~
+  ["幸せになれる隠しコマンドがあるらしい"]                          = '(X) BOOM BOOM BOOM', -- Shiawase ni nareru kakushi command ga arurashii
+  ["しゃかりきリレーション"]                                        = '(X) LOVE SWEETS', -- Shakariki relation
+  ["十二星座の聖域"]                                                = '(X) CRYSTALDIUM', -- Juuniseiza no seiiki
+  ["シュレーディンガーの猫"]                                        = '(X) LOVE SWEETS', -- Schrodinger no neko
+  ["春風ブローインウィンド"]                                        = '(X2) BOOM LIGHT', -- Shunpuu blowing wind
+  ["すろぉもぉしょん"]                                              = '(X) CRYSTALDIUM', -- SLoWMoTIoN
+  ["星座が恋した瞬間を。"]                                          = '(X) CRYSTALDIUM', -- Seiza ga koishita shunkan wo
+  ["千年ノ理"]                                                      = '(X) BOOM BOOM BOOM', -- Sennen no kotowari
+  ["宇宙(ソラ)への片道切符"]                                        = '(X) BOOM BOOM BOOM', -- Sora e no katamichi kippu
+  ["闘え！ダダンダーンV"]                                           = '(X) DANCING RAYS', -- Tatakae! Dadandarn V
+  ["打打打打打打打打打打"]                                          = '(X) DANCING RAYS', -- Dadadadadadadadadada
+  ["チルノのパーフェクトさんすう教室"]                              = '(X) CRYSTALDIUM', -- Cirno's Perfect Math Class
+  ["チルノのパーフェクトさんすう教室 (EDM REMIX)"]                  = '(X) CRYSTALDIUM', -- Cirno's Perfect Math Class (EDM REMIX)
+  ["ナイト・オブ・ナイツ"]                                          = '(A) BOOM DARK', -- Night of knights
+  ["脳漿炸裂ガール"]                                                = '(X2) CYBER', -- Nou shou sakuretsu girl
+  ["初音ミクの消失"]                                                = '(X2) BOOM LIGHT', -- Hatsune Miku no shoushitsu
+  ["ハッピーシンセサイザ"]                                          = '(X) DANCING RAYS', -- Happy synthesizer
+  ["ハピ恋☆らぶりぃタイム!!"]                                      = '(X) LOVE SWEETS', -- Happy koi lovely time!!
+  ["ハルイチバン"]                                                  = '(X2) BOOM LIGHT', -- Haru ichiban
+  ["*ハロー、プラネット。"]                                         = '(X2) CLUB', -- Hello, planet
+  ["向日葵サンセット"]                                              = '(X2) BOOM LIGHT', -- Himawari sunset
+  ["風鈴花火"]                                                      = '(X) DANCING RAYS', -- Fuurin hanabi
+  ["無頼ック自己ライザー"]                                          = '(X2) CLUB', -- Buraikku jikorizer
+  ["プレインエイジア -PHQ remix-"]                                  = '(X) BOOM BOOM BOOM', -- Plain Asia -PHQ remix-
+  ["ベィスドロップ・フリークス"]                                    = '(X) LOVE SWEETS', -- Bassdrop freaks
+  ["放課後ストライド"]                                              = '(X2) BOOM LIGHT', -- Houkago stride
+  ["魔法のたまご ～心菜 ELECTRO POP edition～"]                     = '(X) CRYSTALDIUM', -- Mahou no tamago ~Cocona ELECTRO POP edition~
+  ["魔理沙は大変なものを盗んでいきました"]                          = '(X) LOVE SWEETS', -- Marisa wa taihen na mono wo nusunde ikimashita
+  ["妄想税"]                                                        = '(X2) CYBER', -- Mousou zei
+  ["ようこそジャパリパークへ"]                                      = '(X2) BOOM LIGHT', -- Youkoso Japari Park e
+  ["輪廻転生"]                                                      = '(A) BOOM DARK', -- Rinnetensei
+  ["ルミナスデイズ"]                                                = '(X) DANCING RAYS', -- Luminous days
+  ["恋愛観測"]                                                      = '(X) LOVE SWEETS', -- Renai kansoku
+  ["ロールプレイングゲーム"]                                        = '(X2) CYBER', -- Role-playing game
+  ["六兆年と一夜物語"]                                              = '(X2) CYBER', -- Rokuchounen to ichiya monogatari
+  ["炉心融解"]                                                      = '(X) CRYSTALDIUM', -- Roshin yuukai
+  ["ロストワンの号哭"]                                              = '(X) BOOM BOOM BOOM', -- Lost one no goukoku
+  ["ロンロンへ ライライライ!"]                                      = '(X2) BOOM LIGHT', -- Ronron e rairairai!
+  ["ACE FOR ACES"]                                                  = '(X) BOOM BOOM BOOM', 
+  ["ALGORITHM"]                                                     = '(X2) CYBER', 
+  ["ALL MY HEART -この恋に、わたしの全てを賭ける-"]                 = '(X2) BOOM LIGHT', 
+  ["Angelic Jelly"]                                                 = '(X) LOVE SWEETS', 
+  ["ANNIVERSARY ∴∵∴ ←↓↑→"]                                          = '(X2) CYBER', 
+  ["Astrogazer"]                                                    = '(A) BOOM WHITE', 
+  ["Bad Apple!! feat. nomico"]                                      = '(X2) CYBER', 
+  ["bass 2 bass"]                                                   = '(X) BOOM BOOM BOOM', 
+  ["Be a Hero!"]                                                    = '(X2) BOOM LIGHT', 
+  ["Believe"]                                                       = '(X2) CLUB', 
+  ["Boss Rush"]                                                     = '(A) BOOM DARK', 
+  ["Break Free"]                                                    = '(X) DANCING RAYS', 
+  ["Catch Our Fire!"]                                               = '(X) BOOM BOOM BOOM', 
+  ["CHAOS Terror-Tech Mix"]                                         = '(A) BOOM YELLOW', 
+  ["CHOCOLATE PHILOSOPHY"]                                          = '(X) LOVE SWEETS', 
+  ["Chronos (walk with you remix)"]                                 = '(X) CRYSTALDIUM', 
+  ["Come to Life"]                                                  = '(A) BOOM RED', 
+  ["Cosy Catastrophe"]                                              = '(A) BOOM WHITE', 
+  ["Cytokinesis"]                                                   = '(A) BOOM DARK', 
+  ["DANCE ALL NIGHT (DDR EDITION)"]                                 = '(X2) CYBER', 
+  ["Dancer in the flare"]                                           = '(X) DANCING RAYS', 
+  ["DDR MEGAMIX"]                                                   = '(X) DANCING RAYS', 
+  ["Determination"]                                                 = '(X) DAWN STREETS', 
+  ["DREAMING-ING!!"]                                                = '(X) DANCING RAYS', 
+  ["Electric Dance System Music"]                                   = '(X2) CYBER', 
+  ["Emera"]                                                         = '(A) BOOM GREEN', 
+  ["ENDYMION"]                                                      = '(REPLICANT) RED', 
+  ["Eternal Summer"]                                                = '(X2) BOOM LIGHT', 
+  ["Far east nightbird"]                                            = '(X2) CYBER', 
+  ["Far east nightbird kors k Remix -DDR edit ver-"]                = '(A) BOOM DARK', 
+  ["First Time"]                                                    = '(A) BOOM DARK', 
+  ["Fly far bounce"]                                                = '(X2) CYBER', 
+  ["Grand Chariot"]                                                 = '(X) BOOM BOOM BOOM', 
+  ["Grip & Break down !!"]                                          = '(X) DANCING RAYS', 
+  ["HANDS UP IN THE AIR"]                                           = '(X) CRYSTALDIUM', 
+  ["Happy"]                                                         = '(X) DAWN STREETS', 
+  ["Ha・lle・lu・jah"]                                              = '(X2) CYBER', 
+  ["Help me, ERINNNNNN!!"]                                          = '(X) BOOM BOOM BOOM', 
+  ["High School Love"]                                              = '(X2) BOOM LIGHT', 
+  ["Hillbilly Shoes"]                                               = '(X) BOOM BOOM BOOM', 
+  ["Hopeful"]                                                       = '(X2) CYBER', 
+  ["I Want You To Know"]                                            = '(X) CRYSTALDIUM', 
+  ["Illegal Function Call"]                                         = '(A) BOOM DARK', 
+  ["IN BETWEEN"]                                                    = '(A) BOOM YELLOW', 
+  ["invisible rain"]                                                = '(X) DAWN STREETS', 
+  ["Ishtar"]                                                        = '(A) BOOM RED', 
+  ["Jewelry days"]                                                  = '(X2) BOOM LIGHT', 
+  ["Lesson by DJ"]                                                  = '(X) BOOM BOOM BOOM', 
+  ["Life is beautiful"]                                             = '(X) BOOM BOOM BOOM', 
+  ["Love You More"]                                                 = '(A) BOOM RED', 
+  ["Love♡Shine わんだふるmix"]                                     = '(X) LOVE SWEETS', 
+  ["MAX 360"]                                                       = '(A) BOOM RED', 
+  ["More One Night"]                                                = '(X) CRYSTALDIUM', 
+  ["Neutrino"]                                                      = '(A) BOOM BLUE', 
+  ["New Century"]                                                   = '(A) BOOM GREEN', 
+  ["#OurMemories"]                                                  = '(X2) BOOM LIGHT', 
+  ["out of focus"]                                                  = '(A) BOOM GREEN', 
+  ["Poochie"]                                                       = '(X2) CYBER', 
+  ["POSSESSION (20th Anniversary Mix)"]                             = '(A) BOOM BLUE', 
+  ["Prey"]                                                          = '(X2) CYBER', 
+  ["Puberty Dysthymia"]                                             = '(A) BOOM DARK', 
+  ["Pursuer"]                                                       = '(A) BOOM RED', 
+  ["Reach The Sky, Without you"]                                    = '(A) BOOM DARK', 
+  ["Rejoin"]                                                        = '(X2) BOOM LIGHT', 
+  ["RISING FIRE HAWK"]                                              = '(A) BOOM RED', 
+  ["S!ck"]                                                          = '(X2) CYBER', 
+  ["Sakura Reflection"]                                             = '(X2) CYBER', 
+  ["Sephirot"]                                                      = '(X2) CYBER', 
+  ["SHION"]                                                         = '(X) CRYSTALDIUM', 
+  ["Show me your moves"]                                            = '(X) DANCING RAYS', 
+  ["Shut Up and Dance"]                                             = '(X2) BOOM LIGHT', 
+  ["siberite"]                                                      = '(X) CRYSTALDIUM', 
+  ["Smiling Passion"]                                               = '(X) LOVE SWEETS', 
+  ["Special One"]                                                   = '(X) DANCING RAYS', 
+  ["Star Trail"]                                                    = '(X2) MOVIE LIGHT', 
+  ["Start a New Day"]                                               = '(A) BOOM WHITE', 
+  ["STERLING SILVER"]                                               = '(X) CRYSTALDIUM', 
+  ["STERLING SILVER (U1 overground mix)"]                           = '(X) CRYSTALDIUM', 
+  ["Strawberry Chu♡Chu♡"]                                         = '(X) LOVE SWEETS', 
+  ["StrayedCatz"]                                                   = '(X) DANCING RAYS', 
+  ["SUN² SUMMER STEP!"]                                             = '(X2) BOOM LIGHT', 
+  ["SUPER SUMMER SALE"]                                             = '(X) DAWN STREETS', 
+  ["TECH-NOID"]                                                     = '(X2) CYBER', 
+  ["The Night Away (MK Remix)"]                                     = '(X) CRYSTALDIUM', 
+  ["Time Of Our Lives"]                                             = '(X) DAWN STREETS', 
+  ["Towards the TOWER"]                                             = '(X) CRYSTALDIUM', 
+  ["Triple Counter"]                                                = '(X2) BOOM LIGHT', 
+  ["Twin memories W"]                                               = '(X2) BOOM LIGHT', 
+  ["Vanquish The Ghost"]                                            = '(A) BOOM WHITE', 
+  ["Wake Me Up"]                                                    = '(X) BOOM BOOM BOOM', 
+  ["Yeah! Yeah!"]                                                   = '(X) DANCING RAYS', 
+  ["ZEPHYRANTHES"]                                                  = '(X) CRYSTALDIUM', 
+  ["39"]                                                            = '(X2) BOOM LIGHT', 
+
+  ------ DDR A20 ------
+  ["おーまい！らぶりー！すうぃーてぃ！だーりん！"]                  = '(X) LOVE SWEETS', -- Oh my! lovely! sweety! darling!
+  ["革命パッショネイト"]                                            = '(X) BOOM BOOM BOOM', -- Kakumei passionate
+  ["腐れ外道とチョコレゐト"]                                        = '(X) CRYSTALDIUM', -- Kusare gedou to chocolate
+  ["最終鬼畜妹フランドール・S"]                                     = '(A) BOOM RED', -- Saishuu kichiku imouto Flandre-S
+  ["最小三倍完全数"]                                                = '(X2) CYBER', -- Saishou sanbai kanzensuu
+  ["スイーツはとまらない♪"]                                        = '(X) LOVE SWEETS', -- Sweets wa tomaranai
+  ["すきなことだけでいいです"]                                      = '(X) BOOM BOOM BOOM', -- Sukina koto dakede ii desu
+  ["タイガーランペイジ"]                                            = '(X) BOOM BOOM BOOM', -- Tiger rampage
+  ["どきドキ バレンタイン"]                                         = '(X) LOVE SWEETS', -- Dokidoki Valentine
+  ["毒占欲"]                                                        = '(X) BOOM BOOM BOOM', -- Dokusenyoku
+  ["ナイト・オブ・ナイツ (Ryu☆Remix)"]                             = '(A) BOOM BLUE', -- Night of Knights (Ryu Remix)
+  ["熱情のサパデアード"]                                            = '(X2) CLUB', -- Netsujou no zapadeado
+  ["び"]                                                            = '(X) LOVE SWEETS', -- Bi
+  ["ヒカリユリイカ"]                                                = '(X2) BOOM LIGHT', -- Hikari eureka
+  ["ベビーステップ"]                                                = '(X2) BOOM LIGHT', -- Baby step
+  ["ホーンテッド★メイドランチ"]                                    = '(A) BOOM DARK', -- Haunted maid lunch
+  ["星屑の夜果て"]                                                  = '(X) CRYSTALDIUM', -- Hoshikuzu no yoru hate
+  ["未完成ノ蒸氣驅動乙女 (DDR Edition)"]                            = '(A) BOOM YELLOW', -- Mikansei no jouki kudou otome (DDR Edition)
+  ["ミッドナイト☆WAR"]                                             = '(X) LOVE SWEETS', -- Midnight WAR
+  ["未来（ダ）FUTURE"]                                              = '(X) DANCING RAYS', -- Mirai (da) FUTURE  
+  ["妄想感傷代償連盟"]                                              = '(X) DANCING RAYS', -- Mousou kanshou daishou renmei
+  ["ライアーダンス"]                                                = '(X) DANCING RAYS', -- Liar dance
+  ["ラブキラ☆スプラッシュ"]                                        = '(X) LOVE SWEETS', -- Love kira splash
+  ["ランカーキラーガール"]                                          = '(A) BOOM YELLOW', -- Ranker killer girl
+  ["令和"]                                                          = '(X2) BOOM LIGHT', -- Reiwa
+  ["Ace out"]                                                       = '(A) BOOM YELLOW', 
+  ["Afterimage d'automne"]                                          = '(X2) BOOM LIGHT', 
+  ["Alone"]                                                         = '(X2) CYBER', 
+  ["ALPACORE"]                                                      = '(A) BOOM BLUE', 
+  ["Avenger"]                                                       = '(A) BOOM BLUE', 
+  ["BLACK JACKAL"]                                                  = '(X2) CLUB', 
+  ["BLSTR"]                                                         = '(X2) CYBER', 
+  ["Bounce Trippy"]                                                 = '(X2) CYBER', 
+  ["BUTTERFLY (20th Anniversary Mix)"]                              = '(X2) BOOM LIGHT', 
+  ["CARTOON HEROES (20th Anniversary Mix)"]                         = '(X2) BOOM LIGHT', 
+  ["Clarity"]                                                       = '(X2) CYBER', 
+  ["Crazy Shuffle"]                                                 = '(X) DAWN STREETS', 
+  ["CROSS"]                                                         = '(X) BOOM BOOM BOOM', 
+  ["CyberConnect"]                                                  = '(X2) CYBER', 
+  ["Dead Heat"]                                                     = '(X) BOOM BOOM BOOM', 
+  ["DIGITAL LUV"]                                                   = '(X2) CLUB', 
+  ["District of the Shadows"]                                       = '(X2) CYBER', 
+  ["DOWNER & UPPER"]                                                = '(X) DANCING RAYS', 
+  ["Drop The Bounce"]                                               = '(A) BOOM DARK', 
+  ["ENDLESS"]                                                       = '(X) DANCING RAYS', 
+  ["F4SH10N"]                                                       = '(X) DANCING RAYS', 
+  ["Firestorm"]                                                     = '(A) BOOM YELLOW', 
+  ["Get On Da Floor"]                                               = '(X) DANCING RAYS', 
+  ["Give Me"]                                                       = '(X) LOVE SWEETS', 
+  ["Glitch Angel"]                                                  = '(A) BOOM WHITE', 
+  ["Golden Arrow"]                                                  = '(X) DANCING RAYS', 
+  ["HAVE YOU NEVER BEEN MELLOW (20th Anniversary Mix)"]             = '(X2) BOOM LIGHT', 
+  ["Helios"]                                                        = '(X) CRYSTALDIUM', 
+  ["Hunny Bunny"]                                                   = '(X) BOOM BOOM BOOM', 
+  ["I Love You"]                                                    = '(X2) BOOM LIGHT', 
+  ["I’m an Albatraoz"]                                              = '(X) DANCING RAYS', 
+  ["IRON HEART"]                                                    = '(X2) CYBER', 
+  ["Lachryma《Re:Queen’M》"]                                        = '(A) BOOM WHITE', 
+  ["LEVEL UP"]                                                      = '(X) CRYSTALDIUM', 
+  ["LONG TRAIN RUNNIN' (20th Anniversary Mix)"]                     = '(X) DAWN STREETS', 
+  ["Mythomane"]                                                     = '(X) CRYSTALDIUM', 
+  ["Neverland"]                                                     = '(X2) BOOM LIGHT', 
+  ["New Era"]                                                       = '(A) BOOM YELLOW', 
+  ["New Rules"]                                                     = '(X) DANCING RAYS', 
+  ["No Tears Left to Cry"]                                          = '(X) CRYSTALDIUM', 
+  ["ORCA"]                                                          = '(A) BOOM RED', 
+  ["Our Soul"]                                                      = '(X2) CYBER', 
+  ["ΩVERSOUL"]                                                      = '(X) BOOM BOOM BOOM', 
+  ["Party Rock Anthem"]                                             = '(X) DAWN STREETS', 
+  ["Play Hard"]                                                     = '(X2) CLUB', 
+  ["Procyon"]                                                       = '(X) CRYSTALDIUM', 
+  ["Rampage Hero"]                                                  = '(A) BOOM RED', 
+  ["Re:GENERATION"]                                                 = '(X) CRYSTALDIUM', 
+  ["Right Time Right Way"]                                          = '(X2) BOOM LIGHT', 
+  ["Seta Para Cima↑↑"]                                              = '(X2) CLUB', 
+  ["Silly Love"]                                                    = '(X) DANCING RAYS', 
+  ["Six String Proof"]                                              = '(X) CRYSTALDIUM', 
+  ["SKY HIGH (20th Anniversary Mix)"]                               = '(X2) BOOM LIGHT', 
+  ["Skywalking"]                                                    = '(X2) CYBER', 
+  ["Small Steps"]                                                   = '(X2) CLUB', 
+  ["SODA GALAXY"]                                                   = '(X) BOOM BOOM BOOM', 
+  ["Something Just Like This (Alesso Remix) "]                      = '(X2) CLUB', 
+  ["Splash Gold"]                                                   = '(A) BOOM DARK', 
+  ["Starlight in the Snow"]                                         = '(X2) CLUB', 
+  ["Starry Sky"]                                                    = '(X) DANCING RAYS', 
+  ["Stay 4 Ever"]                                                   = '(X) DANCING RAYS', 
+  ["SWEET HOME PARTY"]                                              = '(A) BOOM RED', 
+  ["The History of the Future"]                                     = '(A) BOOM BLUE', 
+  ["The Light"]                                                     = '(X2) CYBER', 
+  ["The World Ends Now"]                                            = '(A) BOOM WHITE', 
+  ["This Beat Is....."]                                             = '(X) DAWN STREETS', 
+  ["Toy Box Factory"]                                               = '(X) LOVE SWEETS', 
+  ["toy boxer"]                                                     = '(X) BOOM BOOM BOOM', 
+  ["Trill auf G"]                                                   = '(X) DAWN STREETS', 
+  ["Une mage blanche"]                                              = '(X) LOVE SWEETS', 
+  ["voltississimo"]                                                 = '(X) DANCING RAYS', 
+  ["Waiting"]                                                       = '(X) CRYSTALDIUM', 
+  ["50th Memorial Songs -Beginning Story-"]                         = '(A) BOOM RED', 
+  ["50th Memorial Songs -Flagship medley-"]                         = '(X) DAWN STREETS', 
+  ["50th Memorial Songs -二人の時 ～under the cherry blossoms～-"]  = '(X) LOVE SWEETS', 
+  ["50th Memorial Songs -The BEMANI History-"]                      = '(X2) CYBER', 
+
+  ------ DDR A20 PLUS ------
+  ["蒼が消えるとき"]                                                = '(X) BOOM BOOM BOOM', -- Ao ga kieru toki
+  ["アリスサイド・キャスリング"]                                    = '(X) CRYSTALDIUM', -- Alice side castling
+  ["鋳鉄の檻"]                                                      = '(X) BOOM BOOM BOOM', -- Itetsu no pride
+  ["イノセントバイブル"]                                            = '(X) BOOM BOOM BOOM', -- Innocent bible
+  ["ウソツキ横丁は雨模様"]                                          = '(X) BOOM BOOM BOOM', -- Usotsuki yokochou wa amemoyou
+  ["梅雪夜"]                                                        = '(X) CRYSTALDIUM', -- Umeyukiyo
+  ["御伽噺に幕切れを"]                                              = '(X) BOOM BOOM BOOM', -- Otogibanashi ni makugire wo
+  ["彼方のリフレシア"]                                              = '(X2) BOOM LIGHT', -- Kanata no Reflesia
+  ["狂水一華"]                                                      = '(X) DANCING RAYS', -- Kyousui ichika
+  ["恋"]                                                            = '(X) DANCING RAYS', -- Koi
+  ["ここからよろしく大作戦143"]                                     = '(X) BOOM BOOM BOOM', -- Koko kara yoroshiku daisakusen 143
+  ["逆さま♥シンデレラパレード"]                                    = '(X) LOVE SWEETS', -- Sakasama Cinderella parade
+  ["雑草魂なめんなよ！"]                                            = '(X2) BOOM LIGHT', -- Zassou tamashii namen na yo!
+  ["至上のラトゥーリア"]                                            = '(X) BOOM BOOM BOOM', -- Shijou no laturia
+  ["思想犯"]                                                        = '(X) BOOM BOOM BOOM', -- Shisouhan
+  ["灼熱 Pt.2 Long Train Running"]                                  = '(X) DANCING RAYS', -- Shakunetsu Pt 2 Long Train Running
+  ["シル・ヴ・プレジデント"]                                        = '(X) LOVE SWEETS', -- S'il vous president
+  ["スーパー戦湯ババンバーン"]                                      = '(X2) BOOM LIGHT', -- Super sentou Babanburn
+  ["スカイクラッドの観測者"]                                        = '(A) BOOM WHITE', -- Skyclad no kansokusha
+  ["世界の果てに約束の凱歌を -DDR Extended Megamix-"]               = '(A) BOOM YELLOW', -- Sekai no hate ni yakusoku no gaika wo -DDR Extended Megamix-
+  ["追憶のアリア"]                                                  = '(X2) BOOM LIGHT', -- Tsuioku no aria
+  ["東京神話"]                                                      = '(X) BOOM BOOM BOOM', -- Tokyo shinwa
+  ["なだめスかし Negotiation"]                                      = '(X) LOVE SWEETS', -- Nadame sukashi Negotiation
+  ["ノルエピネフリン"]                                              = '(X) BOOM BOOM BOOM', -- Norepinephrine
+  ["花は折りたし梢は高し"]                                          = '(X) BOOM BOOM BOOM', -- Hana wa oritashi kozue wa takashi
+  ["ハラショー！おにぎりサーカス団☆"]                              = '(X) LOVE SWEETS', -- Khorosho! Onigiri circus dan
+  ["春を告げる"]                                                    = '(X) BOOM BOOM BOOM', -- Haru wo tsugeru
+  ["叛逆のディスパレート"]                                          = '(X) BOOM BOOM BOOM', -- Hangyaku no disparate
+  ["勇猛無比"]                                                      = '(X) BOOM BOOM BOOM', -- YU-MOU-MU-HI
+  ["ユメブキ"]                                                      = '(X2) CYBER', -- Yumebuki
+  ["ロキ(w/緒方恵美)"]                                              = '(X) BOOM BOOM BOOM', -- Roki (Megumi Ogata)
+  ["ほしのつくりかた"]                                              = '(X) CRYSTALDIUM', -- Hoshi no tsukurikata
+  ["モノクロモーメント"]                                            = '(X) CRYSTALDIUM', -- Monochrome moment
+  ["ノープラン・デイズ"]                                            = '(X) CRYSTALDIUM', -- No plan days
+  ["サイカ"]                                                        = '(X) BOOM BOOM BOOM', -- Saika
+  ["テレキャスタービーボーイ"]                                      = '(X) LOVE SWEETS', -- Telecaster B-boy
+  ["actualization of self (weaponized)"]                            = '(X2) BOOM LIGHT', 
+  ["AI"]                                                            = '(X2) CYBER', 
+  ["Aftermath"]                                                     = '(A) BOOM BLUE', 
+  ["ANTI ANTHEM"]                                                   = '(A) BOOM YELLOW', 
+  ["Bang Pad(Werk Mix)"]                                            = '(X2) CYBER', 
+  ["Better Than Me"]                                                = '(X2) CYBER', 
+  ["BITTER CHOCOLATE STRIKER"]                                      = '(X2) CYBER', 
+  ["BLAKE"]                                                         = '(X) BOOM BOOM BOOM', 
+  ["BRIDAL FESTIVAL !!!"]                                           = '(X) LOVE SWEETS', 
+  ["City Never Sleeps"]                                             = '(X) CRYSTALDIUM', 
+  ["Come Back To Me"]                                               = '(X) CRYSTALDIUM', 
+  ["CONNECT-"]                                                      = '(X2) CLUB', 
+  ["Crazy Hot"]                                                     = '(X) DANCING RAYS', 
+  ["DANCERUSH STARDOM ANTHEM"]                                      = '(X) DAWN STREETS', 
+  ["DEADLOCK -Out Of Reach-"]                                       = '(A) BOOM RED', 
+  ["DeStRuCtIvE FoRcE"]                                             = '(X) CRYSTALDIUM', 
+  ["DIGITALIZER"]                                                   = '(A) BOOM RED', 
+  ["Draw the Savage"]                                               = '(X2) CYBER', 
+  ["Evans"]                                                         = '(A) BOOM BLUE', 
+  ["Feidie"]                                                        = '(X) DANCING RAYS', 
+  ["GHOST KINGDOM"]                                                 = '(X) DAWN STREETS', 
+  ["Globe Glitter"]                                                 = '(X) CRYSTALDIUM', 
+  ["Going Hypersonic"]                                              = '(A) BOOM WHITE', 
+  ["Good Looking"]                                                  = '(X2) CLUB', 
+  ["GUILTY DIAMONDS"]                                               = '(X) DANCING RAYS', 
+  ["HARD BRAIN"]                                                    = '(X) CRYSTALDIUM', 
+  ["Hella Deep"]                                                    = '(X2) CYBER', 
+  ["High & Low"]                                                    = '(A) BOOM DARK', 
+  ["Hyper Bomb"]                                                    = '(X2) CYBER', 
+  ["HYPERDRIVE"]                                                    = '(X) CRYSTALDIUM', 
+  ["HyperTwist"]                                                    = '(X) DANCING RAYS', 
+  ["I believe what you said"]                                       = '(X) BOOM BOOM BOOM', 
+  ["I Want To Do This Keep"]                                        = '(X) LOVE SWEETS', 
+  ["If"]                                                            = '(X2) CYBER', 
+  ["In the past"]                                                   = '(X) BOOM BOOM BOOM', 
+  ["Inner Spirit -GIGA HiTECH MIX-"]                                = '(X2) CYBER', 
+  ["Jetcoaster Windy"]                                              = '(X) LOVE SWEETS', 
+  ["Jucunda Memoria"]                                               = '(A) BOOM RED', 
+  ["Last Card"]                                                     = '(A) BOOM WHITE', 
+  ["Last Twilight"]                                                 = '(X) CRYSTALDIUM', 
+  ["LET'S CHECK YOUR LEVEL!"]                                       = '(X) BOOM BOOM BOOM', 
+  ["Lightspeed"]                                                    = '(A) BOOM YELLOW', 
+  ["LIKE A VAMPIRE"]                                                = '(A) BOOM DARK', 
+  ["Midnight Amaretto"]                                             = '(X2) CLUB', 
+  ["MOVE! (We Keep It Movin')"]                                     = '(X) DANCING RAYS', 
+  ["MUTEKI BUFFALO"]                                                = '(A) BOOM RED', 
+  ["Never See You Again"]                                           = '(X) CRYSTALDIUM', 
+  ["Next Phase"]                                                    = '(A) BOOM BLUE', 
+  ["No Life Queen [DJ Command Remix]"]                              = '(X) DANCING RAYS', 
+  ["ONYX"]                                                          = '(X2) CYBER', 
+  ["Our Love"]                                                      = '(X2) CYBER', 
+  ["PANIC HOLIC"]                                                   = '(A) BOOM DARK', 
+  ["paparazzi"]                                                     = '(X2) CLUB', 
+  ["PARTY ALL NIGHT(DJ KEN-BOW MIX)"]                               = '(X) DANCING RAYS', 
+  ["Poppin' Soda"]                                                  = '(X) LOVE SWEETS', 
+  ["Rave Accelerator"]                                              = '(X2) CYBER', 
+  ["Realize"]                                                       = '(X) BOOM BOOM BOOM', 
+  ["Red Cape Theorem"]                                              = '(X) CRYSTALDIUM', 
+  ["Riot of Color"]                                                 = '(X) BOOM BOOM BOOM', 
+  ["ROOM"]                                                          = '(X) CRYSTALDIUM', 
+  ["Run The Show"]                                                  = '(X2) CYBER', 
+  ["Seize The Day"]                                                 = '(X2) BOOM LIGHT', 
+  ["SHINY DAYS"]                                                    = '(X2) BOOM LIGHT', 
+  ["Shout It Out"]                                                  = '(A) BOOM DARK', 
+  ["Sparkle Smilin\'"]                                              = '(X2) BOOM LIGHT', 
+  ["STEP MACHINE"]                                                  = '(X2) CYBER', 
+  ["Step This Way"]                                                 = '(X2) BOOM LIGHT', 
+  ["Sweet Clock"]                                                   = '(X) LOVE SWEETS', 
+  ["Sword of Vengeance"]                                            = '(A) BOOM RED', 
+  ["take me higher"]                                                = '(X2) BOOM LIGHT', 
+  ["Taking It To The Sky (PLUS step)"]                              = '(X2) BOOM LIGHT', 
+  ["Together Going My Way"]                                         = '(X) DANCING RAYS', 
+  ["Triple Cross"]                                                  = '(X2) BOOM LIGHT', 
+  ["Twinkle Wonderland"]                                            = '(X2) BOOM LIGHT', 
+  ["TYPHØN"]                                                        = '(A) BOOM WHITE', 
+  ["Uh-Oh"]                                                         = '(X) LOVE SWEETS', 
+  ["Vertigo"]                                                       = '(X2) CYBER', 
+  ["We're so Happy"]                                                = '(X) CRYSTALDIUM', 
+  ["X-ray binary"]                                                  = '(X) DANCING RAYS', 
+  ["Yuni's Nocturnal Days"]                                         = '(X) DANCING RAYS', 
+
+  ------ DDR GRAND PRIX ------
+  ["怪物"]                                                          = '(X) DAWN STREETS', 
+  ["紅蓮華"]                                                        = '(X) BOOM BOOM BOOM', 
+  ["群青"]                                                          = '(X) CRYSTALDIUM', 
+  ["さくらんぼ"]                                                    = '(X) LOVE SWEETS', 
+  ["じょいふる"]                                                    = '(X) LOVE SWEETS', 
+  ["ドライフラワー"]                                                = '(X) DAWN STREETS', 
+  ["夏祭り"]                                                        = '(X2) BOOM LIGHT', 
+  ["夜に駆ける"]                                                    = '(X) BOOM BOOM BOOM', 
+  ["ルカルカ★ナイトフィーバー"]                                    = '(X) DANCING RAYS', 
+  ["恋愛レボリューション21"]                                        = '(X2) CLUB', 
+  ["勿忘"]                                                          = '(X2) BOOM LIGHT', 
+
+  ------ OTHER SONGS ------
+  ["Re:Elemental Creation"]                                         = '(A) BOOM WHITE', 
+  ["Haryu"]                                                         = '(X2) CYBER', 
+  ["dEKA"]                                                          = '(X) CRYSTALDIUM', 
+  ["U.N. Owen Was Her"]                                             = '(X) BOOM BOOM BOOM', 
+  ["You Goddamn Fish"]                                              = '(X2) BOOM LIGHT', 
+  
+  ------ END OF SONG LIST ------
+}
+
 function DanceStageSong()
   local fullSongTitle = GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
-  ----------------------------------------------------------------------------- DDR 1st --------------------------------------------------------------------------------
 
-  if fullSongTitle == "Butterfly" then                                                         return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Have You Never Been Mellow" then                                    return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "KUNG FU FIGHTING" then                                              return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "LET'S GET DOWN" then                                               return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "Little Bitch" then                                                  return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "MAKE IT BETTER" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "My Fire (UKS Remix)" then                                           return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "PARANOiA" then                                                      return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "STRICTLY BUSINESS" then                                             return "(X) DANCING RAYS"
-  elseif fullSongTitle == "That's The Way (I Like It)" then                                   return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "TRIP MACHINE" then                                                  return "(X) CRYSTALDIUM"
-
-    ----------------------------------------------------------------------------- DDR 2ndMIX -----------------------------------------------------------------------------
-
-  elseif fullSongTitle == "AM-3P" then                                                         return "(X2) CYBER"
-  elseif fullSongTitle == "BAD GIRLS" then                                                     return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Boom Boom Dollar (Red Monster Mix)" then                            return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "Boys" then                                                          return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "BRILLIANT 2U" then                                                  return "(X) CAPTURE ME"
-  elseif fullSongTitle == "BRILLIANT 2U(Orchestra Groove)" then                                return "(X2) CYBER"
-  elseif fullSongTitle == "DUB-I-DUB" then                                                     return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "EL RITMO TROPICAL" then                                             return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "GET UP'N MOVE" then                                                return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "HERO" then                                                          return "(X2) CYBER"
-  elseif fullSongTitle == "I Believe In Miracles (The Lisa Marie Experience Radio Edit)" then  return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "IF YOU WERE HERE" then                                              return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "LOVE" then                                                          return "(X) DANCING RAYS"
-  elseif fullSongTitle == "LOVE IS THE POWER" then                                             return "(X) DANCING RAYS"
-  elseif fullSongTitle == "MAKE A JAM!" then                                                   return "(X) DAWN STREETS"
-  elseif fullSongTitle == "MAKE IT BETTER (So-REAL Mix)" then                                  return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "PARANOiA KCET ～clean mix～" then                                   return "(A) BOOM DARK"
-  elseif fullSongTitle == "PARANOiA MAX～DIRTY MIX～" then                                     return "(X) CAPTURE ME"
-  elseif fullSongTitle == "PUT YOUR FAITH IN ME" then                                          return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "PUT YOUR FAITH IN ME (Jazzy Groove)" then                           return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "Smoke" then                                                         return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "SP-TRIP MACHINE～JUNGLE MIX～" then                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "stomp to my beat" then                                              return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "TUBTHUMPING" then                                                   return "(X) DAWN STREETS"
-
-    ----------------------------------------------------------------------------- DDR 2ndMIX CLUB Version 1 --------------------------------------------------------------
-
-  elseif fullSongTitle == "e-motion" then                                                      return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "GENOM SCREAMS" then                                                 return "(X2) CYBER"
-
-    ----------------------------------------------------------------------------- DDR 3rdMIX -----------------------------------------------------------------------------
-
-  elseif fullSongTitle == "AFRONOVA" then                                                      return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "AFTER THE GAME OF LOVE" then                                        return "(X) DANCING RAYS"
-  elseif fullSongTitle == "BOOM BOOM DOLLAR (K.O.G. G3 MIX)" then                              return "(X) DANCING RAYS"
-  elseif fullSongTitle == "BUMBLE BEE" then                                                    return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "butterfly (UPSWING MIX)" then                                       return "(X) DANCING RAYS"
-  elseif fullSongTitle == "CAPTAIN JACK (GRANDALE REMIX)" then                                 return "(X2) CYBER"
-  elseif fullSongTitle == "CUTIE CHASER" then                                                  return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "DAM DARIRAM" then                                                   return "(X2) CYBER"
-  elseif fullSongTitle == "DEAD END" then                                                      return "(A) BOOM DARK"
-  elseif fullSongTitle == "DROP THE BOMB" then                                                 return "(X2) CYBER"
-  elseif fullSongTitle == "DYNAMITE RAVE" then                                                 return "(X2) CYBER"
-  elseif fullSongTitle == "GRADIUSIC CYBER ～AMD G5 MIX～" then                                return "(X2) CYBER"
-  elseif fullSongTitle == "KEEP ON MOVIN'" then                                               return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "La Señorita" then                                                   return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "La Señorita Virtual" then                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "LOVE THIS FEELIN'" then                                            return "(X2) CYBER"
-  elseif fullSongTitle == "LUV TO ME (AMD MIX)" then                                           return "(X) DANCING RAYS"
-  elseif fullSongTitle == "PARANOiA Rebirth" then                                              return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Silent Hill" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "think ya better D" then                                             return "(X) CAPTURE ME"
-  elseif fullSongTitle == "TRIP MACHINE～luv mix～" then                                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "TURN ME ON (HEAVENLY MIX)" then                                     return "(X2) CLUB"
-
-    ----------------------------------------------------------------------------- DDR 4thMIX -----------------------------------------------------------------------------
-
-  elseif fullSongTitle == "B4U" then                                                           return "(X2) CYBER"
-  elseif fullSongTitle == "BABY BABY GIMME YOUR LOVE" then                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "BURNIN' THE FLOOR" then                                            return "(X2) CLUB"
-  elseif fullSongTitle == "CAN'T STOP FALLIN' IN LOVE" then                                  return "(X2) CYBER"
-  elseif fullSongTitle == "CELEBRATE NITE" then                                                return "(X) CAPTURE ME"
-  elseif fullSongTitle == "Don't Stop!～AMD 2nd MIX～" then                                   return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "DROP OUT" then                                                      return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "era (nostalmix)" then                                               return "(X) CAPTURE ME"
-  elseif fullSongTitle == "HIGHER" then                                                        return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Holic" then                                                         return "(X2) CYBER"
-  elseif fullSongTitle == "HYSTERIA" then                                                      return "(X) CAPTURE ME"
-  elseif fullSongTitle == "LEADING CYBER" then                                                 return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "LOVE AGAIN TONIGHT～For Melissa MIX～" then                         return "(X) DANCING RAYS"
-  elseif fullSongTitle == "MY SUMMER LOVE" then                                                return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "ORION.78(AMeuro-MIX)" then                                          return "(X) CAPTURE ME"
-  elseif fullSongTitle == "PARANOIA EVOLUTION" then                                            return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "SEXY PLANET" then                                                   return "(X2) CYBER"
-  elseif fullSongTitle == "SUPER STAR" then                                                    return "(X) DAWN STREETS"
-  elseif fullSongTitle == "TRIP MACHINE CLIMAX" then                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "WILD RUSH" then                                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == ".59" then                                                           return "(X) CRYSTALDIUM"
-
-    ----------------------------------------------------------------------------- DDR 5thMIX -----------------------------------------------------------------------------
-
-  elseif fullSongTitle == "サナ・モレッテ・ネ・エンテ" then                                    return "(X) DANCING RAYS" -- SANA MOLLETE NE ENTE
-  elseif fullSongTitle == "ABSOLUTE" then                                                      return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Abyss" then                                                         return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "AFRONOVA PRIMEVAL" then                                             return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "BROKEN MY HEART" then                                               return "(X2) CYBER"
-  elseif fullSongTitle == "CAN'T STOP FALLIN' IN LOVE ～SPEED MIX～" then                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "DXY!" then                                                          return "(X2) CYBER"
-  elseif fullSongTitle == "ECSTASY" then                                                       return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Electro Tuned ( the SubS Mix )" then                                return "(X) CAPTURE ME"
-  elseif fullSongTitle == "Healing Vision" then                                                return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "INSERTiON" then                                                     return "(X) CAPTURE ME"
-  elseif fullSongTitle == "PARANOiA ETERNAL" then                                              return "(X) CAPTURE ME"
-  elseif fullSongTitle == "STILL IN MY HEART" then                                             return "(X) BOOM BOOM BOOM"
-
-    ----------------------------------------------------------------------------- DDRMAX ---------------------------------------------------------------------------------
-
-  elseif fullSongTitle == "CANDY☆" then                                                       return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "exotic ethnic" then                                                 return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Healing Vision ～Angelic mix～" then                                return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Let the beat hit em!(CLASSIC R&B STYLE)" then                       return "(X) DANCING RAYS"
-  elseif fullSongTitle == "MAX 300" then                                                       return "(X2) MOVIE DARK"
-  elseif fullSongTitle == "ORION.78～civilization mix～" then                                  return "(X) DANCING RAYS"
-
-    ----------------------------------------------------------------------------- DDRMAX2 --------------------------------------------------------------------------------
-
-  elseif fullSongTitle == "革命" then                                                          return "(A) BOOM DARK" -- KAKUMEI
-  elseif fullSongTitle == "AFRONOVA(FROM NONSTOP MEGAMIX)" then                                return "(X2) CLUB"
-  elseif fullSongTitle == "AM-3P(AM EAST mix)" then                                            return "(X) DANCING RAYS"
-  elseif fullSongTitle == "B4U(B4 ZA BEAT MIX)" then                                           return "(X2) CYBER"
-  elseif fullSongTitle == "BRE∀K DOWN！" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "BRILLIANT 2U(K.O.G G3 MIX)" then                                    return "(X2) CYBER"
-  elseif fullSongTitle == "BURNIN' THE FLOOR(BLUE FIRE mix)" then                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "BURNING HEAT！（3 Option MIX）" then                                return "(X2) CYBER"
-  elseif fullSongTitle == "CANDY♡" then                                                       return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "CELEBRATE NITE(EURO TRANCE STYLE)" then                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "D2R" then                                                           return "(X) CAPTURE ME"
-  elseif fullSongTitle == "DESTINY" then                                                       return "(X) CAPTURE ME"
-  elseif fullSongTitle == "DIVE TO THE NIGHT" then                                             return "(X) CAPTURE ME"
-  elseif fullSongTitle == "DROP OUT(FROM NONSTOP MEGAMIX)" then                                return "(X2) CYBER"
-  elseif fullSongTitle == "ECSTASY (midnight blue mix)" then                                   return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "HIGHER(next morning mix)" then                                      return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "HYSTERIA 2001" then                                                 return "(X) DAWN STREETS"
-  elseif fullSongTitle == "i feel ..." then                                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "MAXX UNLIMITED" then                                                return "(A) BOOM DARK"
-  elseif fullSongTitle == "MY SUMMER LOVE(TOMMY'S SMILE MIX)" then                            return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "rain of sorrow" then                                                return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Secret Rendez-vous" then                                            return "(X) DANCING RAYS"
-  elseif fullSongTitle == "SEXY PLANET(FROM NONSTOP MEGAMIX)" then                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Silent Hill (3rd christmas mix)" then                               return "(X) DANCING RAYS"
-  elseif fullSongTitle == "STILL IN MY HEART(MOMO MIX)" then                                   return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "SUPER STAR(FROM NONSTOP MEGAMIX)" then                              return "(X2) CYBER"
-  elseif fullSongTitle == "Sweet Sweet ♥ Magic" then                                          return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "TSUGARU" then                                                       return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "TSUGARU (APPLE MIX)" then                                           return "(X) CAPTURE ME"
-  elseif fullSongTitle == "WILD RUSH(FROM NONSTOP MEGAMIX)" then                               return "(X) CRYSTALDIUM"
-
-    ----------------------------------------------------------------------------- DDR EXTREME -----------------------------------------------------------------------------
-
-  elseif fullSongTitle == "蒼い衝動 ～for EXTREME～" then                                      return "(X2) CYBER" -- BLUE IMPULSE ~for EXTREME~
-  elseif fullSongTitle == "桜" then                                                            return "(X) CRYSTALDIUM" -- SAKURA
-  elseif fullSongTitle == "大見解" then                                                        return "(X2) CYBER" -- DAIKENKAI
-  elseif fullSongTitle == "三毛猫ロック" then                                                  return "(X) DANCING RAYS" -- CALICO CAT ROCK
-  elseif fullSongTitle == "A" then                                                             return "(X2) CYBER"
-  elseif fullSongTitle == "Across the nightmare" then                                          return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "air" then                                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "AM-3P -303 BASS MIX-" then                                          return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "bag" then                                                           return "(X) CAPTURE ME"
-  elseif fullSongTitle == "BE LOVIN" then                                                      return "(X2) CYBER"
-  elseif fullSongTitle == "Colors ～for EXTREME～" then                                        return "(X2) CYBER"
-  elseif fullSongTitle == "CUTIE CHASER(MORNING MIX)" then                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Dance Dance Revolution" then                                        return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Destiny lovers" then                                                return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "DROP THE BOMB(SyS.F. Mix)" then                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Frozen Ray ～for EXTREME～" then                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Gamelan de Couple" then                                             return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "GRADUATION ～それぞれの明日～" then                                 return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Happy Wedding" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Heaven is a '57 metallic gray ～gimmix～" then                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "HYPER EUROBEAT" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "I'm gonna get you!" then                                           return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "jane jana" then                                                     return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "JET WORLD" then                                                     return "(X) CAPTURE ME"
-  elseif fullSongTitle == "KISS KISS KISS" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Kiss me all night long" then                                        return "(X2) CYBER"
-  elseif fullSongTitle == "LA BAMBA" then                                                      return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "L'amour et la liberté(DDR Ver.)" then                              return "(X2) CYBER"
-  elseif fullSongTitle == "LOVE♥SHINE" then                                                   return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "♥Love²シュガ→♥" then                                              return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Miracle Moon ～L.E.D.LIGHT STYLE MIX～" then                        return "(X) DANCING RAYS"
-  elseif fullSongTitle == "PARANOIA survivor" then                                             return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "PARANOIA survivor MAX" then                                         return "(A) BOOM DARK"
-  elseif fullSongTitle == "Pink Rose" then                                                     return "(X2) CYBER"
-  elseif fullSongTitle == "SO IN LOVE" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "STAY (Organic house Version)" then                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "stoic (EXTREME version)" then                                       return "(X2) CYBER"
-  elseif fullSongTitle == "sync (EXTREME version)" then                                        return "(X2) CYBER"
-  elseif fullSongTitle == "TEARS" then                                                         return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "The Least 100sec" then                                              return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "The legend of MAX" then                                             return "(A) BOOM DARK"
-  elseif fullSongTitle == "TRIP MACHINE survivor" then                                         return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Twin Bee -Generation X-" then                                       return "(X2) CYBER"
-  elseif fullSongTitle == "V ～for EXTREME～" then                                             return "(X) CAPTURE ME"
-  elseif fullSongTitle == "VANITY ANGEL" then                                                  return "(X2) CYBER"
-  elseif fullSongTitle == "xenon" then                                                         return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "1998" then                                                          return "(X2) CYBER"
-  elseif fullSongTitle == "321STARS" then                                                      return "(X) BOOM BOOM BOOM"
-
-    ----------------------------------------------------------------------------- DDR SuperNOVA
-
-  elseif fullSongTitle == "怒れる大きな白い馬" then                                            return "(X2) CYBER" -- Tino"s White Horse
-  elseif fullSongTitle == "カゲロウ" then                                                      return "(X) BOOM BOOM BOOM" -- KAGEROW (Dragonfly)
-  elseif fullSongTitle == "月光蝶" then                                                        return "(A) BOOM DARK" -- Gekkou chou
-  elseif fullSongTitle == "この子の七つのお祝いに" then                                        return "(X) BOOM BOOM BOOM" -- Konoko no nanatsu no oiwaini
-  elseif fullSongTitle == "男々道" then                                                        return "(X) CAPTURE ME" -- DanDanDO(The true MAN"s Road)
-  elseif fullSongTitle == "チカラ" then                                                        return "(X2) BOOM LIGHT" -- CHIKARA
-  elseif fullSongTitle == "虹色" then                                                          return "(X) CAPTURE ME" -- NIJIIRO
-  elseif fullSongTitle == "華爛漫 -Flowers-" then                                              return "(X) CRYSTALDIUM" -- Hana Ranman -Flowers-
-  elseif fullSongTitle == "ヒマワリ" then                                                      return "(X2) BOOM LIGHT" -- Himawari
-  elseif fullSongTitle == "夢幻ノ光" then                                                      return "(X2) CYBER" -- Mugen
-  elseif fullSongTitle == "A Stupid Barber" then                                               return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "AA" then                                                            return "(X2) CYBER"
-  elseif fullSongTitle == "Bad Routine" then                                                   return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Baile Le Samba" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "BALLAD FOR YOU～想いの雨～" then                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Brazilian Anthem" then                                              return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "cachaca" then                                                       return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Can Be Real" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "CAN'T STOP FALLIN' IN LOVE -super euro version-" then             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "CENTAUR" then                                                       return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "CHAOS" then                                                         return "(A) BOOM DARK"
-  elseif fullSongTitle == "CURUS" then                                                         return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "DoLL" then                                                          return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Dragon Blade" then                                                  return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Fascination ～eternal love mix～" then                              return "(A) BOOM DARK"
-  elseif fullSongTitle == "Fascination MAXX" then                                              return "(A) BOOM DARK"
-  elseif fullSongTitle == "Flow" then                                                          return "(X2) CYBER"
-  elseif fullSongTitle == "Flow (True Style)" then                                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Fly away" then                                                      return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Forever Sunshine" then                                              return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Freedom" then                                                       return "(X2) CYBER"
-  elseif fullSongTitle == "Funk Boogie" then                                                   return "(X) DAWN STREETS"
-  elseif fullSongTitle == "GORGEOUS 2012" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "HAPPY☆ANGEL" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Healing-D-Vision" then                                              return "(A) BOOM DARK"
-  elseif fullSongTitle == "I Need You" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "iFUTURELIST(DDR VERSION)" then                                      return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "INNOCENCE OF SILENCE" then                                          return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "INSIDE YOUR HEART" then                                             return "(X2) CYBER"
-  elseif fullSongTitle == "Jam & Marmalade" then                                               return "(X) CAPTURE ME"
-  elseif fullSongTitle == "KEEP ON MOVIN' ～DMX MIX～" then                                   return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "LA BAMBA" then                                                      return "(X) DANCING RAYS"
-  elseif fullSongTitle == "LOGICAL DASH" then                                                  return "(X) CAPTURE ME"
-  elseif fullSongTitle == "LOVE IS ORANGE" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Make A Difference" then                                             return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "MARIA(I believe...)" then                                           return "(X2) CYBER"
-  elseif fullSongTitle == "MAX 300 (Super-Max-Me Mix)" then                                    return "(A) BOOM DARK"
-  elseif fullSongTitle == "MAXIMIZER" then                                                     return "(X2) CYBER"
-  elseif fullSongTitle == "MIDNIGHT SPECIAL" then                                              return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Mind Parasite" then                                                 return "(X2) CYBER"
-  elseif fullSongTitle == "Monkey Punk" then                                                   return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "MOON" then                                                          return "(X) DANCING RAYS"
-  elseif fullSongTitle == "murmur twins" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "My Only Shining Star" then                                          return "(X) CAPTURE ME"
-  elseif fullSongTitle == "No.13" then                                                         return "(X) CAPTURE ME"
-  elseif fullSongTitle == "PARANOiA-Respect-" then                                             return "(X) CAPTURE ME"
-  elseif fullSongTitle == "PASSION OF LOVE" then                                               return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Polovtsian Dances And Chorus" then                                  return "(X2) CYBER"
-  elseif fullSongTitle == "PUT YOUR FAITH IN ME ～SATURDAY NIGHT MIX～" then                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Quick Master" then                                                  return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Quickening" then                                                    return "(X2) CYBER"
-  elseif fullSongTitle == "rainbow flyer" then                                                 return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "rainbow rainbow" then                                               return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "RED ZONE" then                                                      return "(X2) CYBER"
-  elseif fullSongTitle == "Saturday Night Love" then                                           return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Scorching Moon" then                                                return "(X) DAWN STREETS"
-  elseif fullSongTitle == "SEDUCTION" then                                                     return "(X2) CYBER"
-  elseif fullSongTitle == "SEDUCTION(Vocal Remix)" then                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Ska Ska No.3" then                                                  return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Star Gate Heaven" then                                              return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "STARS☆☆☆(2nd NAOKI's style)" then                               return "(X2) CYBER"
-  elseif fullSongTitle == "THE SHINING POLARIS" then                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "TIERRA BUENA" then                                                  return "(X) CAPTURE ME"
-  elseif fullSongTitle == "TOMORROW" then                                                      return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Tomorrow Perfume" then                                              return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "TRUE♥LOVE" then                                                    return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Try 2 Luv. U" then                                                  return "(X) DANCING RAYS"
-  elseif fullSongTitle == "un deux trois" then                                                 return "(X2) CYBER"
-  elseif fullSongTitle == "Under the Sky" then                                                 return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Xepher" then                                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "You gotta move it (feat. Julie Rugaard)" then                       return "(X) BOOM BOOM BOOM"
-
-    ----------------------------------------------------------------------------- DDR SuperNOVA 2
-
-  elseif fullSongTitle == "A thing called LOVE" then                                           return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "AM-3P (\"CHAOS\" Special)" then                                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Arrabbiata" then                                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "B4U (\"VOLTAGE\" Special)" then                                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Blind Justice ～Torn souls, Hurt Faiths ～" then                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Bloody Tears(IIDX EDITION)" then                                    return "(X2) CYBER"
-  elseif fullSongTitle == "BRILLIANT 2U (\"STREAM\" Special)" then                               return "(X) CAPTURE ME"
-  elseif fullSongTitle == "CaptivAte～誓い～" then                                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "D2R (\"FREEZE\" Special)" then                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "DEAD END (\"GROOVE RADAR\" Special)" then                             return "(A) BOOM DARK"
-  elseif fullSongTitle == "dream of love" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "DYNAMITE RAVE (\"AIR\" Special)" then                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Electrified" then                                                   return "(X2) CYBER"
-  elseif fullSongTitle == "Every Day, Every Night(NM STYLE)" then                              return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Feelings Won't Fade(Extend Trance Mix)" then                       return "(X2) CYBER"
-  elseif fullSongTitle == "FIRE" then                                                          return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Flow (Jammin' Ragga Mix)" then                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Fly away -mix del matador-" then                                    return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Freeway Shuffle" then                                               return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "GIRIGILI門前雀羅" then                                              return "(X) DAWN STREETS"
-  elseif fullSongTitle == "L'amour et la liberté(Darwin & DJ Silver remix)" then              return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "MARS WAR 3" then                                                    return "(X) CAPTURE ME"
-  elseif fullSongTitle == "MOONSTER" then                                                      return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Music In The Rhythm" then                                           return "(X2) CYBER"
-  elseif fullSongTitle == "NGO" then                                                           return "(A) BOOM DARK"
-  elseif fullSongTitle == "PARANOiA ～HADES～" then                                            return "(A) BOOM DARK"
-  elseif fullSongTitle == "Pluto" then                                                         return "(A) BOOM DARK"
-  elseif fullSongTitle == "Pluto Relinquish" then                                              return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Poseidon" then                                                      return "(X) CAPTURE ME"
-  elseif fullSongTitle == "Raspberry♡Heart(English version)" then                             return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Saturn" then                                                        return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Shades of Grey" then                                                return "(X) CAPTURE ME"
-  elseif fullSongTitle == "Silver Platform - I wanna get your heart -" then                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "SOUL CRASH" then                                                    return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Star Gate Heaven (FUTURE LOVE Mix)" then                            return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "STARS☆☆☆（Re-tuned by HΛL） - DDR EDITION -" then                return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "stealth" then                                                       return "(X) CAPTURE ME"
-  elseif fullSongTitle == "SUNKiSS♥DROP" then                                                 return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "switch" then                                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Trim" then                                                          return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "TRIP MACHINE PhoeniX" then                                          return "(A) BOOM DARK"
-  elseif fullSongTitle == "Trust -DanceDanceRevolution mix-" then                              return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Unreal" then                                                        return "(X2) CYBER"
-  elseif fullSongTitle == "Uranus" then                                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Vem brincar" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Venus" then                                                         return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "volcano" then                                                       return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Votum stellarum -forest #25 DDR RMX-" then                          return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Why not" then                                                       return "(X) BOOM BOOM BOOM"
-
-    ----------------------------------------------------------------------------- DDR X
-
-  elseif fullSongTitle == "スキ☆メロ" then                                                    return "(X) LOVE SWEETS" -- Suki Melo
-  elseif fullSongTitle == "ポリリズム" then                                                    return "(X) LOVE SWEETS" -- PORIRIZUMU
-  elseif fullSongTitle == "世界は踊る" then                                                    return "(X) CRYSTALDIUM" -- SEKAI HA ODORU
-  elseif fullSongTitle == "凛として咲く花の如く" then                                          return "(X2) BOOM LIGHT" -- Rin To Shite Saku Hana No Gotoku
-  elseif fullSongTitle == "旅人" then                                                          return "(X2) BOOM LIGHT" -- Tabibito
-  elseif fullSongTitle == "零 - ZERO -" then                                                   return "(X) BOOM BOOM BOOM" -- ZERO
-  elseif fullSongTitle == "革命(X-Special)" then                                               return "(X) CAPTURE ME" -- KAKUMEI(X-Special)
-  elseif fullSongTitle == "A Geisha's Dream" then                                             return "(X) DANCING RAYS"
-  elseif fullSongTitle == "AFRONOVA(X-Special)" then                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Always on My Mind" then                                             return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Beautiful Inside (Cube::Hard Mix)" then                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Big Girls Don't Cry" then                                          return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Blue Rain" then                                                     return "(X2) CYBER"
-  elseif fullSongTitle == "Boys (2008 X-edit)" then                                            return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Butterfly (2008 X-edit)" then                                       return "(X) DANCING RAYS"
-  elseif fullSongTitle == "CANDY☆(X-Special)" then                                            return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Chance and Dice" then                                               return "(X) CAPTURE ME"
-  elseif fullSongTitle == "Dance Celebration" then                                             return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Dance Celebration (System 7 Remix)" then                            return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Dance Dance Revolution(X-Special)" then                             return "(REPLICANT) LIGHT PURPLE"
-  elseif fullSongTitle == "Dance Floor" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "dazzle" then                                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Dream Machine" then                                                 return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "DUB-I-DUB (2008 X-edit)" then                                       return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Feel" then                                                          return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Flight of the Phoenix" then                                         return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Flourish" then                                                      return "(X) DANCING RAYS"
-  elseif fullSongTitle == "GET UP'N MOVE (2008 X-edit)" then                                  return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Ghetto Blasta Deluxe" then                                          return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Happy" then                                                         return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Healing Vision(X-Special)" then                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Here It Goes Again" then                                            return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Horatio" then                                                       return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Inspiration" then                                                   return "(X) CAPTURE ME"
-  elseif fullSongTitle == "INTO YOUR HEART (Ruffage remix)" then                               return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Koko Soko" then                                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Lift You Up" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "LOVING YOU (Epidemik remix)" then                                   return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Make Me Cry" then                                                   return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Malacca" then                                                       return "(X2) CYBER"
-  elseif fullSongTitle == "MAX 300(X-Special)" then                                            return "(REPLICANT) LIGHT PURPLE"
-  elseif fullSongTitle == "MAXX UNLIMITED(X-Special)" then                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "on the bounce" then                                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "On The Break" then                                                  return "(X) CAPTURE ME"
-  elseif fullSongTitle == "PARANOiA ETERNAL(X-Special)" then                                   return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "PARANOIA EVOLUTION(X-Special)" then                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "PARANOiA MAX～DIRTY MIX～(X-Special)" then                          return "(X) CAPTURE ME"
-  elseif fullSongTitle == "PARANOiA Rebirth(X-Special)" then                                   return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "PARANOiA(X-Special)" then                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Party Lights" then                                                  return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Playa (Original Mix)" then                                          return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Put 'Em Up" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "puzzle" then                                                        return "(X) CAPTURE ME"
-  elseif fullSongTitle == "Reach Up" then                                                      return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "SABER WING" then                                                    return "(X2) CYBER"
-  elseif fullSongTitle == "SABER WING (Akira Ishihara Headshot mix)" then                      return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "S・A・G・A" then                                                    return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Slip Out" then                                                      return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Slip Out (bounce in beat mix)" then                                 return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "SP-TRIP MACHINE～JUNGLE MIX～(X-Special)" then                      return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "SUPER SAMURAI" then                                                 return "(X2) CLUB"
-  elseif fullSongTitle == "Swingin'" then                                                     return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Taj He Spitz" then                                                  return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Taj He Spitz (Tommie Sunshine's Brooklyn Fire Re-Touch)" then      return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Take A Chance" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "The flower in your smile" then                                      return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "The legend of MAX(X-Special)" then                                  return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Ticket to Bombay" then                                              return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Till the lonely's gone" then                                       return "(X) DANCING RAYS"
-  elseif fullSongTitle == "TimeHollow" then                                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Tracers (4Beat Remix)" then                                         return "(X) CAPTURE ME"
-  elseif fullSongTitle == "Trickster" then                                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Trigger" then                                                       return "(X) CAPTURE ME"
-  elseif fullSongTitle == "TRIP MACHINE CLIMAX(X-Special)" then                                return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "TRIP MACHINE(X-Special)" then                                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "U Can't Touch This" then                                           return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Übertreffen" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Waiting 4 u" then                                                   return "(X2) CYBER"
-  elseif fullSongTitle == "We Come Alive" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "We've Got To Make It Tonight" then                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "will" then                                                          return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Xmix1 (Midnight Dawn)" then                                         return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Xmix2 (Beats 'n Bangs)" then                                       return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Xmix3 (Stomp Dem Groove)" then                                      return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Xmix4 (Linear Momentum)" then                                       return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Xmix5 (Overcrush)" then                                             return "(X) DANCING RAYS"
-  elseif fullSongTitle == "30 Lives (Up-Up-Down-Dance Mix)" then                               return "(X2) BOOM LIGHT"
-
-    ----------------------------------------------------------------------------- DDR X2 ---------------------------------------------------------------------------------
-
-  elseif fullSongTitle == "不沈艦CANDY" then                                                   return "(X2) MOVIE LIGHT" -- YELLOW CANDY
-  elseif fullSongTitle == "冥" then                                                            return "(X2) MOVIE LIGHT" -- Mei
-  elseif fullSongTitle == "A Brighter Day" then                                                return "(X2) CYBER"
-  elseif fullSongTitle == "aftershock!!" then                                                  return "(X2) CYBER"
-  elseif fullSongTitle == "All My Love" then                                                   return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Anti-Matter" then                                                   return "(REPLICANT) LIGHT PURPLE"
-  elseif fullSongTitle == "BALLAD THE FEATHERS" then                                           return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "Be your wings" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Bonafied Lovin'" then                                              return "(X) DAWN STREETS"
-  elseif fullSongTitle == "CG Project" then                                                    return "(X2) CYBER"
-  elseif fullSongTitle == "Crazy Control" then                                                 return "(X) DAWN STREETS"
-  elseif fullSongTitle == "DAFT PUNK IS PLAYING AT MY HOUSE" then                              return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Dazzlin' Darlin" then                                              return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Dazzlin' Darlin-秋葉工房mix-" then                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Decade" then                                                        return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "ΔMAX" then                                                          return "(X2) CYBER"
-  elseif fullSongTitle == "dirty digital" then                                                 return "(A) BOOM DARK"
-  elseif fullSongTitle == "DROP" then                                                          return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Dummy" then                                                         return "(X2) CYBER"
-  elseif fullSongTitle == "ETERNITY" then                                                      return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Everytime We Touch" then                                            return "(X2) CLUB"
-  elseif fullSongTitle == "EZ DO DANCE" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Feel Good Inc" then                                                 return "(X2) CYBER"
-  elseif fullSongTitle == "FIRE FIRE" then                                                     return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "Freeze" then                                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "going up" then                                                      return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "GOLD RUSH" then                                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Gotta Dance" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Heatstroke" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Hide-away" then                                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "ICE ICE BABY" then                                                  return "(X2) CYBER"
-  elseif fullSongTitle == "IF YOU WERE HERE (L.E.D.-G STYLE REMIX)" then                       return "(X2) CYBER"
-  elseif fullSongTitle == "I'm so Happy" then                                                 return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "in love wit you" then                                               return "(X) DANCING RAYS"
-  elseif fullSongTitle == "KIMONO♥PRINCESS" then                                              return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "KISS KISS KISS 秋葉工房 MIX" then                                   return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "La libertad" then                                                   return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "La receta" then                                                     return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Leaving…" then                                                      return "(X2) MOVIE DARK"
-  elseif fullSongTitle == "Love Again" then                                                    return "(X2) CLUB"
-  elseif fullSongTitle == "MAX LOVE" then                                                      return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Melody Life" then                                                   return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "more more more" then                                                return "(X2) CLUB"
-  elseif fullSongTitle == "New Decade" then                                                    return "(REPLICANT) LIGHT PURPLE"
-  elseif fullSongTitle == "oarfish" then                                                       return "(X2) CYBER"
-  elseif fullSongTitle == "only my railgun" then                                               return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Pierce The Sky" then                                                return "(REPLICANT) LIGHT BLUE"
-  elseif fullSongTitle == "Pluto The First" then                                               return "(A) BOOM DARK"
-  elseif fullSongTitle == "Poseidon(kors k mix)" then                                          return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "POSSESSION" then                                                    return "(REPLICANT) LIGHT PURPLE"
-  elseif fullSongTitle == "real-high-SPEED" then                                               return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "resonance" then                                                     return "(X2) CYBER"
-  elseif fullSongTitle == "roppongi EVOLVED ver.A" then                                        return "(X2) CYBER"
-  elseif fullSongTitle == "roppongi EVOLVED ver.B" then                                        return "(X2) CYBER"
-  elseif fullSongTitle == "roppongi EVOLVED ver.C" then                                        return "(X2) CYBER"
-  elseif fullSongTitle == "roppongi EVOLVED ver.D" then                                        return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "Sacred Oath" then                                                   return "(X2) CYBER"
-  elseif fullSongTitle == "sakura storm" then                                                  return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Sakura Sunrise" then                                                return "(REPLICANT) LIGHT BLUE"
-  elseif fullSongTitle == "Second Heaven" then                                                 return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "She is my wife" then                                                return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Shine" then                                                         return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "☆shining☆" then                                                   return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Shiny World" then                                                   return "(REPLICANT) LIGHT BLUE"
-  elseif fullSongTitle == "Sky Is The Limit" then                                              return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "smooooch･∀･" then                                                   return "(X2) CYBER"
-  elseif fullSongTitle == "someday..." then                                                    return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Super Driver" then                                                  return "(X2) CYBER"
-  elseif fullSongTitle == "SUPER EUROBEAT <GOLD MIX>" then                                     return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Taking It To The Sky" then                                          return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "TENSHI" then                                                        return "(X2) CYBER"
-  elseif fullSongTitle == "Theory of Eternity" then                                            return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "THIS NIGHT" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Time After Time" then                                               return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Valkyrie dimension" then                                            return "(REPLICANT) DARK PURPLE"
-  elseif fullSongTitle == "VANESSA" then                                                       return "(X2) MOVIE DARK"
-  elseif fullSongTitle == "WH1TE RO5E" then                                                    return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "What Will Come of Me" then                                          return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "You are a Star" then                                                return "(X2) CYBER"
-  elseif fullSongTitle == "Your Angel" then                                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "ZETA～素数の世界と超越者～" then                                    return "(X2) MOVIE LIGHT" -- ZETA ~The World of Prime Numbers and the Transcendental Being~
-  elseif fullSongTitle == "888" then                                                           return "(X2) CYBER"
-
-    ----------------------------------------------------------------------------- DDR X3 vs 2ndMIX
-
-  elseif fullSongTitle == "アルストロメリア (walk with you remix)" then                        return "(X2) BOOM LIGHT" -- Alstroemeria (walk with you remix)
-  elseif fullSongTitle == "紅焔" then                                                          return "(X) CRYSTALDIUM" -- Kouen
-  elseif fullSongTitle == "雫" then                                                            return "(A) BOOM DARK" -- Shizuku
-  elseif fullSongTitle == "隅田川夏恋歌" then                                                  return "(X) CRYSTALDIUM" -- Sumidagawa karenka
-  elseif fullSongTitle == "天上の星 ～黎明記～" then                                           return "(X2) CYBER" -- Tenjou no Hoshi -Reimeiki-
-  elseif fullSongTitle == "コネクト" then                                                      return "(X2) CYBER" -- Connect
-  elseif fullSongTitle == "ヘビーローテーション" then                                          return "(X) LOVE SWEETS" -- Heavy Rotation
-  elseif fullSongTitle == "ビューティフル レシート" then                                       return "(X2) BOOM LIGHT" -- Beautiful Receipt
-  elseif fullSongTitle == "女々しくて" then                                                    return "(X) DANCING RAYS" -- Memeshikute
-  elseif fullSongTitle == "繚乱ヒットチャート" then                                            return "(X2) MOVIE LIGHT" -- Ryouran Hit Chart
-  elseif fullSongTitle == "恋閃繚乱" then                                                      return "(X) CRYSTALDIUM" -- Rensen ryouran
-  elseif fullSongTitle == "Amalgamation" then                                                  return "(A) BOOM DARK"
-  elseif fullSongTitle == "BRILLIANT 2U (AKBK MIX)" then                                       return "(X2) CYBER"
-  elseif fullSongTitle == "Chronos" then                                                       return "(X2) CLUB"
-  elseif fullSongTitle == "COME BACK TO MY HEART" then                                         return "(X2) CYBER"
-  elseif fullSongTitle == "Cosmic Hurricane" then                                              return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "CRAZY♥LOVE" then                                                   return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Diamond Dust" then                                                  return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "dreaming can make a wish come true" then                            return "(X2) CLUB"
-  elseif fullSongTitle == "ever snow" then                                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Fever" then                                                         return "(X2) CLUB"
-  elseif fullSongTitle == "Find You Again" then                                                return "(X2) CLUB"
-  elseif fullSongTitle == "FLOWER" then                                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "future gazer" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Get Back Up!" then                                                  return "(X2) CLUB"
-  elseif fullSongTitle == "Go For The Top" then                                                return "(REPLICANT) LIGHT BLUE"
-  elseif fullSongTitle == "Haunted Rhapsody" then                                              return "(X2) CLUB"
-  elseif fullSongTitle == "HEART BEAT FORMULA" then                                            return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "HEARTBREAK (Sound Selektaz remix)" then                             return "(X2) CLUB"
-  elseif fullSongTitle == "I/O" then                                                           return "(X2) CYBER"
-  elseif fullSongTitle == "In The Air" then                                                    return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "IN THE ZONE" then                                                   return "(X) DAWN STREETS"
-  elseif fullSongTitle == "KEEP ON MOVIN' (Y&Co. DJ BOSS remix)" then                         return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Let's Get Away" then                                               return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "London EVOLVED Ver.A" then                                          return "(X2) CLUB"
-  elseif fullSongTitle == "London EVOLVED Ver.B" then                                          return "(X2) CLUB"
-  elseif fullSongTitle == "London EVOLVED Ver.C" then                                          return "(X2) CLUB"
-  elseif fullSongTitle == "LOVE & JOY" then                                                    return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "LOVE IS THE POWER -Re:born-" then                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "MAGIC PARADE" then                                                  return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Mermaid girl" then                                                  return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "message" then                                                       return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "NEPHILIM DELTA" then                                                return "(A) BOOM DARK"
-  elseif fullSongTitle == "New Beginning" then                                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "New York EVOLVED (Type A)" then                                     return "(A) BOOM DARK"
-  elseif fullSongTitle == "New York EVOLVED (Type B)" then                                     return "(A) BOOM DARK"
-  elseif fullSongTitle == "New York EVOLVED (Type C)" then                                     return "(A) BOOM DARK"
-  elseif fullSongTitle == "osaka EVOLVED -毎度、おおきに！- (TYPE1)" then                      return "(X2) CLUB"
-  elseif fullSongTitle == "osaka EVOLVED -毎度、おおきに！- (TYPE2)" then                      return "(X2) CLUB"
-  elseif fullSongTitle == "osaka EVOLVED -毎度、おおきに！- (TYPE3)" then                      return "(X2) CLUB"
-  elseif fullSongTitle == "PARANOiA (kskst mix)" then                                          return "(A) BOOM DARK"
-  elseif fullSongTitle == "PARANOiA Revolution" then                                           return "(X2) MOVIE DARK"
-  elseif fullSongTitle == "Private Eye" then                                                   return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Programmed Universe" then                                           return "(X2) CYBER"
-  elseif fullSongTitle == "PUT YOUR FAITH IN ME (DA's Twinkly Disco Remix)" then              return "(X) DANCING RAYS"
-  elseif fullSongTitle == "REBORN MAGIC" then                                                  return "(X2) CYBER"
-  elseif fullSongTitle == "Rescue Me" then                                                     return "(X2) CLUB"
-  elseif fullSongTitle == "Resurrection" then                                                  return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "REVOLUTIONARY ADDICT" then                                          return "(REPLICANT) LIGHT BLUE"
-  elseif fullSongTitle == "Rhythms Inside" then                                                return "(X2) CLUB"
-  elseif fullSongTitle == "Seasons" then                                                       return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Seule" then                                                         return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Share The Love" then                                                return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "SigSig" then                                                        return "(X2) CLUB"
-  elseif fullSongTitle == "SILVER☆DREAM" then                                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "snow prism" then                                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Something Special" then                                             return "(X) DANCING RAYS"
-  elseif fullSongTitle == "STRAIGHT JET" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Take A Step Forward" then                                           return "(X2) CYBER"
-  elseif fullSongTitle == "The Heavens Above" then                                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "TIME" then                                                          return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Tohoku EVOLVED" then                                                return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "tokyoEVOLVED (TYPE1)" then                                          return "(X2) CLUB"
-  elseif fullSongTitle == "tokyoEVOLVED (TYPE2)" then                                          return "(X2) CLUB"
-  elseif fullSongTitle == "tokyoEVOLVED (TYPE3)" then                                          return "(X2) CLUB"
-  elseif fullSongTitle == "Tribe" then                                                         return "(X) DANCING RAYS"
-  elseif fullSongTitle == "TRIP MACHINE (xac nanoglide mix)" then                              return "(A) BOOM DARK"
-  elseif fullSongTitle == "TRIP MACHINE EVOLUTION" then                                        return "(X2) MOVIE DARK"
-  elseif fullSongTitle == "TWINKLE♡HEART" then                                                return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "UNBELIEVABLE (Sparky remix)" then                                   return "(X2) CYBER"
-  elseif fullSongTitle == "Until the End" then                                                 return "(A) BOOM DARK"
-  elseif fullSongTitle == "Wicked Plastik" then                                                return "(X2) CYBER"
-  elseif fullSongTitle == "Wings of an Angel (Fly With Me)" then                               return "(X) CRYSTALDIUM"
-
-    ----------------------------------------------------------------------------- DDR 2013 -----------------------------------------------------------------------------
-
-  elseif fullSongTitle == "つけまつける" then                                                  return "(X) DANCING RAYS" -- Tsukematsukeru
-  elseif fullSongTitle == "ふりそでーしょん" then                                              return "(X) DANCING RAYS" -- Furisodation
-  elseif fullSongTitle == "ウッーウッーウマウマ(ﾟ∀ﾟ)(Speedcake Remix)" then                      return "(X) DANCING RAYS" -- U-u-uma uma (Speedcake Remix)
-  elseif fullSongTitle == "お米の美味しい炊き方、そしてお米を食べることによるその効果。" then  return "(X2) CYBER" -- Okome no oishii takikata, soshite okome wo taberu koto ni yoru sono kouka
-  elseif fullSongTitle == "オリオンをなぞる" then                                              return "(X) DANCING RAYS" -- Orion wo nazoru
-  elseif fullSongTitle == "からふるぱすてる" then                                              return "(X2) BIG SCREEN" -- Colorful Pastel
-  elseif fullSongTitle == "キケンな果実" then                                                  return "(X2) BOOM LIGHT" -- Kiken na kajitsu
-  elseif fullSongTitle == "ジョジョ～その血の運命～" then                                      return "(X) DANCING RAYS" -- JoJo ~Sono Chi no Sadame~
-  elseif fullSongTitle == "ずっとみつめていて (Ryu☆Remix)" then                               return "(X) DANCING RAYS" -- Zutto Mitsu Meteite (Ryu Remix)
-  elseif fullSongTitle == "晴天Bon Voyage" then                                                return "(X) CRYSTALDIUM" -- Seiten Bon Voyage
-  elseif fullSongTitle == "創世ノート" then                                                    return "(X2) BOOM LIGHT" -- Sousei Note
-  elseif fullSongTitle == "ちくわパフェだよ☆CKP" then                                         return "(X) LOVE SWEETS" -- Chikuwa parfait da yo CKP
-  elseif fullSongTitle == "†渚の小悪魔ラヴリィ～レイディオ†" then                              return "(X) DANCING RAYS" -- Nagisa no koakuma lovely~radio
-  elseif fullSongTitle == "虹色の花" then                                                      return "(X) BOOM BOOM BOOM" -- Nijiiro no hana
-  elseif fullSongTitle == "フー・フローツ" then                                                return "(X) CRYSTALDIUM" -- Who Floats
-  elseif fullSongTitle == "マジLOVE1000%" then                                                 return "(X) DANCING RAYS" -- Maji LOVE 1000%
-  elseif fullSongTitle == "めうめうぺったんたん！！" then                                      return "(X) LOVE SWEETS" -- Meumeupettantan!!
-  elseif fullSongTitle == "ラキラキ" then                                                      return "(X2) BOOM LIGHT" -- Lucky Lucky
-  elseif fullSongTitle == "凛として咲く花の如く ～ひなビタ♪ edition～" then                   return "(X) LOVE SWEETS" -- Rin to shite saku hana no gotoku ~HinaBitter edition~
-  elseif fullSongTitle == "ロンドンは夜8時(LON 8PM - TYO 4AM)" then                            return "(X) DANCING RAYS" -- London wa Yoru 8 Ji (LON 8PM - TYO 4AM)
-  elseif fullSongTitle == "折れないハート" then                                                return "(X) DANCING RAYS" -- Orenai Heart
-  elseif fullSongTitle == "ACROSS WORLD" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Ah La La La" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Air Heroes" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Another Phase" then                                                 return "(A) BOOM DARK"
-  elseif fullSongTitle == "Back In Your Arms" then                                             return "(X2) CLUB"
-  elseif fullSongTitle == "Beautiful Dream" then                                               return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Blew My Mind" then                                                  return "(A) BOOM DARK"
-  elseif fullSongTitle == "Bombay Bomb" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "BRIGHT STREAM" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Burst The Gravity" then                                             return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Children of the Beat" then                                          return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Chinese Snowy Dance" then                                           return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Choo Choo TRAIN" then                                               return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Condor" then                                                        return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Confession" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Desert Journey" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Diamond Night" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Elemental Creation" then                                            return "(A) BOOM DARK"
-  elseif fullSongTitle == "Empathetic" then                                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "escape" then                                                        return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Everything I Need" then                                             return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Find The Way" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "GAIA" then                                                          return "(X2) CYBER"
-  elseif fullSongTitle == "heron" then                                                         return "(X2) CYBER"
-  elseif fullSongTitle == "Hoping To Be Good" then                                             return "(X) DANCING RAYS"
-  elseif fullSongTitle == "JOKER" then                                                         return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "LOVE & JOY -Risk Junk MIX-" then                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Magnetic" then                                                      return "(X2) CYBER"
-  elseif fullSongTitle == "Mickey Mouse March(Eurobeat Version)" then                          return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Monkey Business" then                                               return "(A) BOOM DARK"
-  elseif fullSongTitle == "New Generation" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "New Gravity" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "nightbird lost wing" then                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "PRANA" then                                                         return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "printemps" then                                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Qipchãq" then                                                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Right on time (Ryu☆Remix)" then                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "RЁVOLUTIФN" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "sola" then                                                          return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Somehow You Found Me" then                                          return "(X) DANCING RAYS"
-  elseif fullSongTitle == "south" then                                                         return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Spanish Snowy Dance" then                                           return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Starry HEAVEN" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Straight Oath" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "STULTI" then                                                        return "(X2) CYBER"
-  elseif fullSongTitle == "Sucka Luva" then                                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Summer Fairytale" then                                              return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Sweet Rain" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Synergy For Angels" then                                            return "(X2) CYBER"
-  elseif fullSongTitle == "Tell me what to do" then                                            return "(X) DANCING RAYS"
-  elseif fullSongTitle == "The Island Song" then                                               return "(X) DANCING RAYS"
-  elseif fullSongTitle == "THE REASON" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "The Wind of Gold" then                                              return "(X2) CYBER"
-  elseif fullSongTitle == "Top The Charts" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Triple Journey -TAG EDITION-" then                                  return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "WILD SIDE" then                                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Windy Fairy" then                                                   return "(X2) CYBER"
-  elseif fullSongTitle == "Wow Wow VENUS" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "You" then                                                           return "(X) DANCING RAYS"
-
-    ----------------------------------------------------------------------------- DDR 2014 ---------------------------------------------------------------------------------
-
-  elseif fullSongTitle == "朝色の紙飛行機" then                                                return "(X2) CYBER" -- Asa-iro no kami hikouki
-  elseif fullSongTitle == "妖隠し -あやかしかくし-" then                                       return "(A) BOOM DARK" -- Ayakashi kakushi
-  elseif fullSongTitle == "阿波おどり -Awaodori- やっぱり踊りはやめられない" then              return "(X2) BOOM LIGHT" -- Awa odori -Awaodori- yappari odori wa yame rarenai
-  elseif fullSongTitle == "エンドルフィン" then                                                return "(X2) CYBER" -- Endorphin
-  elseif fullSongTitle == "御千手メディテーション" then                                        return "(X2) CYBER" -- Osenju meditation
-  elseif fullSongTitle == "乙女繚乱 舞い咲き誇れ" then                                         return "(X) LOVE SWEETS" -- Otome ryouran mai sakihokore
-  elseif fullSongTitle == "女言葉の消失" then                                                  return "(X2) BOOM LIGHT" -- Onna kotoba no shoushitsu
-  elseif fullSongTitle == "クリムゾンゲイト" then                                              return "(A) BOOM DARK" -- Crimson Gate
-  elseif fullSongTitle == "激アツ☆マジヤバ☆チアガール" then                                  return "(X2) BOOM LIGHT" -- Gekiatsu majiyaba cheer girl
-  elseif fullSongTitle == "幻想系世界修復少女" then                                            return "(X) CRYSTALDIUM" -- Gensoukei sekai shuufuku shoujo
-  elseif fullSongTitle == "恋はどう？モロ◎波動OK☆方程式！！" then                             return "(X) LOVE SWEETS" -- Koi hadou Moro Hadou OK Houteishiki!!
-  elseif fullSongTitle == "漆黒のスペシャルプリンセスサンデー" then                            return "(X) BOOM BOOM BOOM" -- Shikkoku no special princess sundae
-  elseif fullSongTitle == "灼熱Beach Side Bunny" then                                          return "(X2) BOOM LIGHT" -- Shakunetsu Beach Side Bunny
-  elseif fullSongTitle == "セツナトリップ" then                                                return "(X2) BOOM LIGHT" -- Setsuna Trip
-  elseif fullSongTitle == "地方創生☆チクワクティクス" then                                    return "(X) LOVE SWEETS" -- Chihou sousei chikuwactics
-  elseif fullSongTitle == "ちゅ～いん☆バニー" then                                            return "(X) LOVE SWEETS" -- Chewin" Bunny
-  elseif fullSongTitle == "チョコレートスマイル" then                                          return "(X) LOVE SWEETS" -- Chocolate Smile
-  elseif fullSongTitle == "デッドボヲルdeホームラン" then                                      return "(X) DANCING RAYS" -- Deadball de homerun
-  elseif fullSongTitle == "天空の華" then                                                      return "(A) BOOM DARK" -- Tenkuu no hana
-  elseif fullSongTitle == "ドーパミン" then                                                    return "(A) BOOM DARK" -- Dopamine
-  elseif fullSongTitle == "ドキドキ☆流星トラップガール!!" then                                return "(X) CRYSTALDIUM" -- Dokidoki ryuusei trap girl!!
-  elseif fullSongTitle == "突撃！ガラスのニーソ姫！" then                                      return "(X) CRYSTALDIUM" -- Totsugeki! Glass no kneeso hime!
-  elseif fullSongTitle == "轟け！恋のビーンボール！！" then                                    return "(X2) BOOM LIGHT" -- Todoroke! Koi no beanball!!
-  elseif fullSongTitle == "嘆きの樹" then                                                      return "(A) BOOM DARK" -- Nageki no ki
-  elseif fullSongTitle == "夏色DIARY -DDR mix-" then                                           return "(X) BOOM BOOM BOOM" -- SUMMER DIARY -DDR mix-
-  elseif fullSongTitle == "爆なな☆てすとロイヤー" then                                        return "(X) LOVE SWEETS" -- Bakunana Testroyer
-  elseif fullSongTitle == "はなまるぴっぴはよいこだけ" then                                    return "(X) DANCING RAYS" -- Hanamaru pippi wa yoiko dake
-  elseif fullSongTitle == "パ→ピ→プ→Yeah!" then                                                return "(X) LOVE SWEETS" -- Pa pi pu Yeah!
-  elseif fullSongTitle == "バンブーソード・ガール" then                                        return "(X2) CYBER" -- Bamboo Sword Girl
-  elseif fullSongTitle == "ビビットストリーム" then                                            return "(X) DANCING RAYS" -- BeBeatStream
-  elseif fullSongTitle == "星屑のキロク" then                                                  return "(X) CRYSTALDIUM" -- Hoshikuzu no kiroku
-  elseif fullSongTitle == "ホメ猫☆センセーション" then                                        return "(X) LOVE SWEETS" -- Home neko sensation
-  elseif fullSongTitle == "マインド・ゲーム" then                                              return "(X2) BOOM LIGHT" -- Mind Game
-  elseif fullSongTitle == "回レ！雪月花" then                                                  return "(X2) BIG SCREEN" -- Maware! Setsugetsuka
-  elseif fullSongTitle == "ミライプリズム" then                                                return "(X) CRYSTALDIUM" -- Mirai prism
-  elseif fullSongTitle == "滅亡天使 † にこきゅっぴん" then                                     return "(X) LOVE SWEETS" -- Metsubou tenshi nikokyuppin
-  elseif fullSongTitle == "野球の遊び方　そしてその歴史　～決定版～" then                      return "(X) DANCING RAYS" -- Yakyuu no asobikata soshite sono rekishi ~ketteiban~
-  elseif fullSongTitle == "ヤマトなでなで♡かぐや姫" then                                      return "(X) CRYSTALDIUM" -- Yamato nadenade Kaguya-hime
-  elseif fullSongTitle == "ラクガキスト" then                                                  return "(X) DAWN STREETS" -- Luckgakist
-  elseif fullSongTitle == "海神" then                                                          return "(A) BOOM DARK" -- Wadatsumi
-  elseif fullSongTitle == "Adularia" then                                                      return "(X2) CYBER"
-  elseif fullSongTitle == "ÆTHER" then                                                         return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "AWAKE" then                                                         return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "chaos eater" then                                                   return "(A) BOOM BLUE"
-  elseif fullSongTitle == "Cleopatrysm" then                                                   return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Daily Lunch Special" then                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Dance Partay" then                                                  return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Destination" then                                                   return "(A) BOOM GREEN"
-  elseif fullSongTitle == "Din Don Dan" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Dispersion Star" then                                               return "(X2) CYBER"
-  elseif fullSongTitle == "Do The Evolution" then                                              return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Dreamin'" then                                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "EGOISM 440" then                                                    return "(REPLICANT) RED"
-  elseif fullSongTitle == "Electronic or Treat!" then                                          return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Elysium" then                                                       return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Engraved Mark" then                                                 return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "esrev:eR" then                                                      return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Follow Tomorrow" then                                               return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "FUJIMORI -祭- FESTIVAL" then                                        return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "FUNKY SUMMER BEACH" then                                            return "(A) BOOM DARK"
-  elseif fullSongTitle == "Go↓Go↑Girls&Boys!" then                                             return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Habibe (Antuh muhleke)" then                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "HAPPY☆LUCKY☆YEAPPY" then                                          return "(A) BOOM WHITE"
-  elseif fullSongTitle == "HEART BEAT FORMULA (Vinyl Mix)" then                                return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "HYENA" then                                                         return "(X2) CYBER"
-  elseif fullSongTitle == "Idola" then                                                         return "(A) BOOM DARK"
-  elseif fullSongTitle == "IMANOGUILTS" then                                                   return "(A) BOOM DARK"
-  elseif fullSongTitle == "In The Breeze" then                                                 return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "JOMANDA" then                                                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "KHAMEN BREAK" then                                                  return "(X2) CYBER"
-  elseif fullSongTitle == "M.A.Y.U." then                                                      return "(X2) CYBER"
-  elseif fullSongTitle == "MAX.(period)" then                                                  return "(REPLICANT) DARK BLUE"
-  elseif fullSongTitle == "neko＊neko" then                                                    return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Nostalgia Is Lost" then                                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "One Sided Love" then                                                return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Over The “Period”" then                                             return "(REPLICANT) RED"
-  elseif fullSongTitle == "Party Lights (Tommie Sunshine's Brooklyn Fire Remix)" then         return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Plan 8" then                                                         return "(A) BOOM DARK"
-  elseif fullSongTitle == "POSSESSION(EDP Live Mix)" then                                      return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "PRANA+REVOLUTIONARY ADDICT (U1 DJ Mix)" then                        return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "PUNISHER" then                                                      return "(X2) CYBER"
-  elseif fullSongTitle == "Remain" then                                                        return "(A) BOOM DARK"
-  elseif fullSongTitle == "Romancing Layer" then                                               return "(X2) CYBER"
-  elseif fullSongTitle == "SABER WING (satellite silhouette remix)" then                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Sakura Mirage" then                                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Samurai Shogun vs. Master Ninja" then                               return "(A) BOOM RED"
-  elseif fullSongTitle == "Sand Blow" then                                                     return "(A) BOOM YELLOW"
-  elseif fullSongTitle == "Scarlet Moon" then                                                  return "(X) DANCING RAYS"
-  elseif fullSongTitle == "second spring storm" then                                           return "(X) DANCING RAYS"
-  elseif fullSongTitle == "SPECIAL SUMMER CAMPAIGN!" then                                      return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Squeeze" then                                                       return "(X2) CYBER"
-  elseif fullSongTitle == "Starlight Fantasia" then                                            return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Starlight Fantasia (Endorphins Mix)" then                           return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "starmine" then                                                      return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Stella Sinistra" then                                               return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Strobe♡Girl" then                                                  return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Struggle" then                                                      return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Summer fantasy (Darwin remix)" then                                 return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "SUPER HERO" then                                                    return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Thank You Merry Christmas" then                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "The Lonely Streets" then                                            return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Truare!" then                                                       return "(A) BOOM DARK"
-  elseif fullSongTitle == "True Blue" then                                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "TSUBASA" then                                                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "VEGA" then                                                          return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "8000000" then                                                       return "(X) DANCING RAYS"
-  elseif fullSongTitle == "IX" then                                                            return "(A) BOOM DARK"
-
-    ----------------------------------------------------------------------------- U.M.U × BEMANI
-
-  elseif fullSongTitle == "僕は君に恋をした" then                                              return "(X2) BIG SCREEN" -- Boku wa kimi ni koi wo shita
-  elseif fullSongTitle == "Che Che Chelip～魔法のコトバ～" then                                return "(X2) BIG SCREEN" -- Che Che Chelip ~mahou no kotoba~
-  elseif fullSongTitle == "ドリームキャッチャー" then                                          return "(X2) BIG SCREEN" -- DREAM CATCHER
-  elseif fullSongTitle == "HAPPY☆きたかた" then                                               return "(X2) BIG SCREEN" -- HAPPY kitakata
-  elseif fullSongTitle == "川崎純情音頭" then                                                  return "(X2) BIG SCREEN" -- Kawasaki junjo ondo
-  elseif fullSongTitle == "キライじゃないのぉ" then                                            return "(X2) BIG SCREEN" -- Kiraijanaino
-  elseif fullSongTitle == "ルシャナの気持ち" then                                              return "(X2) BIG SCREEN" -- Le Siana no kimochi
-  elseif fullSongTitle == "ラブラブキュートなハピハピサンデー" then                            return "(X2) BIG SCREEN" -- Love love cute na happy happy sunday
-  elseif fullSongTitle == "マーメイド" then                                                    return "(X2) BIG SCREEN" -- Mermaid
-  elseif fullSongTitle == "MITOれて！いばらきっしゅだ～りん" then                              return "(X2) BIG SCREEN" -- MITOrete! Ibarakisshuda~rin
-  elseif fullSongTitle == "乙女の真骨頂" then                                                  return "(X2) BIG SCREEN" -- Otome no shinkocchou
-  elseif fullSongTitle == "らいらら" then                                                      return "(X2) BIG SCREEN" -- Rairara
-  elseif fullSongTitle == "瞬間 I LOVE YOU" then                                               return "(X2) BIG SCREEN" -- Shunkan I LOVE YOU
-  elseif fullSongTitle == "ザッツ！KAIYODO" then                                               return "(X2) BIG SCREEN" -- That"s! KAIYODO
-  elseif fullSongTitle == "We are チャリンコエンジェルス" then                                 return "(X2) BIG SCREEN" -- We are Charinko Angels
-  elseif fullSongTitle == "A to Z" then                                                        return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Boom! Boom! Miracle Emotion" then                                   return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "CAPTIVE" then                                                       return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Dong! Dong!" then                                                   return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Everybody Say EDOGAWA" then                                         return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "Field on!" then                                                     return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "HeartLatte" then                                                    return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "LoveLove DokiDoki" then                                             return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "LUCKY-YO!!" then                                                    return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "my cosmic world" then                                               return "(X2) BIG SCREEN"
-  elseif fullSongTitle == "MY HERO" then                                                       return "(X2) BIG SCREEN"
-
-    ----------------------------------------------------------------------------- DDR A
-
-  elseif fullSongTitle == "愛言葉" then                                                        return "(X) LOVE SWEETS" -- Ai kotoba
-  elseif fullSongTitle == "天ノ弱" then                                                        return "(X2) BOOM LIGHT" -- Ama no jyaku
-  elseif fullSongTitle == "ありふれたせかいせいふく" then                                      return "(X) BOOM BOOM BOOM" -- Arifureta sekai seifuku
-  elseif fullSongTitle == "いーあるふぁんくらぶ" then                                          return "(X) DANCING RAYS" -- Yi-er fanclub
-  elseif fullSongTitle == "イーディーエム・ジャンパーズ" then                                  return "(X2) BOOM LIGHT" -- EDM jumpers
-  elseif fullSongTitle == "色は匂へど散りぬるを" then                                          return "(X) BOOM BOOM BOOM" -- Iro wa nio e do chirinuru wo
-  elseif fullSongTitle == "エイリアンエイリアン" then                                          return "(X) DANCING RAYS" -- Alien Alien
-  elseif fullSongTitle == "エキサイティング!!も・ちゃ・ちゃ☆" then                            return "(X) LOVE SWEETS" -- Exciting!! Mo-cha-cha
-  elseif fullSongTitle == "おねがいダーリン" then                                              return "(X) LOVE SWEETS" -- Onegai darling
-  elseif fullSongTitle == "朧" then                                                            return "(X2) BOOM LIGHT" -- Oboro
-  elseif fullSongTitle == "朧 (dj TAKA Remix)" then                                            return "(X) CRYSTALDIUM" -- Oboro (dj TAKA Remix)
-  elseif fullSongTitle == "きゅん×きゅんばっきゅん☆LOVE" then                                 return "(X) BOOM BOOM BOOM" -- Kyun kyun bakkyun LOVE
-  elseif fullSongTitle == "倉野川音頭" then                                                    return "(X2) BOOM LIGHT" -- Kuranogawa ondo
-  elseif fullSongTitle == "黒髪乱れし修羅となりて～凛 edition～" then                          return "(X) CRYSTALDIUM" -- Kurokami midareshi shura to narite ~Rin edition~
-  elseif fullSongTitle == "君氏危うくも近うよれ" then                                          return "(X) BOOM BOOM BOOM" -- Kunshi ayauku mo chikou yore
-  elseif fullSongTitle == "恋時雨" then                                                        return "(X) BOOM BOOM BOOM" -- Koishigure
-  elseif fullSongTitle == "恋する☆宇宙戦争っ!!" then                                          return "(X2) BOOM LIGHT" -- Koisuru uchuu sensou!!
-  elseif fullSongTitle == "恋のパズルマジック" then                                            return "(X) CRYSTALDIUM" -- Koi no puzzle magic
-  elseif fullSongTitle == "この青空の下で" then                                                return "(X) CRYSTALDIUM" -- Kono aozora no shita de
-  elseif fullSongTitle == "さよならトリップ ～夏陽 EDM edition～" then                         return "(X) CRYSTALDIUM" -- Sayonara trip ~Natsuhi EDM edition~
-  elseif fullSongTitle == "幸せになれる隠しコマンドがあるらしい" then                          return "(X) BOOM BOOM BOOM" -- Shiawase ni nareru kakushi command ga arurashii
-  elseif fullSongTitle == "しゃかりきリレーション" then                                        return "(X) LOVE SWEETS" -- Shakariki relation
-  elseif fullSongTitle == "十二星座の聖域" then                                                return "(X) CRYSTALDIUM" -- Juuniseiza no seiiki
-  elseif fullSongTitle == "シュレーディンガーの猫" then                                        return "(X) LOVE SWEETS" -- Schrodinger no neko
-  elseif fullSongTitle == "春風ブローインウィンド" then                                        return "(X2) BOOM LIGHT" -- Shunpuu blowing wind
-  elseif fullSongTitle == "すろぉもぉしょん" then                                              return "(X) CRYSTALDIUM" -- SLoWMoTIoN
-  elseif fullSongTitle == "星座が恋した瞬間を。" then                                          return "(X) CRYSTALDIUM" -- Seiza ga koishita shunkan wo
-  elseif fullSongTitle == "千年ノ理" then                                                      return "(X) BOOM BOOM BOOM" -- Sennen no kotowari
-  elseif fullSongTitle == "宇宙(ソラ)への片道切符" then                                        return "(X) BOOM BOOM BOOM" -- Sora e no katamichi kippu
-  elseif fullSongTitle == "闘え！ダダンダーンV" then                                           return "(X) DANCING RAYS" -- Tatakae! Dadandarn V
-  elseif fullSongTitle == "打打打打打打打打打打" then                                          return "(X) DANCING RAYS" -- Dadadadadadadadadada
-  elseif fullSongTitle == "チルノのパーフェクトさんすう教室" then                              return "(X) CRYSTALDIUM" -- Cirno"s Perfect Math Class
-  elseif fullSongTitle == "チルノのパーフェクトさんすう教室 (EDM REMIX)" then                  return "(X) CRYSTALDIUM" -- Cirno"s Perfect Math Class (EDM REMIX)
-  elseif fullSongTitle == "ナイト・オブ・ナイツ" then                                          return "(A) BOOM DARK" -- Night of knights
-  elseif fullSongTitle == "脳漿炸裂ガール" then                                                return "(X2) CYBER" -- Nou shou sakuretsu girl
-  elseif fullSongTitle == "初音ミクの消失" then                                                return "(X2) BOOM LIGHT" -- Hatsune Miku no shoushitsu
-  elseif fullSongTitle == "ハッピーシンセサイザ" then                                          return "(X) DANCING RAYS" -- Happy synthesizer
-  elseif fullSongTitle == "ハピ恋☆らぶりぃタイム!!" then                                      return "(X) LOVE SWEETS" -- Happy koi lovely time!!
-  elseif fullSongTitle == "ハルイチバン" then                                                  return "(X2) BOOM LIGHT" -- Haru ichiban
-  elseif fullSongTitle == "*ハロー、プラネット。" then                                         return "(X2) CLUB" -- Hello, planet
-  elseif fullSongTitle == "向日葵サンセット" then                                              return "(X2) BOOM LIGHT" -- Himawari sunset
-  elseif fullSongTitle == "風鈴花火" then                                                      return "(X) DANCING RAYS" -- Fuurin hanabi
-  elseif fullSongTitle == "無頼ック自己ライザー" then                                          return "(X2) CLUB" -- Buraikku jikorizer
-  elseif fullSongTitle == "プレインエイジア -PHQ remix-" then                                  return "(X) BOOM BOOM BOOM" -- Plain Asia -PHQ remix-
-  elseif fullSongTitle == "ベィスドロップ・フリークス" then                                    return "(X) LOVE SWEETS" -- Bassdrop freaks
-  elseif fullSongTitle == "放課後ストライド" then                                              return "(X2) BOOM LIGHT" -- Houkago stride
-  elseif fullSongTitle == "魔法のたまご ～心菜 ELECTRO POP edition～" then                     return "(X) CRYSTALDIUM" -- Mahou no tamago ~Cocona ELECTRO POP edition~
-  elseif fullSongTitle == "魔理沙は大変なものを盗んでいきました" then                          return "(X) LOVE SWEETS" -- Marisa wa taihen na mono wo nusunde ikimashita
-  elseif fullSongTitle == "妄想税" then                                                        return "(X2) CYBER" -- Mousou zei
-  elseif fullSongTitle == "ようこそジャパリパークへ" then                                      return "(X2) BOOM LIGHT" -- Youkoso Japari Park e
-  elseif fullSongTitle == "輪廻転生" then                                                      return "(A) BOOM DARK" -- Rinnetensei
-  elseif fullSongTitle == "ルミナスデイズ" then                                                return "(X) DANCING RAYS" -- Luminous days
-  elseif fullSongTitle == "恋愛観測" then                                                      return "(X) LOVE SWEETS" -- Renai kansoku
-  elseif fullSongTitle == "ロールプレイングゲーム" then                                        return "(X2) CYBER" -- Role-playing game
-  elseif fullSongTitle == "六兆年と一夜物語" then                                              return "(X2) CYBER" -- Rokuchounen to ichiya monogatari
-  elseif fullSongTitle == "炉心融解" then                                                      return "(X) CRYSTALDIUM" -- Roshin yuukai
-  elseif fullSongTitle == "ロストワンの号哭" then                                              return "(X) BOOM BOOM BOOM" -- Lost one no goukoku
-  elseif fullSongTitle == "ロンロンへ ライライライ!" then                                      return "(X2) BOOM LIGHT" -- Ronron e rairairai!
-  elseif fullSongTitle == "ACE FOR ACES" then                                                  return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "ALGORITHM" then                                                     return "(X2) CYBER"
-  elseif fullSongTitle == "ALL MY HEART -この恋に、わたしの全てを賭ける-" then                 return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Angelic Jelly" then                                                 return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "ANNIVERSARY ∴∵∴ ←↓↑→" then                                          return "(X2) CYBER"
-  elseif fullSongTitle == "Astrogazer" then                                                    return "(A) BOOM WHITE"
-  elseif fullSongTitle == "Bad Apple!! feat. nomico" then                                      return "(X2) CYBER"
-  elseif fullSongTitle == "bass 2 bass" then                                                   return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Be a Hero!" then                                                    return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Believe" then                                                       return "(X2) CLUB"
-  elseif fullSongTitle == "Boss Rush" then                                                     return "(A) BOOM DARK"
-  elseif fullSongTitle == "Break Free" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Catch Our Fire!" then                                               return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "CHAOS Terror-Tech Mix" then                                         return "(A) BOOM YELLOW"
-  elseif fullSongTitle == "CHOCOLATE PHILOSOPHY" then                                          return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Chronos (walk with you remix)" then                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Come to Life" then                                                  return "(A) BOOM RED"
-  elseif fullSongTitle == "Cosy Catastrophe" then                                              return "(A) BOOM WHITE"
-  elseif fullSongTitle == "Cytokinesis" then                                                   return "(A) BOOM DARK"
-  elseif fullSongTitle == "DANCE ALL NIGHT (DDR EDITION)" then                                 return "(X2) CYBER"
-  elseif fullSongTitle == "Dancer in the flare" then                                           return "(X) DANCING RAYS"
-  elseif fullSongTitle == "DDR MEGAMIX" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Determination" then                                                 return "(X) DAWN STREETS"
-  elseif fullSongTitle == "DREAMING-ING!!" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Electric Dance System Music" then                                   return "(X2) CYBER"
-  elseif fullSongTitle == "Emera" then                                                         return "(A) BOOM GREEN"
-  elseif fullSongTitle == "ENDYMION" then                                                      return "(REPLICANT) RED"
-  elseif fullSongTitle == "Eternal Summer" then                                                return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Far east nightbird" then                                            return "(X2) CYBER"
-  elseif fullSongTitle == "Far east nightbird kors k Remix -DDR edit ver-" then                return "(A) BOOM DARK"
-  elseif fullSongTitle == "First Time" then                                                    return "(A) BOOM DARK"
-  elseif fullSongTitle == "Fly far bounce" then                                                return "(X2) CYBER"
-  elseif fullSongTitle == "Grand Chariot" then                                                 return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Grip & Break down !!" then                                          return "(X) DANCING RAYS"
-  elseif fullSongTitle == "HANDS UP IN THE AIR" then                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Happy" then                                                         return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Ha・lle・lu・jah" then                                              return "(X2) CYBER"
-  elseif fullSongTitle == "Help me, ERINNNNNN!!" then                                          return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "High School Love" then                                              return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Hillbilly Shoes" then                                               return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Hopeful" then                                                       return "(X2) CYBER"
-  elseif fullSongTitle == "I Want You To Know" then                                            return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Illegal Function Call" then                                         return "(A) BOOM DARK"
-  elseif fullSongTitle == "IN BETWEEN" then                                                    return "(A) BOOM YELLOW"
-  elseif fullSongTitle == "invisible rain" then                                                return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Ishtar" then                                                        return "(A) BOOM RED"
-  elseif fullSongTitle == "Jewelry days" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Lesson by DJ" then                                                  return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Life is beautiful" then                                             return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Love You More" then                                                 return "(A) BOOM RED"
-  elseif fullSongTitle == "Love♡Shine わんだふるmix" then                                     return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "MAX 360" then                                                       return "(A) BOOM RED"
-  elseif fullSongTitle == "More One Night" then                                                return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Neutrino" then                                                      return "(A) BOOM BLUE"
-  elseif fullSongTitle == "New Century" then                                                   return "(A) BOOM GREEN"
-  elseif fullSongTitle == "#OurMemories" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "out of focus" then                                                  return "(A) BOOM GREEN"
-  elseif fullSongTitle == "Poochie" then                                                       return "(X2) CYBER"
-  elseif fullSongTitle == "POSSESSION (20th Anniversary Mix)" then                             return "(A) BOOM BLUE"
-  elseif fullSongTitle == "Prey" then                                                          return "(X2) CYBER"
-  elseif fullSongTitle == "Puberty Dysthymia" then                                             return "(A) BOOM DARK"
-  elseif fullSongTitle == "Pursuer" then                                                       return "(A) BOOM RED"
-  elseif fullSongTitle == "Reach The Sky, Without you" then                                    return "(A) BOOM DARK"
-  elseif fullSongTitle == "Rejoin" then                                                        return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "RISING FIRE HAWK" then                                              return "(A) BOOM RED"
-  elseif fullSongTitle == "S!ck" then                                                          return "(X2) CYBER"
-  elseif fullSongTitle == "Sakura Reflection" then                                             return "(X2) CYBER"
-  elseif fullSongTitle == "Sephirot" then                                                      return "(X2) CYBER"
-  elseif fullSongTitle == "SHION" then                                                         return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Show me your moves" then                                            return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Shut Up and Dance" then                                             return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "siberite" then                                                      return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Smiling Passion" then                                               return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Special One" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Star Trail" then                                                    return "(X2) MOVIE LIGHT"
-  elseif fullSongTitle == "Start a New Day" then                                               return "(A) BOOM WHITE"
-  elseif fullSongTitle == "STERLING SILVER" then                                               return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "STERLING SILVER (U1 overground mix)" then                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Strawberry Chu♡Chu♡" then                                         return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "StrayedCatz" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "SUN² SUMMER STEP!" then                                             return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "SUPER SUMMER SALE" then                                             return "(X) DAWN STREETS"
-  elseif fullSongTitle == "TECH-NOID" then                                                     return "(X2) CYBER"
-  elseif fullSongTitle == "The Night Away (MK Remix)" then                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Time Of Our Lives" then                                             return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Towards the TOWER" then                                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Triple Counter" then                                                return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Twin memories W" then                                               return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Vanquish The Ghost" then                                            return "(A) BOOM WHITE"
-  elseif fullSongTitle == "Wake Me Up" then                                                    return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Yeah! Yeah!" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "ZEPHYRANTHES" then                                                  return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "39" then                                                            return "(X2) BOOM LIGHT"
-
-    ----------------------------------------------------------------------------- DDR A20 ---------------------------------------------------------------------------------
-
-  elseif fullSongTitle == "おーまい！らぶりー！すうぃーてぃ！だーりん！" then                  return "(X) LOVE SWEETS" -- Oh my! lovely! sweety! darling!
-  elseif fullSongTitle == "革命パッショネイト" then                                            return "(X) BOOM BOOM BOOM" -- Kakumei passionate
-  elseif fullSongTitle == "腐れ外道とチョコレゐト" then                                        return "(X) CRYSTALDIUM" -- Kusare gedou to chocolate
-  elseif fullSongTitle == "最終鬼畜妹フランドール・S" then                                     return "(A) BOOM RED" -- Saishuu kichiku imouto Flandre-S
-  elseif fullSongTitle == "最小三倍完全数" then                                                return "(X2) CYBER" -- Saishou sanbai kanzensuu
-  elseif fullSongTitle == "スイーツはとまらない♪" then                                        return "(X) LOVE SWEETS" -- Sweets wa tomaranai
-  elseif fullSongTitle == "すきなことだけでいいです" then                                      return "(X) BOOM BOOM BOOM" -- Sukina koto dakede ii desu
-  elseif fullSongTitle == "タイガーランペイジ" then                                            return "(X) BOOM BOOM BOOM" -- Tiger rampage
-  elseif fullSongTitle == "どきドキ バレンタイン" then                                         return "(X) LOVE SWEETS" -- Dokidoki Valentine
-  elseif fullSongTitle == "毒占欲" then                                                        return "(X) BOOM BOOM BOOM" -- Dokusenyoku
-  elseif fullSongTitle == "ナイト・オブ・ナイツ (Ryu☆Remix)" then                             return "(A) BOOM BLUE" -- Night of Knights (Ryu Remix)
-  elseif fullSongTitle == "熱情のサパデアード" then                                            return "(X2) CLUB" -- Netsujou no zapadeado
-  elseif fullSongTitle == "び" then                                                            return "(X) LOVE SWEETS" -- Bi
-  elseif fullSongTitle == "ヒカリユリイカ" then                                                return "(X2) BOOM LIGHT" -- Hikari eureka
-  elseif fullSongTitle == "ベビーステップ" then                                                return "(X2) BOOM LIGHT" -- Baby step
-  elseif fullSongTitle == "ホーンテッド★メイドランチ" then                                    return "(A) BOOM DARK" -- Haunted maid lunch
-  elseif fullSongTitle == "星屑の夜果て" then                                                  return "(X) CRYSTALDIUM" -- Hoshikuzu no yoru hate
-  elseif fullSongTitle == "未完成ノ蒸氣驅動乙女 (DDR Edition)" then                            return "(A) BOOM YELLOW" -- Mikansei no jouki kudou otome (DDR Edition)
-  elseif fullSongTitle == "ミッドナイト☆WAR" then                                             return "(X) LOVE SWEETS" -- Midnight WAR
-  elseif fullSongTitle == "未来（ダ）FUTURE" then                                              return "(X) DANCING RAYS" -- Mirai (da) FUTURE  
-  elseif fullSongTitle == "妄想感傷代償連盟" then                                              return "(X) DANCING RAYS" -- Mousou kanshou daishou renmei
-  elseif fullSongTitle == "ライアーダンス" then                                                return "(X) DANCING RAYS" -- Liar dance
-  elseif fullSongTitle == "ラブキラ☆スプラッシュ" then                                        return "(X) LOVE SWEETS" -- Love kira splash
-  elseif fullSongTitle == "ランカーキラーガール" then                                          return "(A) BOOM YELLOW" -- Ranker killer girl
-  elseif fullSongTitle == "令和" then                                                          return "(X2) BOOM LIGHT" -- Reiwa
-  elseif fullSongTitle == "Ace out" then                                                       return "(A) BOOM YELLOW"
-  elseif fullSongTitle == "Afterimage d'automne" then                                         return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Alone" then                                                         return "(X2) CYBER"
-  elseif fullSongTitle == "ALPACORE" then                                                      return "(A) BOOM BLUE"
-  elseif fullSongTitle == "Avenger" then                                                       return "(A) BOOM BLUE"
-  elseif fullSongTitle == "BLACK JACKAL" then                                                  return "(X2) CLUB"
-  elseif fullSongTitle == "BLSTR" then                                                         return "(X2) CYBER"
-  elseif fullSongTitle == "Bounce Trippy" then                                                 return "(X2) CYBER"
-  elseif fullSongTitle == "BUTTERFLY (20th Anniversary Mix)" then                              return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "CARTOON HEROES (20th Anniversary Mix)" then                         return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Clarity" then                                                       return "(X2) CYBER"
-  elseif fullSongTitle == "Crazy Shuffle" then                                                 return "(X) DAWN STREETS"
-  elseif fullSongTitle == "CROSS" then                                                         return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "CyberConnect" then                                                  return "(X2) CYBER"
-  elseif fullSongTitle == "Dead Heat" then                                                     return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "DIGITAL LUV" then                                                   return "(X2) CLUB"
-  elseif fullSongTitle == "District of the Shadows" then                                       return "(X2) CYBER"
-  elseif fullSongTitle == "DOWNER & UPPER" then                                                return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Drop The Bounce" then                                               return "(A) BOOM DARK"
-  elseif fullSongTitle == "ENDLESS" then                                                       return "(X) DANCING RAYS"
-  elseif fullSongTitle == "F4SH10N" then                                                       return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Firestorm" then                                                     return "(A) BOOM YELLOW"
-  elseif fullSongTitle == "Get On Da Floor" then                                               return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Give Me" then                                                       return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Glitch Angel" then                                                  return "(A) BOOM WHITE"
-  elseif fullSongTitle == "Golden Arrow" then                                                  return "(X) DANCING RAYS"
-  elseif fullSongTitle == "HAVE YOU NEVER BEEN MELLOW (20th Anniversary Mix)" then             return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Helios" then                                                        return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Hunny Bunny" then                                                   return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "I Love You" then                                                    return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "I’m an Albatraoz" then                                              return "(X) DANCING RAYS"
-  elseif fullSongTitle == "IRON HEART" then                                                    return "(X2) CYBER"
-  elseif fullSongTitle == "Lachryma《Re:Queen’M》" then                                        return "(A) BOOM WHITE"
-  elseif fullSongTitle == "LEVEL UP" then                                                      return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "LONG TRAIN RUNNIN' (20th Anniversary Mix)" then                    return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Mythomane" then                                                     return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Neverland" then                                                     return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "New Era" then                                                       return "(A) BOOM YELLOW"
-  elseif fullSongTitle == "New Rules" then                                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "No Tears Left to Cry" then                                          return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "ORCA" then                                                          return "(A) BOOM RED"
-  elseif fullSongTitle == "Our Soul" then                                                      return "(X2) CYBER"
-  elseif fullSongTitle == "ΩVERSOUL" then                                                      return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Party Rock Anthem" then                                             return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Play Hard" then                                                     return "(X2) CLUB"
-  elseif fullSongTitle == "Procyon" then                                                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Rampage Hero" then                                                  return "(A) BOOM RED"
-  elseif fullSongTitle == "Re:GENERATION" then                                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Right Time Right Way" then                                          return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Seta Para Cima↑↑" then                                              return "(X2) CLUB"
-  elseif fullSongTitle == "Silly Love" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Six String Proof" then                                              return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "SKY HIGH (20th Anniversary Mix)" then                               return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Skywalking" then                                                    return "(X2) CYBER"
-  elseif fullSongTitle == "Small Steps" then                                                   return "(X2) CLUB"
-  elseif fullSongTitle == "SODA GALAXY" then                                                   return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Something Just Like This (Alesso Remix) " then                      return "(X2) CLUB"
-  elseif fullSongTitle == "Splash Gold" then                                                   return "(A) BOOM DARK"
-  elseif fullSongTitle == "Starlight in the Snow" then                                         return "(X2) CLUB"
-  elseif fullSongTitle == "Starry Sky" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Stay 4 Ever" then                                                   return "(X) DANCING RAYS"
-  elseif fullSongTitle == "SWEET HOME PARTY" then                                              return "(A) BOOM RED"
-  elseif fullSongTitle == "The History of the Future" then                                     return "(A) BOOM BLUE"
-  elseif fullSongTitle == "The Light" then                                                     return "(X2) CYBER"
-  elseif fullSongTitle == "The World Ends Now" then                                            return "(A) BOOM WHITE"
-  elseif fullSongTitle == "This Beat Is....." then                                             return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Toy Box Factory" then                                               return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "toy boxer" then                                                     return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Trill auf G" then                                                   return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Une mage blanche" then                                              return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "voltississimo" then                                                 return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Waiting" then                                                       return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "50th Memorial Songs -Beginning Story-" then                         return "(A) BOOM RED"
-  elseif fullSongTitle == "50th Memorial Songs -Flagship medley-" then                         return "(X) DAWN STREETS"
-  elseif fullSongTitle == "50th Memorial Songs -二人の時 ～under the cherry blossoms～-" then  return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "50th Memorial Songs -The BEMANI History-" then                      return "(X2) CYBER"
-
-    ----------------------------------------------------------------------------- DDR A20 PLUS ---------------------------------------------------------------------------
-
-  elseif fullSongTitle == "蒼が消えるとき" then                                                return "(X) BOOM BOOM BOOM" -- Ao ga kieru toki
-  elseif fullSongTitle == "アリスサイド・キャスリング" then                                    return "(X) CRYSTALDIUM" -- Alice side castling
-  elseif fullSongTitle == "鋳鉄の檻" then                                                      return "(X) BOOM BOOM BOOM" -- Itetsu no pride
-  elseif fullSongTitle == "イノセントバイブル" then                                            return "(X) BOOM BOOM BOOM" -- Innocent bible
-  elseif fullSongTitle == "ウソツキ横丁は雨模様" then                                          return "(X) BOOM BOOM BOOM" -- Usotsuki yokochou wa amemoyou
-  elseif fullSongTitle == "梅雪夜" then                                                        return "(X) CRYSTALDIUM" -- Umeyukiyo
-  elseif fullSongTitle == "御伽噺に幕切れを" then                                              return "(X) BOOM BOOM BOOM" -- Otogibanashi ni makugire wo
-  elseif fullSongTitle == "彼方のリフレシア" then                                              return "(X2) BOOM LIGHT" -- Kanata no Reflesia
-  elseif fullSongTitle == "狂水一華" then                                                      return "(X) DANCING RAYS" -- Kyousui ichika
-  elseif fullSongTitle == "恋" then                                                            return "(X) DANCING RAYS" -- Koi
-  elseif fullSongTitle == "ここからよろしく大作戦143" then                                     return "(X) BOOM BOOM BOOM" -- Koko kara yoroshiku daisakusen 143
-  elseif fullSongTitle == "逆さま♥シンデレラパレード" then                                    return "(X) LOVE SWEETS" -- Sakasama Cinderella parade
-  elseif fullSongTitle == "雑草魂なめんなよ！" then                                            return "(X2) BOOM LIGHT" -- Zassou tamashii namen na yo!
-  elseif fullSongTitle == "至上のラトゥーリア" then                                            return "(X) BOOM BOOM BOOM" -- Shijou no laturia
-  elseif fullSongTitle == "思想犯" then                                                        return "(X) BOOM BOOM BOOM" -- Shisouhan
-  elseif fullSongTitle == "灼熱 Pt.2 Long Train Running" then                                  return "(X) DANCING RAYS" -- Shakunetsu Pt 2 Long Train Running
-  elseif fullSongTitle == "シル・ヴ・プレジデント" then                                        return "(X) LOVE SWEETS" -- S"il vous president
-  elseif fullSongTitle == "スーパー戦湯ババンバーン" then                                      return "(X2) BOOM LIGHT" -- Super sentou Babanburn
-  elseif fullSongTitle == "スカイクラッドの観測者" then                                        return "(A) BOOM WHITE" -- Skyclad no kansokusha
-  elseif fullSongTitle == "世界の果てに約束の凱歌を -DDR Extended Megamix-" then               return "(A) BOOM YELLOW" -- Sekai no hate ni yakusoku no gaika wo -DDR Extended Megamix-
-  elseif fullSongTitle == "追憶のアリア" then                                                  return "(X2) BOOM LIGHT" -- Tsuioku no aria
-  elseif fullSongTitle == "東京神話" then                                                      return "(X) BOOM BOOM BOOM" -- Tokyo shinwa
-  elseif fullSongTitle == "なだめスかし Negotiation" then                                      return "(X) LOVE SWEETS" -- Nadame sukashi Negotiation
-  elseif fullSongTitle == "ノルエピネフリン" then                                              return "(X) BOOM BOOM BOOM" -- Norepinephrine
-  elseif fullSongTitle == "花は折りたし梢は高し" then                                          return "(X) BOOM BOOM BOOM" -- Hana wa oritashi kozue wa takashi
-  elseif fullSongTitle == "ハラショー！おにぎりサーカス団☆" then                              return "(X) LOVE SWEETS" -- Khorosho! Onigiri circus dan
-  elseif fullSongTitle == "春を告げる" then                                                    return "(X) BOOM BOOM BOOM" -- Haru wo tsugeru
-  elseif fullSongTitle == "叛逆のディスパレート" then                                          return "(X) BOOM BOOM BOOM" -- Hangyaku no disparate
-  elseif fullSongTitle == "勇猛無比" then                                                      return "(X) BOOM BOOM BOOM" -- YU-MOU-MU-HI
-  elseif fullSongTitle == "ユメブキ" then                                                      return "(X2) CYBER" -- Yumebuki
-  elseif fullSongTitle == "ロキ(w/緒方恵美)" then                                              return "(X) BOOM BOOM BOOM" -- Roki (Megumi Ogata)
-  elseif fullSongTitle == "ほしのつくりかた" then                                              return "(X) CRYSTALDIUM" -- Hoshi no tsukurikata
-  elseif fullSongTitle == "モノクロモーメント" then                                            return "(X) CRYSTALDIUM" -- Monochrome moment
-  elseif fullSongTitle == "ノープラン・デイズ" then                                            return "(X) CRYSTALDIUM" -- No plan days
-  elseif fullSongTitle == "サイカ" then                                                        return "(X) BOOM BOOM BOOM" -- Saika
-  elseif fullSongTitle == "テレキャスタービーボーイ" then                                      return "(X) LOVE SWEETS" -- Telecaster B-boy
-  elseif fullSongTitle == "actualization of self (weaponized)" then                            return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "AI" then                                                            return "(X2) CYBER"
-  elseif fullSongTitle == "Aftermath" then                                                     return "(A) BOOM BLUE"
-  elseif fullSongTitle == "ANTI ANTHEM" then                                                   return "(A) BOOM YELLOW"
-  elseif fullSongTitle == "Bang Pad(Werk Mix)" then                                            return "(X2) CYBER"
-  elseif fullSongTitle == "Better Than Me" then                                                return "(X2) CYBER"
-  elseif fullSongTitle == "BITTER CHOCOLATE STRIKER" then                                      return "(X2) CYBER"
-  elseif fullSongTitle == "BLAKE" then                                                         return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "BRIDAL FESTIVAL !!!" then                                           return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "City Never Sleeps" then                                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Come Back To Me" then                                               return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "CONNECT-" then                                                      return "(X2) CLUB"
-  elseif fullSongTitle == "Crazy Hot" then                                                     return "(X) DANCING RAYS"
-  elseif fullSongTitle == "DANCERUSH STARDOM ANTHEM" then                                      return "(X) DAWN STREETS"
-  elseif fullSongTitle == "DEADLOCK -Out Of Reach-" then                                       return "(A) BOOM RED"
-  elseif fullSongTitle == "DeStRuCtIvE FoRcE" then                                             return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "DIGITALIZER" then                                                   return "(A) BOOM RED"
-  elseif fullSongTitle == "Draw the Savage" then                                               return "(X2) CYBER"
-  elseif fullSongTitle == "Evans" then                                                         return "(A) BOOM BLUE"
-  elseif fullSongTitle == "Feidie" then                                                        return "(X) DANCING RAYS"
-  elseif fullSongTitle == "GHOST KINGDOM" then                                                 return "(X) DAWN STREETS"
-  elseif fullSongTitle == "Globe Glitter" then                                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Going Hypersonic" then                                              return "(A) BOOM WHITE"
-  elseif fullSongTitle == "Good Looking" then                                                  return "(X2) CLUB"
-  elseif fullSongTitle == "GUILTY DIAMONDS" then                                               return "(X) DANCING RAYS"
-  elseif fullSongTitle == "HARD BRAIN" then                                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Hella Deep" then                                                    return "(X2) CYBER"
-  elseif fullSongTitle == "High & Low" then                                                    return "(A) BOOM DARK"
-  elseif fullSongTitle == "Hyper Bomb" then                                                    return "(X2) CYBER"
-  elseif fullSongTitle == "HYPERDRIVE" then                                                    return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "HyperTwist" then                                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "I believe what you said" then                                       return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "I Want To Do This Keep" then                                        return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "If" then                                                            return "(X2) CYBER"
-  elseif fullSongTitle == "In the past" then                                                   return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Inner Spirit -GIGA HiTECH MIX-" then                                return "(X2) CYBER"
-  elseif fullSongTitle == "Jetcoaster Windy" then                                              return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Jucunda Memoria" then                                               return "(A) BOOM RED"
-  elseif fullSongTitle == "Last Card" then                                                     return "(A) BOOM WHITE"
-  elseif fullSongTitle == "Last Twilight" then                                                 return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "LET'S CHECK YOUR LEVEL!" then                                      return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Lightspeed" then                                                    return "(A) BOOM YELLOW"
-  elseif fullSongTitle == "LIKE A VAMPIRE" then                                                return "(A) BOOM DARK"
-  elseif fullSongTitle == "Midnight Amaretto" then                                             return "(X2) CLUB"
-  elseif fullSongTitle == "MOVE! (We Keep It Movin')" then                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "MUTEKI BUFFALO" then                                                return "(A) BOOM RED"
-  elseif fullSongTitle == "Never See You Again" then                                           return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Next Phase" then                                                    return "(A) BOOM BLUE"
-  elseif fullSongTitle == "No Life Queen [DJ Command Remix]" then                              return "(X) DANCING RAYS"
-  elseif fullSongTitle == "ONYX" then                                                          return "(X2) CYBER"
-  elseif fullSongTitle == "Our Love" then                                                      return "(X2) CYBER"
-  elseif fullSongTitle == "PANIC HOLIC" then                                                   return "(A) BOOM DARK"
-  elseif fullSongTitle == "paparazzi" then                                                     return "(X2) CLUB"
-  elseif fullSongTitle == "PARTY ALL NIGHT(DJ KEN-BOW MIX)" then                               return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Poppin' Soda" then                                                 return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Rave Accelerator" then                                              return "(X2) CYBER"
-  elseif fullSongTitle == "Realize" then                                                       return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "Red Cape Theorem" then                                              return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Riot of Color" then                                                 return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "ROOM" then                                                          return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "Run The Show" then                                                  return "(X2) CYBER"
-  elseif fullSongTitle == "Seize The Day" then                                                 return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "SHINY DAYS" then                                                    return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Shout It Out" then                                                  return "(A) BOOM DARK"
-  elseif fullSongTitle == "Sparkle Smilin'" then                                              return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "STEP MACHINE" then                                                  return "(X2) CYBER"
-  elseif fullSongTitle == "Step This Way" then                                                 return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Sweet Clock" then                                                   return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Sword of Vengeance" then                                            return "(A) BOOM RED"
-  elseif fullSongTitle == "take me higher" then                                                return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Taking It To The Sky (PLUS step)" then                              return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Together Going My Way" then                                         return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Triple Cross" then                                                  return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "Twinkle Wonderland" then                                            return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "TYPHØN" then                                                        return "(A) BOOM WHITE"
-  elseif fullSongTitle == "Uh-Oh" then                                                         return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "Vertigo" then                                                       return "(X2) CYBER"
-  elseif fullSongTitle == "We're so Happy" then                                               return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "X-ray binary" then                                                  return "(X) DANCING RAYS"
-  elseif fullSongTitle == "Yuni's Nocturnal Days" then                                        return "(X) DANCING RAYS"
-
-    ----------------------------------------------------------------------------- DDR GRAND PRIX 
-
-  elseif fullSongTitle == "怪物" then                                                          return "(X) DAWN STREETS"
-  elseif fullSongTitle == "紅蓮華" then                                                        return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "群青" then                                                          return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "さくらんぼ" then                                                    return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "じょいふる" then                                                    return "(X) LOVE SWEETS"
-  elseif fullSongTitle == "ドライフラワー" then                                                return "(X) DAWN STREETS"
-  elseif fullSongTitle == "夏祭り" then                                                        return "(X2) BOOM LIGHT"
-  elseif fullSongTitle == "夜に駆ける" then                                                    return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "ルカルカ★ナイトフィーバー" then                                    return "(X) DANCING RAYS"
-  elseif fullSongTitle == "恋愛レボリューション21" then                                        return "(X2) CLUB"
-  elseif fullSongTitle == "勿忘" then                                                          return "(X2) BOOM LIGHT"
-
-    ----------------------------------------------------------------------------- OTHER SONGS 
-
-  elseif fullSongTitle == "Re:Elemental Creation" then                                         return "(A) BOOM WHITE"
-  elseif fullSongTitle == "Haryu" then                                                         return "(X2) CYBER"
-  elseif fullSongTitle == "dEKA" then                                                          return "(X) CRYSTALDIUM"
-  elseif fullSongTitle == "U.N. Owen Was Her" then                                             return "(X) BOOM BOOM BOOM"
-  elseif fullSongTitle == "You Goddamn Fish" then                                              return "(X2) BOOM LIGHT"
-
+  local danceStage = songDanceStageTable[fullSongTitle]
+  if danceStage then
+    return danceStage
   else
     local RDS = math.random(1, 8)
     if RDS == 1 then
@@ -1242,5 +1228,4 @@ function DanceStageSong()
       return "(X) CAPTURE ME"
     end
   end
-  ----------------------------------------------------------------------------- END OF SONG LIST
 end
