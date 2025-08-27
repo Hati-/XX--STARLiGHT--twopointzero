@@ -49,7 +49,7 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 		or (HasVideo() and not VideoStage() and GetUserPref("CutInOverVideo") == "ON")
 	) then
 		--use ipairs here because i think it expects P1 is loaded before P2
-		if FILEMAN:DoesFileExist("/Characters/"..WhichRead(pn).."/Cut-In") then
+		if FILEMAN:DoesFileExist(GetCharactersDirPath()..WhichRead(pn).."/Cut-In") then
 			t[#t+1] = Def.ActorFrame{
 				loadfile(THEME:GetPathB("ScreenGameplay","underlay/Cutin.lua"))(pn) .. {
 					OnCommand=function(s) s:setsize(450,SCREEN_HEIGHT) end,

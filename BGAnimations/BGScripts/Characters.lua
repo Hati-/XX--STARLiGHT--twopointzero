@@ -4,6 +4,8 @@
 -- Author: Enciso0720
 -- Last Update: 20230813
 
+local DanceRepo = GetCharactersDirPath() .. 'DanceRepo/'
+
 ------- CHARACTER BPM SYNC -------
 local DanceStage = GetUserPref('SelectDanceStage')
 local function CharaAnimRate(self)
@@ -93,7 +95,7 @@ end
 ------- GENDER AND SIZE CHECK -------
 
 function CharacterInfoo(Chara, Read)
-  local CharaCfg = '/Characters/' .. Chara .. '/character.ini'
+  local CharaCfg = GetCharactersDirPath() .. Chara .. '/character.ini'
   local Info = Config.Load(Read, CharaCfg)
   return Info
 end
@@ -118,7 +120,7 @@ if #Listed > 0 then
 
   ------- DANCEROUTINES-------
 
-  t[#t + 1] = LoadActor('/Characters/DanceRepo/DRoutines.lua')
+  t[#t + 1] = LoadActor(DanceRepo .. 'DRoutines.lua')
 
 ------- CHARACTER POSITION -------
 if #Listed == 1 then
@@ -177,7 +179,7 @@ end
   ------- ENVIROMENT MODE (FOR SN STAGES) -------
 
   function DSInfo(Read)
-    local StageIni = '/DanceStages/' .. DanceStage .. '/Stage.ini'
+    local StageIni = GetDanceStagesDirPath() .. DanceStage .. '/Stage.ini'
     local Info = Config.Load(Read, StageIni)
     if FILEMAN:DoesFileExist(StageIni) and Info ~= nil then
       local Info = Config.Load(Read, StageIni)
@@ -210,9 +212,9 @@ end
       end,
 
       Def.Model {
-        Meshes = '/Characters/' .. Listed[i] .. '/model.txt',
-        Materials = '/Characters/' .. Listed[i] .. '/model.txt',
-        Bones = '/Characters/DanceRepo/' .. Gender[i] .. '/' .. Gender[i] .. ' ' .. Motion .. '.txt',
+        Meshes = GetCharactersDirPath() .. Listed[i] .. '/model.txt',
+        Materials = GetCharactersDirPath() .. Listed[i] .. '/model.txt',
+        Bones = DanceRepo .. Gender[i] .. '/' .. Gender[i] .. ' ' .. Motion .. '.txt',
         OnCommand = function(self)
           self:cullmode('CullMode_None'):zoom(Size[i]):x(PositionX[i]):z(PositionZ[i]):position(Position)
           if not GAMESTATE:IsDemonstration() then
@@ -233,9 +235,9 @@ end
           self:SetUpdateFunction(CharaAnimRate)
         end,
         Def.Model {
-          Meshes = '/Characters/DanceRepo/Shadow/' .. ShadowModel,
-          Materials = '/Characters/DanceRepo/Shadow/Model.txt',
-          Bones = '/Characters/DanceRepo/Shadow/Dance/' .. Gender[i] .. ' ' .. Motion .. '.txt',
+          Meshes = DanceRepo .. 'Shadow/' .. ShadowModel,
+          Materials = DanceRepo .. 'Shadow/Model.txt',
+          Bones = DanceRepo .. 'Shadow/Dance/' .. Gender[i] .. ' ' .. Motion .. '.txt',
           OnCommand = function(self)
             self:cullmode('CullMode_None'):zoom(Size[i]):x(PositionX[i]):z(PositionZ[i]):position(Position)
           end,

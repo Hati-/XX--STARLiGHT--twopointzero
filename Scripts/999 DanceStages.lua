@@ -13,6 +13,14 @@ XXX:
 	that would require a lot of work, and there are other priorities right now.
 --]]
 
+function GetDanceStagesDirPath()
+  return '/DanceStages/'
+end
+
+function GetCharactersDirPath()
+  return '/Characters/'
+end
+
 function HasAnyCharacters(pn)
   return GAMESTATE:IsPlayerEnabled(pn) and GAMESTATE:GetCharacter(pn):GetDisplayName() ~= 'default'
 end
@@ -167,7 +175,7 @@ end
 
 function GetAllCharacterNames()
   local chars = {}
-  local _chars = FILEMAN:GetDirListing('/Characters/', true, false)
+  local _chars = FILEMAN:GetDirListing(GetCharactersDirPath(), true, false)
   SortList(_chars, chars, '%(A%)')
   SortList(_chars, chars, '%(X2%)')
   SortList(_chars, chars, '%(X%)')
@@ -257,14 +265,14 @@ function RandomCharacter(pn)
 end
 
 function GetAllDanceStagesNames()
-  local danceStagesFolder = '/DanceStages/'
+  local danceStagesDirPath = GetDanceStagesDirPath()
   
-  local directories = FILEMAN:GetDirListing(danceStagesFolder, true, false)
+  local directories = FILEMAN:GetDirListing(danceStagesDirPath, true, false)
   for index = #directories, 1, -1 do -- Iterate backwards so we don't skip elements when removing
     local dirName = directories[index]
     if (dirName == 'StageMovies')
-    or (not FILEMAN:DoesFileExist(danceStagesFolder .. dirName .. '/LoaderA.lua'))
-    or (not FILEMAN:DoesFileExist(danceStagesFolder .. dirName .. '/Cameras.lua')) then
+    or (not FILEMAN:DoesFileExist(danceStagesDirPath .. dirName .. '/LoaderA.lua'))
+    or (not FILEMAN:DoesFileExist(danceStagesDirPath .. dirName .. '/Cameras.lua')) then
       table.remove(directories, index)
     end
   end

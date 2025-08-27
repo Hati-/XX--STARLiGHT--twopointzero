@@ -17,12 +17,12 @@ versus_y = versus_y[short_pn]
 
 local t = Def.ActorFrame{};
 
-local charComboA   = "/Characters/"..WhichRead(pn).."/Cut-In/comboA.png";
-local charComboB   = "/Characters/"..WhichRead(pn).."/Cut-In/comboB.png";
-local charCombo100 = "/Characters/"..WhichRead(pn).."/Cut-In/combo100.png";
-local charCircles  = "/Characters/"..WhichRead(pn).."/Cut-In/Tex_0035.png";
-local charColor    = "/Characters/"..WhichRead(pn).."/Cut-In/Tex_0036.png";
-local charLight    = "/Characters/"..WhichRead(pn).."/Cut-In/Tex_0037.png";
+local charComboA   = GetCharactersDirPath() .. WhichRead(pn) .. "/Cut-In/comboA.png";
+local charComboB   = GetCharactersDirPath() .. WhichRead(pn) .. "/Cut-In/comboB.png";
+local charCombo100 = GetCharactersDirPath() .. WhichRead(pn) .. "/Cut-In/combo100.png";
+local charCircles  = GetCharactersDirPath() .. WhichRead(pn) .. "/Cut-In/Tex_0035.png";
+local charColor    = GetCharactersDirPath() .. WhichRead(pn) .. "/Cut-In/Tex_0036.png";
+local charLight    = GetCharactersDirPath() .. WhichRead(pn) .. "/Cut-In/Tex_0037.png";
 
 t[#t+1] = Def.ActorFrame{
   ComboChangedMessageCommand=function(self, params)
