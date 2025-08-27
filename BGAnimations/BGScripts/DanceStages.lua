@@ -22,14 +22,39 @@ local t = Def.ActorFrame {
   end,
  }
 
-------- DANCESTAGE DEMO -------
+------- DANCESTAGE SELECTION -------
+UpdateDanceStageFromSelection()
 
-if GAMESTATE:IsDemonstration() then
-  DanceStage = DanceStageSong()
+------- VIDEO/BACKGROUND VS STAGE  -------
+local SBG = GAMESTATE:GetSongOptionsObject('ModsLevel_Preferred')
+if (not HasVideo() and PotentialModSong()) then
+  --SBG:StaticBackground(false)
+  PREFSMAN:SetPreference('SongBackgrounds', true)
+elseif (HasVideo() and not VideoStage() and VoverS()) then
+  --SBG:StaticBackground(false)
+  PREFSMAN:SetPreference('SongBackgrounds', true)
+elseif (HasVideo() and not VideoStage() and not VoverS()) then
+  --SBG:StaticBackground(true)
+  PREFSMAN:SetPreference('SongBackgrounds', false)
+else
+  --SBG:StaticBackground(true)
+  PREFSMAN:SetPreference('SongBackgrounds', false)
+end
+SBG:RandomBGOnly(false)
+
+
+------- RANDOM CHARACTER -------
+local CharaRandom = GetAllCharacterNames()
+table.remove(CharaRandom,IndexKey(CharaRandom,'Random'))
+table.remove(CharaRandom,IndexKey(CharaRandom,'None'))
+
+for pn in ivalues(GAMESTATE:GetEnabledPlayers()) do
+    if GetUserPref('SelectCharacter'..pn) == 'Random' then
+        WritePrefToFile('CharaRandom'..pn,CharaRandom[math.random(#CharaRandom)]);
+    end
 end
 
 ------- DANCESTAGE LOADER -------
-
 if (not HasVideo() and not PotentialModSong()) or (HasVideo() and VideoStage() and not PotentialModSong()) or
   (HasVideo() and not VideoStage() and not VoverS()) then
 

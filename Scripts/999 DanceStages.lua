@@ -257,33 +257,78 @@ function RandomCharacter(pn)
 end
 
 function GetAllDanceStagesNames()
+  local danceStagesFolder = '/DanceStages/'
+  
+  local directories = FILEMAN:GetDirListing(danceStagesFolder, true, false)
+  for index = #directories, 1, -1 do -- Iterate backwards so we don't skip elements when removing
+    local dirName = directories[index]
+    if (dirName == 'StageMovies')
+    or (not FILEMAN:DoesFileExist(danceStagesFolder .. dirName .. '/LoaderA.lua'))
+    or (not FILEMAN:DoesFileExist(danceStagesFolder .. dirName .. '/Cameras.lua')) then
+      table.remove(directories, index)
+    end
+  end
+  
   local DanceStagesList = {}
-  local _DanceStagesList = FILEMAN:GetDirListing('/DanceStages/', true, false)
-  table.remove(_DanceStagesList, IndexKey(_DanceStagesList, 'StageMovies'))
-  SortList(_DanceStagesList, DanceStagesList, '%(A%)')
-  SortList(_DanceStagesList, DanceStagesList, '%(X2%)')
-  SortList(_DanceStagesList, DanceStagesList, '%(X%)')
-  SortList(_DanceStagesList, DanceStagesList, '%(REPLICANT%)')
-  SortList(_DanceStagesList, DanceStagesList, '%(2014%)')
-  SortList(_DanceStagesList, DanceStagesList, '%(SN%)')
-  SortList(_DanceStagesList, DanceStagesList, '%(DDRII%)')
-  SortList(_DanceStagesList, DanceStagesList, '%[DDRII%]')
-  SortList(_DanceStagesList, DanceStagesList, '%(HP4%)')
-  SortList(_DanceStagesList, DanceStagesList, '%[HP4%]')
-  SortList(_DanceStagesList, DanceStagesList, '%(HP3%)')
-  SortList(_DanceStagesList, DanceStagesList, '%[HP3%]')
-  SortList(_DanceStagesList, DanceStagesList, '%(HP2%)')
-  SortList(_DanceStagesList, DanceStagesList, '%[HP2%]')
-  SortList(_DanceStagesList, DanceStagesList, '%(HP1%)')
-  SortList(_DanceStagesList, DanceStagesList, '%[HP1%]')
-  SortList(_DanceStagesList, DanceStagesList, '%(HP%)')
-  SortList(_DanceStagesList, DanceStagesList, '%[HP%]')
-  SortList(_DanceStagesList, DanceStagesList, '%(WINX%)')
-  SortList(_DanceStagesList, DanceStagesList, '%[WINX%]')
-  SortList(_DanceStagesList, DanceStagesList, '%(CUSTOM%)')
+  SortList(directories, DanceStagesList, '%(A%)')
+  SortList(directories, DanceStagesList, '%(X2%)')
+  SortList(directories, DanceStagesList, '%(X%)')
+  SortList(directories, DanceStagesList, '%(REPLICANT%)')
+  SortList(directories, DanceStagesList, '%(2014%)')
+  SortList(directories, DanceStagesList, '%(SN%)')
+  SortList(directories, DanceStagesList, '%(DDRII%)')
+  SortList(directories, DanceStagesList, '%[DDRII%]')
+  SortList(directories, DanceStagesList, '%(HP4%)')
+  SortList(directories, DanceStagesList, '%[HP4%]')
+  SortList(directories, DanceStagesList, '%(HP3%)')
+  SortList(directories, DanceStagesList, '%[HP3%]')
+  SortList(directories, DanceStagesList, '%(HP2%)')
+  SortList(directories, DanceStagesList, '%[HP2%]')
+  SortList(directories, DanceStagesList, '%(HP1%)')
+  SortList(directories, DanceStagesList, '%[HP1%]')
+  SortList(directories, DanceStagesList, '%(HP%)')
+  SortList(directories, DanceStagesList, '%[HP%]')
+  SortList(directories, DanceStagesList, '%(WINX%)')
+  SortList(directories, DanceStagesList, '%[WINX%]')
+  SortList(directories, DanceStagesList, '%(CUSTOM%)')
   table.insert(DanceStagesList, 1, 'DEFAULT')
   table.insert(DanceStagesList, 2, 'RANDOM')
   return DanceStagesList
+end
+
+DanceStage = nil -- Global variable to hold the current DanceStage
+local DanceStageSeed
+function UpdateDanceStageFromSelection()
+  local StageSeed = GAMESTATE:GetStageSeed()
+  if DanceStage then
+    if DanceStageSeed == StageSeed then
+      Trace('Stage Seed is the same, not re-evaluating DanceStage')
+      return
+    else
+      DanceStage = nil
+    end
+  end
+  DanceStageSeed = StageSeed
+  
+  local DanceStagesDir = GetAllDanceStagesNames()
+  table.remove(DanceStagesDir, IndexKey(DanceStagesDir, 'DEFAULT'))
+  table.remove(DanceStagesDir, IndexKey(DanceStagesDir, 'RANDOM'))
+  local DanceStageSelected = GetUserPref('SelectDanceStage')
+
+  if DanceStageSelected == 'DEFAULT' or GAMESTATE:IsDemonstration() then
+    DanceStage = DanceStageSong()
+  elseif DanceStageSelected == 'RANDOM' then
+    DanceStage = DanceStagesDir[math.random(#DanceStagesDir)]
+  else
+    DanceStage = GetUserPref('SelectDanceStage')
+  end
+
+  if not DanceStage or IndexKey(DanceStagesDir, DanceStage) == nil then
+    Trace('Invalid DanceStage "'..tostring(DanceStage)..'", re-selecting a random one')
+    DanceStage = DanceStagesDir[math.random(#DanceStagesDir)]
+  end
+
+  Trace('DanceStage set to: ' .. tostring(DanceStage) .. ' (Stage Seed: ' .. tostring(DanceStageSeed) .. ')')
 end
 
 function SelectDanceStage()
