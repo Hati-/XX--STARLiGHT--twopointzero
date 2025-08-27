@@ -248,7 +248,7 @@ end
 local SelectionTable = {
     Characters = {
         getAssetPath = function(name, isImg)
-            return '/Characters/' ..name.. (isImg and '/Card.png' or '/Model.txt')
+            return GetCharactersDirPath() ..name.. (isImg and '/Card.png' or '/Model.txt')
         end,
         specialKeyImages = {
             _UNKNOWN = THEME:GetPathB("ScreenSelectMusic", "decorations/_shared/_OptionsList/cards/Unknown.png"),
@@ -258,7 +258,7 @@ local SelectionTable = {
     },
     DanceStages = {
         getAssetPath = function(name, isImg)
-            return '/DanceStages/' ..name.. (isImg and '/Card.png' or '/LoaderA.lua')
+            return GetDanceStagesDirPath() ..name.. (isImg and '/Card.png' or '/LoaderA.lua')
         end,
         specialKeyImages = {
             _UNKNOWN = THEME:GetPathB("ScreenSelectMusic", "decorations/_shared/_OptionsList/cards/DSU.png"),
