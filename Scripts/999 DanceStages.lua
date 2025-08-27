@@ -13,6 +13,14 @@ XXX:
 	that would require a lot of work, and there are other priorities right now.
 --]]
 
+function GetDanceStagesDirPath()
+  return '/DanceStages/'
+end
+
+function GetCharactersDirPath()
+  return '/Characters/'
+end
+
 function HasAnyCharacters(pn)
   return GAMESTATE:IsPlayerEnabled(pn) and GAMESTATE:GetCharacter(pn):GetDisplayName() ~= 'default'
 end
@@ -140,67 +148,65 @@ function IndexKey(tab, el)
   end
 end
 
-function Contains(list, x)
-  for _, v in pairs(list) do
-    if v == x then
+local charactersSortOrder = {
+  '%(A%)',
+  '%(X2%)',
+  '%(X%)',
+  '%(SN2%)',
+  '%(SN%)',
+  '%[PiX%]',
+  '%[JB%]',
+  '%[DW%]',
+  '%(DDRII%)',
+  '%[DDRII%]',
+  '%(HP4%)',
+  '%[HP4%]',
+  '%(HP3%)',
+  '%[HP3%]',
+  '%(HP2%)',
+  '%[HP2%]',
+  '%(HP1%)',
+  '%[HP1%]',
+  '%(HP%)',
+  '%[HP%]',
+  '%(WINX%)',
+  '%[WINX%]',
+  '%(5th%)',
+  '%(4th%)',
+  '%(3rd%)',
+  '%(2nd%)',
+  '%(1st%)',
+  '%(CUSTOM%)',
+}
+
+local function charactersSortFunc(a, b)
+  for _, pattern in ipairs(charactersSortOrder) do
+    local aMatches = string.match(a, pattern) ~= nil
+    local bMatches = string.match(b, pattern) ~= nil
+    if aMatches and not bMatches then
       return true
-    end
-  end
-  return false
-end
-
-function SortList(list1, list2, value)
-  for index, x in pairs(list1) do
-    if string.match(x, value) then
-      table.insert(list2, list1[index])
-    end
-  end
-end
-
-function ReFillList(list1, list2)
-  for index, x in pairs(list1) do
-    if not Contains(list2, list1[index]) then
-      table.insert(list2, #list2 + 1, list1[index])
+    elseif bMatches and not aMatches then
+      return false
     end
   end
 end
 
 function GetAllCharacterNames()
-  local chars = {}
-  local _chars = FILEMAN:GetDirListing('/Characters/', true, false)
-  SortList(_chars, chars, '%(A%)')
-  SortList(_chars, chars, '%(X2%)')
-  SortList(_chars, chars, '%(X%)')
-  SortList(_chars, chars, '%(SN2%)')
-  SortList(_chars, chars, '%(SN%)')
-  SortList(_chars, chars, '%[PiX%]')
-  SortList(_chars, chars, '%[JB%]')
-  SortList(_chars, chars, '%[DW%]')
-  SortList(_chars, chars, '%(DDRII%)')
-  SortList(_chars, chars, '%[DDRII%]')
-  SortList(_chars, chars, '%(HP4%)')
-  SortList(_chars, chars, '%[HP4%]')
-  SortList(_chars, chars, '%(HP3%)')
-  SortList(_chars, chars, '%[HP3%]')
-  SortList(_chars, chars, '%(HP2%)')
-  SortList(_chars, chars, '%[HP2%]')
-  SortList(_chars, chars, '%(HP1%)')
-  SortList(_chars, chars, '%[HP1%]')
-  SortList(_chars, chars, '%(HP%)')
-  SortList(_chars, chars, '%[HP%]')
-  SortList(_chars, chars, '%(WINX%)')
-  SortList(_chars, chars, '%[WINX%]')
-  SortList(_chars, chars, '%(5th%)')
-  SortList(_chars, chars, '%(4th%)')
-  SortList(_chars, chars, '%(3rd%)')
-  SortList(_chars, chars, '%(2nd%)')
-  SortList(_chars, chars, '%(1st%)')
-  SortList(_chars, chars, '%(CUSTOM%)')
-  ReFillList(_chars, chars)
-  table.remove(chars, IndexKey(chars, 'DanceRepo'))
-  table.remove(chars, IndexKey(chars, 'default'))
-  table.insert(chars, 1, 'Random')
-  return chars
+  local charactersDirPath = GetCharactersDirPath()
+  
+  local characterDirs = FILEMAN:GetDirListing(charactersDirPath, true, false)
+  for i = #characterDirs, 1, -1 do -- Iterate backwards so we don't skip elements when removing
+    local dirName = characterDirs[i]
+    if dirName == 'DanceRepo'
+    or dirName == 'default'
+    or not FILEMAN:DoesFileExist(charactersDirPath .. dirName .. '/model.txt') then
+      table.remove(characterDirs, i)
+    end
+  end
+  
+  table.sort(characterDirs, charactersSortFunc)
+  table.insert(characterDirs, 1, 'Random')
+  return characterDirs
 end
 
 function OptionRowCharacters()
@@ -256,44 +262,59 @@ function RandomCharacter(pn)
   end
 end
 
+local danceStagesSortOrder = {
+  '%(A%)',
+  '%(X2%)',
+  '%(X%)',
+  '%(REPLICANT%)',
+  '%(2014%)',
+  '%(SN%)',
+  '%(DDRII%)',
+  '%[DDRII%]',
+  '%(HP4%)',
+  '%[HP4%]',
+  '%(HP3%)',
+  '%[HP3%]',
+  '%(HP2%)',
+  '%[HP2%]',
+  '%(HP1%)',
+  '%[HP1%]',
+  '%(HP%)',
+  '%[HP%]',
+  '%(WINX%)',
+  '%[WINX%]',
+  '%(CUSTOM%)',
+}
+
+local function danceStagesSortFunc(a, b)
+  for _, pattern in ipairs(danceStagesSortOrder) do
+    local aMatches = string.match(a, pattern) ~= nil
+    local bMatches = string.match(b, pattern) ~= nil
+    if aMatches and not bMatches then
+      return true
+    elseif bMatches and not aMatches then
+      return false
+    end
+  end
+end
+
 function GetAllDanceStagesNames()
-  local danceStagesFolder = '/DanceStages/'
+  local danceStagesDirPath = GetDanceStagesDirPath()
   
-  local directories = FILEMAN:GetDirListing(danceStagesFolder, true, false)
-  for index = #directories, 1, -1 do -- Iterate backwards so we don't skip elements when removing
-    local dirName = directories[index]
-    if (dirName == 'StageMovies')
-    or (not FILEMAN:DoesFileExist(danceStagesFolder .. dirName .. '/LoaderA.lua'))
-    or (not FILEMAN:DoesFileExist(danceStagesFolder .. dirName .. '/Cameras.lua')) then
-      table.remove(directories, index)
+  local danceStageDirs = FILEMAN:GetDirListing(danceStagesDirPath, true, false)
+  for i = #danceStageDirs, 1, -1 do -- Iterate backwards so we don't skip elements when removing
+    local dirName = danceStageDirs[i]
+    if dirName == 'StageMovies'
+    or not FILEMAN:DoesFileExist(danceStagesDirPath .. dirName .. '/LoaderA.lua')
+    or not FILEMAN:DoesFileExist(danceStagesDirPath .. dirName .. '/Cameras.lua') then
+      table.remove(danceStageDirs, i)
     end
   end
   
-  local DanceStagesList = {}
-  SortList(directories, DanceStagesList, '%(A%)')
-  SortList(directories, DanceStagesList, '%(X2%)')
-  SortList(directories, DanceStagesList, '%(X%)')
-  SortList(directories, DanceStagesList, '%(REPLICANT%)')
-  SortList(directories, DanceStagesList, '%(2014%)')
-  SortList(directories, DanceStagesList, '%(SN%)')
-  SortList(directories, DanceStagesList, '%(DDRII%)')
-  SortList(directories, DanceStagesList, '%[DDRII%]')
-  SortList(directories, DanceStagesList, '%(HP4%)')
-  SortList(directories, DanceStagesList, '%[HP4%]')
-  SortList(directories, DanceStagesList, '%(HP3%)')
-  SortList(directories, DanceStagesList, '%[HP3%]')
-  SortList(directories, DanceStagesList, '%(HP2%)')
-  SortList(directories, DanceStagesList, '%[HP2%]')
-  SortList(directories, DanceStagesList, '%(HP1%)')
-  SortList(directories, DanceStagesList, '%[HP1%]')
-  SortList(directories, DanceStagesList, '%(HP%)')
-  SortList(directories, DanceStagesList, '%[HP%]')
-  SortList(directories, DanceStagesList, '%(WINX%)')
-  SortList(directories, DanceStagesList, '%[WINX%]')
-  SortList(directories, DanceStagesList, '%(CUSTOM%)')
-  table.insert(DanceStagesList, 1, 'DEFAULT')
-  table.insert(DanceStagesList, 2, 'RANDOM')
-  return DanceStagesList
+  table.sort(danceStageDirs, danceStagesSortFunc)
+  table.insert(danceStageDirs, 1, 'DEFAULT')
+  table.insert(danceStageDirs, 2, 'RANDOM')
+  return danceStageDirs
 end
 
 DanceStage = nil -- Global variable to hold the current DanceStage

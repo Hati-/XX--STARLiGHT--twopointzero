@@ -3,7 +3,7 @@
 -- Enjoy! See you later alligator.
 -- Author: Enciso0720
 -- Last Update: 20230813
-local StagesFolder = '/DanceStages/'
+local StagesFolder = GetDanceStagesDirPath()
 
 local gFOV = 90
 if THEME:GetMetric('Common', 'ScreenHeight') >= 1080 then
