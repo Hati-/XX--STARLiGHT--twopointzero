@@ -98,6 +98,11 @@ return Def.ActorFrame{
       end
     end
   end,]]
+  BackRepeatCommand=function(s)
+    if getenv("OPList") == 0 and getenv("DList") == 0 then 
+      SCREENMAN:GetTopScreen():Cancel()
+    end
+  end,
   StartRepeatCommand=function(s)
     local mw = SCREENMAN:GetTopScreen():GetChild("MusicWheel")
     local song = GAMESTATE:GetCurrentSong()
