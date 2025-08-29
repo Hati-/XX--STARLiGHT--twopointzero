@@ -342,21 +342,46 @@ function SpeedModIncLarge()
 	return ret
 end
 
-function GetSpeedModeAndValueFromPoptions(pn)
-	local poptions= GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred")
-	local speed= nil
-	local mode= nil
-	if poptions:MaxScrollBPM() > 0 then
-		mode= "m"
-		speed= math.round(poptions:MaxScrollBPM())
-	elseif poptions:TimeSpacing() > 0 then
-		mode= "C"
-		speed= math.round(poptions:ScrollBPM())
-	else
-		mode= "x"
-		speed= math.round(poptions:ScrollSpeed() * 100)
+local SpeedModsTable = {
+	{'XMod', 'x'},
+	{'CMod', 'C'},
+	{'MMod', 'm'}, -- I actually want MMod and AMod to be uppercase too, but that requires fixing more code.
+	{'AMod', 'a'},
+	{'CAMod', 'CA'},
+}
+for _, entry in ipairs(SpeedModsTable) do
+	SpeedModsTable[entry[1]] = entry[2] -- Just so we can lookup the shortform using the function name.
+end
+
+function GetAvailableSpeedMods()
+	local availableMods = {}
+	for _, entry in ipairs(SpeedModsTable) do
+		local modFunc = entry[1]
+		if type(PlayerOptions[modFunc]) == 'function' then
+			table.insert(availableMods, modFunc)
+		end
 	end
-	return speed, mode
+	
+	return availableMods
+end
+
+function GetSpeedModeAndValueFromPoptions(pn, returnSpeedFuncName)
+	local pOptions = GAMESTATE:GetPlayerState(pn):GetPlayerOptions('ModsLevel_Preferred')
+	local speedMod, value
+	
+	for _, testSpeedMod in pairs(GetAvailableSpeedMods()) do
+		local testValue = pOptions[testSpeedMod](pOptions)
+		if testValue ~= nil then
+			speedMod = testSpeedMod
+			value = testValue
+			-- We can't break out here or else we will return XMod when we're actually using MMod, AMod, or CAMod.
+		end
+	end
+	
+	if speedMod == 'XMod' then
+		value = value * 100
+	end
+	return math.round(value), returnSpeedFuncName and speedMod or SpeedModsTable[speedMod]
 end
 
 function ArbitrarySpeedMods()
@@ -507,148 +532,127 @@ Previous version was copyright © 2008-2012 AJ Kelly/KKI Labs.
 function ArbitrarySpeedMods2Increment()
 	local increment = get_speed_increment()
 	local inc_large = get_speed_inc_large()
+	local values = {inc_large, increment, -increment, -inc_large}
     
-    local function change_speed_mod_by_amount(pn, amount)
-        local ps = GAMESTATE:GetPlayerState(pn)
-        if not ps then
-            lua.ReportScriptError("change_speed_mod_by_amount: No playerstate for "..pn..", ignoring request.")
-            return
-        end
-        local preferred = ps:GetPlayerOptions("ModsLevel_Preferred")
-        local stage = ps:GetPlayerOptions("ModsLevel_Stage")
-        local song = ps:GetPlayerOptions("ModsLevel_Song")
-        local current = ps:GetPlayerOptions("ModsLevel_Current")
-        
-        local func_name, value
-        local value_needs_scaling_down = false
-        --if this is 5.1, AMods won't be available, so don't check for them unless the PlayerOptions
-        --supports them.
-        if preferred.AMod and preferred:AMod() then
-            value = preferred:AMod()
-            func_name = 'AMod'
-        elseif preferred:MMod() then
-            value = preferred:MMod()
-            func_name = 'MMod'
-        elseif preferred:CMod() then
-            value = preferred:CMod()
-            func_name = 'CMod'
-        elseif preferred:XMod() then
-            value = preferred:XMod() * 100
-            value_needs_scaling_down = true
-            func_name = 'XMod'
-        else
-            lua.ReportScriptError("change_speed_mod_by_amount(): No recognized speed mod type set, can't modify speed mods.")
-            return
-        end
-        
-        value = value + amount
-        --silently ignore attempts to reduce the set mod to a value at or below 0.
-        if value <= 0 then
-            return
-        end
-        if value_needs_scaling_down then
-            value = value / 100
-        end
-        
-        preferred[func_name](preferred, value)
-        stage[func_name](stage, value)
-        song[func_name](song, value)
-        current[func_name](current, value)
-        MESSAGEMAN:Broadcast("SpeedModChanged",{PlayerNumber=pn})
-    end
-    local values = {inc_large, increment, -increment, -inc_large}
-    return {
-        Name = "SpeedIncrement",
-        LayoutType = "ShowAllInRow",
-        SelectType = "SelectMultiple",
-        OneChoiceForAllPlayers = false,
-        ExportOnChange = true,
-        Choices = {tostring(values[1]), tostring(values[2]), tostring(values[3]), tostring(values[4])},
-        LoadSelections = function(self, choice_list, pn)
-            for idx, _ in pairs(choice_list) do
-                choice_list[idx] = false
-            end
-        end,
-        --dummy function so SM doesn't crash.
-        SaveSelections = function() end,
-        NotifyOfSelection = function(self, pn, choice)
-            change_speed_mod_by_amount(pn, values[choice])
-            --this hack causes SM to call LoadSelections, which clears the choice list.
-            return true
-        end
-    }
-        
-        
+	local function change_speed_mod_by_amount(pn, amount)
+		local ps = GAMESTATE:GetPlayerState(pn)
+		if not ps then
+			lua.ReportScriptError("change_speed_mod_by_amount: No playerstate for "..pn..", ignoring request.")
+			return
+		end
+		local preferred = ps:GetPlayerOptions("ModsLevel_Preferred")
+		local stage = ps:GetPlayerOptions("ModsLevel_Stage")
+		local song = ps:GetPlayerOptions("ModsLevel_Song")
+		local current = ps:GetPlayerOptions("ModsLevel_Current")
+		
+		local value, func_name = GetSpeedModeAndValueFromPoptions(pn, true)
+		local value_needs_scaling_down = false
+		
+		if func_name == 'XMod' then
+			value_needs_scaling_down = true
+		end
+		
+		value = value + amount
+		
+		--silently ignore attempts to reduce the set mod to a value at or below 0.
+		if value <= 0 then
+			return
+		end
+		if value_needs_scaling_down then
+			value = value / 100
+		end
+		
+		preferred[func_name](preferred, value)
+		stage[func_name](stage, value)
+		song[func_name](song, value)
+		current[func_name](current, value)
+		MESSAGEMAN:Broadcast("SpeedModChanged",{PlayerNumber=pn})
+	end
+	
+	return {
+		Name = "SpeedIncrement",
+		LayoutType = "ShowAllInRow",
+		SelectType = "SelectMultiple",
+		OneChoiceForAllPlayers = false,
+		ExportOnChange = true,
+		Choices = {tostring(values[1]), tostring(values[2]), tostring(values[3]), tostring(values[4])},
+		LoadSelections = function(self, choice_list, pn)
+			for idx, _ in pairs(choice_list) do
+				choice_list[idx] = false
+			end
+		end,
+		--dummy function so SM doesn't crash.
+		SaveSelections = function() end,
+		NotifyOfSelection = function(self, pn, choice)
+			change_speed_mod_by_amount(pn, values[choice])
+			--this hack causes SM to call LoadSelections, which clears the choice list.
+			return true
+		end
+	}
 end
 
 function ArbitrarySpeedMods2ModType()
-    --In this case, we need to change the choices list depending on the presence of AMods
-    local has_AMod = PlayerOptions.AMod ~= nil
-    local choices
-    if has_AMod then
-        choices = {'XMod', 'CMod', 'MMod', 'AMod'}
-    else
-        choices = {'XMod', 'CMod', 'MMod'}
-    end
-    
-    local function change_speed_mod_type(pn, func_name)
-        local ps = GAMESTATE:GetPlayerState(pn)
-        if not ps then
-            lua.ReportScriptError("change_speed_mod_type: No playerstate for "..pn..", ignoring request.")
-            return
-        end
-        local preferred = ps:GetPlayerOptions("ModsLevel_Preferred")
-        if not preferred[func_name] then
-            lua.ReportScriptError("change_speed_mod_by_amount(): invalid option function name "..tostring(func_name))
-            return
-        end
-        local stage = ps:GetPlayerOptions("ModsLevel_Stage")
-        local song = ps:GetPlayerOptions("ModsLevel_Song")
-        local current = ps:GetPlayerOptions("ModsLevel_Current")
-        local value = 100
-        if has_AMod and preferred:AMod() then
-            value = preferred:AMod()
-        elseif preferred:MMod() then
-            value = preferred:MMod()
-        elseif preferred:CMod() then
-            value = preferred:CMod()
-        elseif preferred:XMod() then
-            value = preferred:XMod() * 100
-        else
-            lua.ReportScriptError("change_speed_mod_by_amount(): No recognized speed mod type set, can't modify speed mods.")
-            return
-        end
-        if func_name == "XMod" then
-            value = value / 100
-        end
-        --To clarify, this does the same thing as [po obj]:[insert func_name here](value)
-        preferred[func_name](preferred, value)
-        stage[func_name](stage, value)
-        song[func_name](song, value)
-        current[func_name](current, value)
-        MESSAGEMAN:Broadcast("SpeedModChanged",{PlayerNumber=pn})
-    end
-    
-    return {
-        Name = "SpeedType",
-        LayoutType = "ShowAllInRow",
-        SelectType = "SelectMultiple",
-        OneChoiceForAllPlayers = false,
-        ExportOnChange = true,
-        Choices = choices,
-        LoadSelections = function(self, choice_list, pn)
-            for idx, _ in pairs(choice_list) do
-                choice_list[idx] = false
-            end
-        end,
-        --dummy function so SM doesn't crash.
-        SaveSelections = function() end,
-        NotifyOfSelection = function(self, pn, choice)
-            change_speed_mod_type(pn, choices[choice])
-            --as above
-            return true
-        end
-    }
+	local choices = GetAvailableSpeedMods()
+	
+	local function change_speed_mod_type(pn, func_name)
+		local ps = GAMESTATE:GetPlayerState(pn)
+		if not ps then
+			lua.ReportScriptError("change_speed_mod_type: No playerstate for "..pn..", ignoring request.")
+			return
+		end
+		local preferred = ps:GetPlayerOptions("ModsLevel_Preferred")
+		if not preferred[func_name] then
+			lua.ReportScriptError("change_speed_mod_type(): invalid option function name "..tostring(func_name))
+			return
+		end
+		local stage = ps:GetPlayerOptions("ModsLevel_Stage")
+		local song = ps:GetPlayerOptions("ModsLevel_Song")
+		local current = ps:GetPlayerOptions("ModsLevel_Current")
+		
+		local value = GetSpeedModeAndValueFromPoptions(pn, true)
+		
+		--get the current value of the selected speed mod type.
+		if func_name == "XMod" then
+			value = value / 100
+		end
+		
+		--To clarify, this does the same thing as [po obj]:[insert func_name here](value)
+		preferred[func_name](preferred, value)
+		stage[func_name](stage, value)
+		song[func_name](song, value)
+		current[func_name](current, value)
+		MESSAGEMAN:Broadcast("SpeedModChanged",{PlayerNumber=pn})
+	end
+	
+	return {
+		Name = "SpeedType",
+		LayoutType = "ShowAllInRow",
+		SelectType = "SelectOne",
+		OneChoiceForAllPlayers = false,
+		ExportOnChange = true,
+		Choices = choices,
+		LoadSelections = function(self, list, pn)
+			local _, speedFunc = GetSpeedModeAndValueFromPoptions(pn, true)
+			for i, _ in pairs(list) do
+				if choices[i] == speedFunc then
+					list[i] = true
+					break
+				end
+			end
+		end,
+		SaveSelections = function(self, list, pn)
+			for i, value in ipairs(list) do
+				if value then
+					change_speed_mod_type(pn, choices[i])
+					break
+				end
+			end
+		end,
+		NotifyOfSelection = function(self, pn, choice)
+			-- We can't use NotifyOfSelection together with SelectType="SelectOne" to get the selection because
+			-- the choice parameter will always point to the EXIT option, so we need to use SaveSelections instead.
+		end
+	}
 end
 
 function OptionRowScreenFilter()
@@ -1370,4 +1374,3 @@ function OptionRowTargetScore()
 	setmetatable(t ,t)
 	return t
 end
-
