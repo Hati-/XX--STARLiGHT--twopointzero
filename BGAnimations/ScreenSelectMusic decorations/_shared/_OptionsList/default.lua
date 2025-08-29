@@ -385,7 +385,7 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
             Def.BitmapText{
                 Name="ExpText",
                 Font="_avenirnext lt pro bold/25px",
-                InitCommand=function(s) s:wrapwidthpixels(420) end,
+                InitCommand=function(s) s:wrapwidthpixels(500) end,
             },
         },
 
