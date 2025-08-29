@@ -309,6 +309,31 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
                     else
                         self:GetChild("Explanation"):GetChild("ExpText"):settext("Exit.")
                     end
+                elseif OptionsListMenu == 'Speed2Type' then
+                    local availableSpeedMods = GetAvailableSpeedMods()
+                    if sel+1 <= #availableSpeedMods then
+                        local speedType = availableSpeedMods[sel+1]
+                        self:GetChild('Explanation'):GetChild('ExpText'):settext(THEME:GetString('OptionListItemExplanations', OptionsListMenu .. tostring(speedType)))
+                    else
+                        self:GetChild('Explanation'):GetChild('ExpText'):settext(THEME:GetString('OptionListItemExplanations', OptionsListMenu .. 'Exit'))
+                    end
+                elseif OptionsListMenu == 'Speed2Value' then
+                    local optionsListData = ArbitrarySpeedMods2Increment() -- XXX: This is really bad but it's the easiest way to get the values array. Please fix when doing rewrite of the SpeedMod system.
+                    local values = optionsListData.Choices
+                    
+                    if sel+1 <= #values then
+                        local speedValue = tonumber(values[sel+1])
+                        local explanation
+                        if speedValue >= 0 then
+                            explanation = THEME:GetString('OptionListItemExplanations', OptionsListMenu .. 'Add')
+                        else
+                            explanation = THEME:GetString('OptionListItemExplanations', OptionsListMenu .. 'Subtract')
+                        end
+                        explanation = explanation:gsub('{}', tostring(math.abs(speedValue)))
+                        self:GetChild('Explanation'):GetChild('ExpText'):settext(explanation)
+                    else
+                        self:GetChild('Explanation'):GetChild('ExpText'):settext(THEME:GetString('OptionListItemExplanations', OptionsListMenu .. 'Exit'))
+                    end
                 else
                     if OptionsListMenu ~= "Exit" then
                         if OptionsListMenu == "Gauge" then
