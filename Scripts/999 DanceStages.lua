@@ -93,13 +93,6 @@ function SlowMotion(self)
   end
 end
 
-function setenv(name, value)
-  GAMESTATE:Env()[name] = value
-end
-function getenv(name)
-  return GAMESTATE:Env()[name]
-end
-
 function HasVideo()
   local videoFileExtensions = { 'mp4', 'avi', 'mov', 'm2ts', 'm2v', 'wmv', 'mpg', 'mpeg' }
   
