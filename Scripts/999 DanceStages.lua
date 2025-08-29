@@ -93,26 +93,22 @@ function SlowMotion(self)
   end
 end
 
-function setenv(name, value)
-  GAMESTATE:Env()[name] = value
-end
-function getenv(name)
-  return GAMESTATE:Env()[name]
-end
-
 function HasVideo()
-  VideoFileType = { 'mp4', 'avi', 'mov', 'm2ts', 'm2v', 'wmv', 'mpg', 'mpeg' }
-  Z = 0
-  for i = 1, #VideoFileType do
-    if FILEMAN:DoesFileExist(GAMESTATE:GetCurrentSong():GetMusicPath():sub(1, -4) .. VideoFileType[i]) then
-      Z = Z + 1
-    end
-  end
-  if Z > 0 then
-    return true
-  else
+  local videoFileExtensions = { 'mp4', 'avi', 'mov', 'm2ts', 'm2v', 'wmv', 'mpg', 'mpeg' }
+  
+  local song = GAMESTATE:GetCurrentSong()
+  local path = song and song:GetMusicPath()
+  if not path then -- both GetCurrentSong() and GetMusicPath() can return nil
     return false
   end
+  path = path:gsub('%.%w+$', '') .. '.' -- remove file extension and append a dot
+  
+  for _, ext in ipairs(videoFileExtensions) do
+    if FILEMAN:DoesFileExist(path .. ext) then
+      return true
+    end
+  end
+  return false
 end
 
 function PotentialModSong()
