@@ -1,4 +1,7 @@
-local t = Def.ActorFrame {};
+------- DANCESTAGE SELECTION -------
+UpdateDanceStageFromSelection()
+
+local t = Def.ActorFrame{};
 local style = GAMESTATE:GetCurrentStyle():GetStyleType()
 local st = GAMESTATE:GetCurrentStyle():GetStepsType();
 local show_cutins = GAMESTATE:GetCurrentSong() and (not GAMESTATE:GetCurrentSong():HasBGChanges()) or true;
@@ -11,6 +14,26 @@ local x_table = {
   PlayerNumber_P1 = {SCREEN_CENTER_X+428},
   PlayerNumber_P2 = {SCREEN_CENTER_X-428}
 }
+
+local function FilterUpdate(self)
+	local song = GAMESTATE:GetCurrentSong();
+	if song then
+
+
+		local start = song:GetFirstBeat();
+		local last = song:GetLastBeat();
+		
+		if (GAMESTATE:GetSongBeat() >= last) then
+			self:visible(false);
+		elseif (GAMESTATE:GetSongBeat() >= start-16) then
+			self:visible(true);
+		else
+			self:visible(false);
+		end;
+
+
+	end;
+end;
 	
 --toasty loader
 for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
@@ -20,10 +43,14 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 	else
 		song = GAMESTATE:GetCurrentSong()
 	end
-	if show_cutins and st ~= 'StepsType_Dance_Double' and ThemePrefs.Get("CutIns") == true and song:HasBGChanges() == false then
+  if st ~= 'StepsType_Dance_Double' and ThemePrefs.Get("CutIns") == true and (
+		(not HasVideo() and not song:HasBGChanges())
+		or (HasVideo() and VideoStage())
+		or (HasVideo() and not VideoStage() and GetUserPref("CutInOverVideo") == "ON")
+	) then
 		--use ipairs here because i think it expects P1 is loaded before P2
-		if #Characters.GetAllCharacterNames() ~= 0 then
-			t[#t+1] = Def.ActorFrame {
+		if FILEMAN:DoesFileExist(GetCharactersDirPath()..WhichRead(pn).."/Cut-In") then
+			t[#t+1] = Def.ActorFrame{
 				loadfile(THEME:GetPathB("ScreenGameplay","underlay/Cutin.lua"))(pn) .. {
 					OnCommand=function(s) s:setsize(450,SCREEN_HEIGHT) end,
 					InitCommand=function(self)
@@ -49,29 +76,27 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 	local style=GAMESTATE:GetCurrentStyle(pn)
 	local filter_alpha = pPrefs.filter/100
 	local NumColumns = GAMESTATE:GetCurrentStyle():ColumnsPerPlayer()
-	local width=(style:GetWidth(pn)*(NumColumns/1.7))
 
+	local width=(style:GetWidth(pn)*(NumColumns/1.7))
 	if style:GetStyleType() == 'StyleType_OnePlayerTwoSides' then
 		width = style:GetWidth(pn)*(NumColumns/3.7)
 	end
-
 	local X
-
 	if PREFSMAN:GetPreference("Center1Player") and GAMESTATE:GetNumPlayersEnabled() == 1 then
 		X = _screen.cx
 	else
 		X = ScreenGameplay_X(pn)
 	end
 
-	local DS = Def.ActorFrame {};
+  local DS = Def.ActorFrame{};
 
 	--Danger Sidebars
 	for i=1,2 do
-		DS[#DS+1] = Def.ActorFrame {
+    DS[#DS+1] = Def.ActorFrame{
 			InitCommand=function(s)
 				s:x(i==1 and ((-width/2)-10) or ((width/2)+10)):visible(show_danger)
 			end,
-			Def.Sprite {
+      Def.Sprite{
 				Texture="rope",
 				InitCommand=function(s)
 					s:customtexturerect(0,0,1,2):zoomtoheight(_screen.h):diffuseshift():effectcolor1(Color.White):effectcolor2(Alpha(Color.White,0.7)):effectperiod(0.5)
@@ -82,9 +107,9 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 					end;
 				end,
 			},
-			Def.ActorFrame {
+      Def.ActorFrame{
 				InitCommand=function(s) s:rotationz(i==2 and 180 or 0) end,
-				Def.Sprite {
+        Def.Sprite{
 					Texture="text",
 				};
 				Def.ActorFrame{
@@ -102,8 +127,10 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 		};
 	end
 
-	t[#t+1] = Def.ActorFrame {
-		InitCommand=function(s) s:xy(X,_screen.cy):diffusealpha(0) end,
+  t[#t+1] = Def.ActorFrame{
+    InitCommand=function(s)
+      s:xy(X,_screen.cy):diffusealpha(0)
+		end,
 		CurrentSongChangedMessageCommand=function(s) s:diffusealpha(0):sleep(BeginReadyDelay()+SongMeasureSec()):linear(0.2):diffusealpha(1):queuecommand("ShowBars") end,
 		ChangeCourseSongInMessageCommand=function(s) s:playcommand('FilterOff') end,
 		OffCommand=function(s) s:playcommand('FilterOff') end,
@@ -145,13 +172,13 @@ for _, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 			s:sleep(dif):linear(0.2):diffusealpha(0):queuecommand("DisableBars")
 		end,
 		
-		Def.Quad {
+    Def.Quad{
 			InitCommand=function(s)
-				s:diffuse(filter_color):fadeleft(1/32):faderight(1/32)
+        s:diffuse(filter_color):fadeleft(1/32):faderight(1/32)
 			end,
 			BeginCommand=function(s) s:playcommand("CurrentSongChangedMessage") end,
 			CurrentSongChangedMessageCommand=function(s,p)
-				s:setsize(width,_screen.h)
+        s:setsize(width,_screen.h)
 				if screen == "ScreenDemonstration" then
 					s:diffusealpha(0.5)
 				else
