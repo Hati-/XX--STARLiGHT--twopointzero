@@ -182,6 +182,9 @@ return Def.ActorFrame{
       SCREENMAN:GetTopScreen():AddInputCallback(DDRInput(self))
       GAMESTATE:Reset()
     end,
+    BackRepeatCommand=function(self)
+      SCREENMAN:SetNewScreen("ScreenExit")
+    end,
     StartReleaseCommand=function(self)
       if GAMESTATE:EnoughCreditsToJoin() then
         GAMESTATE:JoinInput(self.pn)
