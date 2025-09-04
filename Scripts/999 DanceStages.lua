@@ -349,6 +349,10 @@ function UpdateDanceStageFromSelection()
   Trace('DanceStage set to: ' .. tostring(DanceStage) .. ' (Stage Seed: ' .. tostring(DanceStageSeed) .. ')')
 end
 
+function DoShowSongBackground()
+  return PotentialModSong() or (HasVideo() and VoverS() and not VideoStage())
+end
+
 --[[
 	In stepmania the "SongBackgrounds" preference is used in ScreenGameplay::LoadNextSong(), so we need to set it before 
 	that function is called for it to take effect.	We can check whenever LoadNextSong() is called by listening for the
@@ -386,14 +390,7 @@ end
 local function SetSongBackgroundPreferences()
 	local songOptions = GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred")
 	
-	local songsBackgrounds
-	if PotentialModSong() or (HasVideo() and VoverS() and not VideoStage()) then
-		songsBackgrounds = true
-	else
-		songsBackgrounds = false
-	end
-	
-	PREFSMAN:SetPreference('SongBackgrounds', songsBackgrounds)
+	PREFSMAN:SetPreference('SongBackgrounds', DoShowSongBackground())
 	-- songOptions:StaticBackground(false)
 	songOptions:RandomBGOnly(false)
 end
