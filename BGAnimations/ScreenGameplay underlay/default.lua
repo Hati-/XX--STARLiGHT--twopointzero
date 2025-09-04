@@ -1,7 +1,14 @@
-------- DANCESTAGE SELECTION -------
-UpdateDanceStageFromSelection()
+local t = Def.ActorFrame{}
 
-local t = Def.ActorFrame{};
+-- For more info about this see the comment above the definition of SetSongBackgroundPreferences()
+t[#t+1] = Def.Actor{
+	-- InitCommand = SetSongBackgroundPreferences,
+	ChangeCourseSongOutMessageCommand = SetSongBackgroundPreferences,
+	-- DoneLoadingNextSongMessageCommand = function(self)
+	-- 	Trace('ScreenGameplay::LoadNextSong() done')
+	-- end
+}
+
 local style = GAMESTATE:GetCurrentStyle():GetStyleType()
 local st = GAMESTATE:GetCurrentStyle():GetStepsType();
 local show_cutins = GAMESTATE:GetCurrentSong() and (not GAMESTATE:GetCurrentSong():HasBGChanges()) or true;

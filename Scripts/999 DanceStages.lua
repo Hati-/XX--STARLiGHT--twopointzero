@@ -319,7 +319,7 @@ function UpdateDanceStageFromSelection()
   local StageSeed = GAMESTATE:GetStageSeed()
   if DanceStage then
     if DanceStageSeed == StageSeed then
-      Trace('Stage Seed is the same, not re-evaluating DanceStage')
+      Trace('Stage Seed is the same, not re-evaluating DanceStage (Stage Seed: ' .. tostring(DanceStageSeed) .. ')')
       return
     else
       DanceStage = nil
@@ -331,21 +331,73 @@ function UpdateDanceStageFromSelection()
   table.remove(DanceStagesDir, IndexKey(DanceStagesDir, 'DEFAULT'))
   table.remove(DanceStagesDir, IndexKey(DanceStagesDir, 'RANDOM'))
   local DanceStageSelected = GetUserPref('SelectDanceStage')
+  local randomStageIndex = StageSeed % #DanceStagesDir
 
   if DanceStageSelected == 'DEFAULT' or GAMESTATE:IsDemonstration() then
     DanceStage = DanceStageSong()
   elseif DanceStageSelected == 'RANDOM' then
-    DanceStage = DanceStagesDir[math.random(#DanceStagesDir)]
+    DanceStage = DanceStagesDir[randomStageIndex]
   else
     DanceStage = GetUserPref('SelectDanceStage')
   end
 
   if not DanceStage or IndexKey(DanceStagesDir, DanceStage) == nil then
     Trace('Invalid DanceStage "'..tostring(DanceStage)..'", re-selecting a random one')
-    DanceStage = DanceStagesDir[math.random(#DanceStagesDir)]
+    DanceStage = DanceStagesDir[randomStageIndex]
   end
 
   Trace('DanceStage set to: ' .. tostring(DanceStage) .. ' (Stage Seed: ' .. tostring(DanceStageSeed) .. ')')
+end
+
+function DoShowSongBackground()
+  return PotentialModSong() or (HasVideo() and VoverS() and not VideoStage())
+end
+
+--[[
+	In stepmania the "SongBackgrounds" preference is used in ScreenGameplay::LoadNextSong(), so we need to set it before 
+	that function is called for it to take effect.	We can check whenever LoadNextSong() is called by listening for the
+	"DoneLoadingNextSong" message, which LoadNextSong() broadcasts when done. See:
+	https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ScreenGameplay.cpp#L1331
+	
+	We can't change the preference in the background layer (where we load the DanceStage and Character into the background), 
+	because the background layer is loaded after ScreenGameplay::LoadNextSong() is called, so changes wont take effect. See: 
+	https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ScreenManager.cpp#L587
+	https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ScreenManager.cpp#L622
+	
+	ScreenGameplay::LoadNextSong() is called from several places, so there's different ways to set the preference before
+	LoadNextSong() gets called. Here's what we have to do to set the preference before LoadNextSong() is called within:
+		* ScreenGameplay::Init():
+			We set the preference inside "InitCommand", which is called before LoadNextSong(). See:
+			https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ScreenGameplay.cpp#L381
+			
+		* ScreenGameplay::HandleScreenMessage(SM_LoadNextSong):
+			We set the preference inside "ChangeCourseSongOutMessageCommand", which is called before LoadNextSong(). See:
+			https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ScreenGameplay.cpp#L2973
+			
+		* ScreenGameplay::ReloadCurrentSong():
+			There's no simple way to set the preference before LoadNextSong() here, but luckily this function is almost
+			never used, so we don't need to care too much about it. It's only for restarting the song anyway, in which case I
+			don't think we need to change anything with the background.
+				
+	Unfortunately, the ScreenGameplay::Init()'s "InitCommand" method above doesn't work if we also want to get the stage
+  seed, because the stage seed is not yet updated. We therefore need to hook somewhere between GAMESTATE->BeginStage() and
+  LoadNextSong(). The only viable method I've found to do this is to hack the "SongOptionsX" metric. See:
+  https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ScreenGameplay.cpp#L792
+  
+  I've set up that "SongOptionsX" metric to call BetweenStageSeedAndLoadNextSongHook() if it's defined.
+]]
+
+local function SetSongBackgroundPreferences()
+	local songOptions = GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred")
+	
+	PREFSMAN:SetPreference('SongBackgrounds', DoShowSongBackground())
+	-- songOptions:StaticBackground(false)
+	songOptions:RandomBGOnly(false)
+end
+
+function BetweenStageSeedAndLoadNextSongHook()
+  UpdateDanceStageFromSelection()
+  SetSongBackgroundPreferences()
 end
 
 function SelectDanceStage()
