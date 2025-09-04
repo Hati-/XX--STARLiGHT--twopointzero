@@ -20,28 +20,10 @@ local t = Def.ActorFrame {
       Camera:SetUpdateFunction(SlowMotion)
     end
   end,
- }
+}
 
-------- DANCESTAGE SELECTION -------
+-- If  we haven't set a DanceStage for this stage seed yet then lets do it now
 UpdateDanceStageFromSelection()
-
-------- VIDEO/BACKGROUND VS STAGE  -------
-local SBG = GAMESTATE:GetSongOptionsObject('ModsLevel_Preferred')
-if (not HasVideo() and PotentialModSong()) then
-  --SBG:StaticBackground(false)
-  PREFSMAN:SetPreference('SongBackgrounds', true)
-elseif (HasVideo() and not VideoStage() and VoverS()) then
-  --SBG:StaticBackground(false)
-  PREFSMAN:SetPreference('SongBackgrounds', true)
-elseif (HasVideo() and not VideoStage() and not VoverS()) then
-  --SBG:StaticBackground(true)
-  PREFSMAN:SetPreference('SongBackgrounds', false)
-else
-  --SBG:StaticBackground(true)
-  PREFSMAN:SetPreference('SongBackgrounds', false)
-end
-SBG:RandomBGOnly(false)
-
 
 ------- RANDOM CHARACTER -------
 local CharaRandom = GetAllCharacterNames()
