@@ -45,7 +45,14 @@ local function RivalScore(pn, rival)
 			c.Score:visible(true)
 			c.GradeFrame:visible(true)
 			c.ScoreName:visible(true)
-			c.ScoreName:settext(score:GetName())
+			
+			local name
+			if (score:IsFillInMarker()) then
+				name = PROFILEMAN:GetProfile(pn):GetDisplayName() -- Is set during profile select
+			else
+				name = score:GetName()
+			end
+			c.ScoreName:settext(name)
 			
 			s:playcommand('SetScore', { Stats = score, Steps = StepsOrTrail })
 		end,

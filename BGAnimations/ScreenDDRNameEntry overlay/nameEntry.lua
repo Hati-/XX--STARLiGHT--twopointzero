@@ -172,11 +172,20 @@ local t = Def.ActorFrame{
 							if string.len(name) == 0 then
 								name = defaultName
 							end
-							-- At the end of ScreenGameplay, Stepmania checks the last used highscore name and if it's empty, it 
-							-- saves the score as "EVNT" in event mode. We can fix that by setting it from the very start here.
 							local profile = PROFILEMAN:GetProfile(player)
-							profile:SetDisplayName(name)
-							profile:SetLastUsedHighScoreName(name)
+							profile:SetDisplayName(name) -- Will be used later to replace the Fill-In-Marker
+							
+							-- Makes GAMESTATE:AnyPlayerHasRankingFeats() work and allow the use of GAMESTATE:StoreRankingName(player, 'Name') to
+							-- set the score's name after ScreenGameplay even when in event mode. See:
+							-- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ProfileManager.cpp#L859
+							-- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/GameState.cpp#L2108
+							local fillInMarker = GenerateRankingToFillInMarker(player)
+							if fillInMarker then
+								profile:SetLastUsedHighScoreName(fillInMarker)
+							else
+								profile:SetLastUsedHighScoreName('')
+							end
+							
 							setenv("keysetSDDRN"..ToEnumShortString(player),1)
 							if GAMESTATE:GetNumPlayersEnabled() == 1 then
 								local mp = GAMESTATE:GetMasterPlayerNumber()

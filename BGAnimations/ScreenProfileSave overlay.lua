@@ -32,7 +32,7 @@ for _, plr in pairs(GAMESTATE:GetEnabledPlayers()) do
 		MyGrooveRadar.ApplyBonuses(profileID, STATSMAN:GetCurStageStats():GetPlayerStageStats(plr), styleName)
 		ProfilePrefs.Save(profileID)
 	end
-  GAMESTATE:StoreRankingName(plr,PROFILEMAN:GetProfile(plr):GetDisplayName())
+  GAMESTATE:StoreRankingName(plr, PROFILEMAN:GetProfile(plr):GetDisplayName())
 end
 MyGrooveRadar.SaveAllRadarData()
 
