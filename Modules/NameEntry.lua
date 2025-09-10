@@ -196,7 +196,7 @@ local function CreateNameEntryFrame(self)
   
   return Def.ActorFrame{
     InitCommand=function(_self)
-      self.Frame = _self:GetParent() -- We're just a subframe, the actual main frame is the this frame's parent
+      self.Frame = _self:GetParent() -- We're just a subframe, the actual main frame is this frame's parent
     end,
     OnCommand=function()
       if self.AllowKeyboard then
@@ -263,109 +263,34 @@ local function CreateNameEntryFrame(self)
       end
     end,
     Def.ActorFrame{
-      Name='Panes',
-      Def.ActorFrame{
+      InitCommand=function(_self)
+        -- local offsetX = -(KEY_COLS * GRID_CELL_WIDTH / 2)
+        local offsetX = -(GRID_COLS * GRID_CELL_WIDTH / 2)
+        local offsetY = -90
+        _self:xy(offsetX, offsetY)
+      end,
+      GenerateLetterBox(),
+      Def.Quad{
         InitCommand=function(_self)
-          _self:shadowlength(0):zoomy(0)
+          self.SelectionBoxActor = _self
+          _self:diffuse(Alpha(Color.Red, 0.75)):blend(Blend.Add)  
+          self:UpdateSelectionBox()
         end,
-        OnCommand=function(_self)
-          _self:sleep(0.3):linear(0.3):zoomy(1)
-        end,
-        OffCommand=function(_self)
-          _self:linear(0.1):zoomy(0)
-        end,
-        Def.Sprite{
-          Texture=THEME:GetPathG('', 'ScreenSelectProfile/BG01'),
-        },
-        Def.Quad{
-          InitCommand=function(_self)
-            _self:setsize(512, 440):y(-20):diffuse(Alpha(Color.Black, 0.75))
-          end,
-        },
-      },
-      Def.ActorFrame{
-        InitCommand=function(_self)
-          _self:y(-292)
-        end,
-        OnCommand=function(_self)
-          _self:y(0):sleep(0.3):linear(0.3):y(-292)
-        end,
-        OffCommand=function(_self)
-          _self:linear(0.1):y(0):sleep(0):diffusealpha(0)
-        end,
-        Def.Sprite{
-          Texture=THEME:GetPathG('', 'ScreenSelectProfile/BGTOP_' .. ToEnumShortString(self.Player)),
-          InitCommand=function(_self)
-            _self:valign(1)
-          end,
-        },
-      },
-      Def.ActorFrame{
-        Name='Bottom',
-        InitCommand=function(_self)
-          _self:shadowlength(0)
-        end,
-        OnCommand=function(_self)
-          _self:y(0):sleep(0.3):linear(0.3):y(286)
-        end,
-        OffCommand=function(_self)
-          _self:linear(0.1):y(0):sleep(0):diffusealpha(0)
-        end,
-        Def.Sprite{
-          Texture=THEME:GetPathG('', 'ScreenSelectProfile/BGBOTTOM'),
-          InitCommand=function(s) s:valign(0) end,
-        },
-        Def.Sprite{
-          Texture=THEME:GetPathG('', 'ScreenSelectProfile/start game'),
-            InitCommand=function(s) s:valign(0):diffusealpha(0) end,
-            OnCommand=function(s) s:sleep(0.8):diffusealpha(1) end,
-        },
       },
     },
-    Def.ActorFrame{
+    Def.Sprite{
+      Texture=THEME:GetPathB('ScreenDDRNameEntry', 'overlay/nameframe'),
       InitCommand=function(_self)
-        _self:hibernate(0.6)
+        _self:y(-120)
       end,
-      OffCommand=function(_self)
-        _self:diffusealpha(0)
+    },
+    Def.BitmapText{
+      Font='DDRName Large',
+      InitCommand=function(_self)
+        self.NameTextActor = _self
+        _self:halign(1):xy(256, -120)
       end,
-      Def.ActorFrame{
-        InitCommand=function(_self)
-          -- local offsetX = -(KEY_COLS * GRID_CELL_WIDTH / 2)
-          local offsetX = -(GRID_COLS * GRID_CELL_WIDTH / 2)
-          local offsetY = -90
-          _self:xy(offsetX, offsetY)
-        end,
-        GenerateLetterBox(),
-        Def.Quad{
-          InitCommand=function(_self)
-            self.SelectionBoxActor = _self
-            _self:diffuse(Alpha(Color.Red, 0.75)):blend(Blend.Add)  
-            self:UpdateSelectionBox()
-          end,
-        },
-      },
-      Def.BitmapText{
-        Font='_avenirnext lt pro bold/36px',
-        InitCommand=function(_self)
-          _self:xy(-250, -190):halign(0):zoom(0.9):strokecolor(Color.Black)
-        end,
-        Text='Register a DANCER NAME.\nEnter the name you want to use.',
-      },
-      Def.Sprite{
-        Texture=THEME:GetPathB('ScreenDDRNameEntry', 'overlay/nameframe'),
-        InitCommand=function(_self)
-          _self:y(-120)
-        end,
-      },
-      Def.BitmapText{
-        Font='DDRName Large',
-        InitCommand=function(_self)
-          self.NameTextActor = _self
-          _self:halign(1):xy(256, -120)
-        end,
-      },
-    }
+    },
   }
 end
 
