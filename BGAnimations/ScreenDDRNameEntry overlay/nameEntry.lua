@@ -70,7 +70,8 @@ local ALLOWED_CHARACTERS_LOOKUP = {}
 for keyY, row in ipairs(KEY_CHARACTER_MAP) do
 	for keyX, character in ipairs(row) do
 		if not SPECIAL_CHARACTERS_LOOKUP[character] then
-			ALLOWED_CHARACTERS_LOOKUP[character] = true
+			ALLOWED_CHARACTERS_LOOKUP[character:lower()] = character
+			ALLOWED_CHARACTERS_LOOKUP[character:upper()] = character
 		end
 	end
 end
@@ -129,10 +130,10 @@ local function GenerateLetterBox()
 					
 					local widthRatio = width/height
 					if widthRatio >= 1.5 then						
-						c.Sprite:Load(THEME:GetPathB('ScreenDDRNameEntry','overlay/endBOX'))
+						c.Sprite:Load(THEME:GetPathB('ScreenDDRNameEntry', 'overlay/endBOX'))
 						c.Sprite:zoomx(widthRatio / 2)
 					else
-						c.Sprite:Load(THEME:GetPathB('ScreenDDRNameEntry','overlay/letterBOX'))
+						c.Sprite:Load(THEME:GetPathB('ScreenDDRNameEntry', 'overlay/letterBOX'))
 						c.Sprite:zoomx(widthRatio)
 					end
 					self:xy(x, y)
@@ -178,7 +179,99 @@ function GetSelectionBoxProperties(keyX, keyY)
 	return x, y, width, height
 end
 
+-- These are set during InitCommands
+local NameTextActor
+local SelectionBoxActor
+
+local function UpdateSelectionBox()
+		local keyX, keyY = GridXYToKeyXY(SELECTION_X, SELECTION_Y)
+		local x, y, width, height = GetSelectionBoxProperties(keyX, keyY)
+		SelectionBoxActor:xy(x, y):setsize(width, height)
+end
+
+local function NameAppend(char)
+	local nameChanged = false
+	char = ALLOWED_CHARACTERS_LOOKUP[char]
+	if not char then return nameChanged end
+	if string.len(name) < MAX_NAME_LENGTH then
+		name = name .. char
+		NameTextActor:settext(name)
+		nameChanged = true
+	end
+	if string.len(name) == MAX_NAME_LENGTH then
+		-- Move to Enter key
+		SELECTION_X = 9
+		SELECTION_Y = 5
+		UpdateSelectionBox()
+	end
+	if nameChanged then
+		SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
+	end
+	return nameChanged
+end
+
+local function NameBackspace()
+	if string.len(name) <= 0 then return end
+	name = string.sub(name, 1, -2)
+	NameTextActor:settext(name)
+	SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
+end
+
+local function NameEnter()
+	if string.len(name) == 0 then
+		name = defaultName
+	end
+	local profile = PROFILEMAN:GetProfile(player)
+	profile:SetDisplayName(name) -- Will be used later to replace the Fill-In-Marker
+	
+	-- Makes GAMESTATE:AnyPlayerHasRankingFeats() work and allow the use of GAMESTATE:StoreRankingName(player, 'Name') to
+	-- set the score's name after ScreenGameplay even when in event mode. See:
+	-- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ProfileManager.cpp#L859
+	-- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/GameState.cpp#L2108
+	local fillInMarker = GenerateRankingToFillInMarker(player)
+	if fillInMarker then
+		profile:SetLastUsedHighScoreName(fillInMarker)
+	else
+		profile:SetLastUsedHighScoreName('')
+	end
+	
+	setenv('keysetSDDRN' .. ToEnumShortString(player), 1)
+	if GAMESTATE:GetNumPlayersEnabled() == 1 or (getenv('keysetSDDRNP1') == 1 and getenv('keysetSDDRNP2') == 1) then
+		SCREENMAN:GetTopScreen():StartTransitioningScreen('SM_GoToNextScreen')
+	end
+	
+	SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
+end
+
+local function Player1InputHandler(event)
+	if event.GameButton and event.GameButton ~= '' then return end -- Don't do anything if input is mapped to a GameButton
+	if ToEnumShortString(event.type) ~= 'FirstPress' then return end
+	if ToEnumShortString(event.DeviceInput.device) ~= 'Key' then return end -- Only allow keyboard input
+	local key = ToEnumShortString(event.DeviceInput.button):lower()
+	
+	if key == 'backspace' then
+		NameBackspace()
+	elseif key == 'enter' then -- In case the enter key isn't bound to a GameButton
+		NameEnter()
+	else
+		if NameAppend(key) then
+			-- Move to Enter key so we can easily complete the name entry if the enter key is bound to the Start GameButton
+			SELECTION_X = 9
+			SELECTION_Y = 5
+			UpdateSelectionBox()
+		end
+	end
+end
+
 local t = Def.ActorFrame{
+	OnCommand=function(self)
+		if player == PLAYER_1 then
+			SCREENMAN:GetTopScreen():AddInputCallback(Player1InputHandler)
+		end
+	end,
+	OffCommand=function(self)
+		SCREENMAN:GetTopScreen():RemoveInputCallback(Player1InputHandler)
+	end,
 	Def.ActorFrame{
 		Name='Panes',
 		Def.ActorFrame{
@@ -192,7 +285,7 @@ local t = Def.ActorFrame{
 				self:linear(0.1):zoomy(0)
 			end,
 			Def.Sprite{
-				Texture=THEME:GetPathG('','ScreenSelectProfile/BG01'),
+				Texture=THEME:GetPathG('', 'ScreenSelectProfile/BG01'),
 			},
 			Def.Quad{
 				InitCommand=function(self)
@@ -254,12 +347,10 @@ local t = Def.ActorFrame{
 			GenerateLetterBox(),
 			Def.Quad{
 				InitCommand=function(self)
+					SelectionBoxActor = self
 					local keyX, keyY = GridXYToKeyXY(SELECTION_X, SELECTION_Y)
 					local x, y, width, height = GetSelectionBoxProperties(keyX, keyY)
 					self:diffuse(Alpha(Color.Red, 0.75)):blend(Blend.Add):xy(x, y):setsize(width, height)
-				end,
-				NextScreenCommand=function(self)
-					SCREENMAN:GetTopScreen():StartTransitioningScreen('SM_GoToNextScreen')
 				end,
 				CodeMessageCommand=function(self, params)
 					if params.PlayerNumber ~= player then return end
@@ -269,42 +360,12 @@ local t = Def.ActorFrame{
 						local keyX, keyY = GridXYToKeyXY(SELECTION_X, SELECTION_Y)
 						local selection = KEY_CHARACTER_MAP[keyY][keyX]
 						if selection == 'Enter' then
-							if string.len(name) == 0 then
-								name = defaultName
-							end
-							local profile = PROFILEMAN:GetProfile(player)
-							profile:SetDisplayName(name) -- Will be used later to replace the Fill-In-Marker
-							
-							-- Makes GAMESTATE:AnyPlayerHasRankingFeats() work and allow the use of GAMESTATE:StoreRankingName(player, 'Name') to
-							-- set the score's name after ScreenGameplay even when in event mode. See:
-							-- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ProfileManager.cpp#L859
-							-- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/GameState.cpp#L2108
-							local fillInMarker = GenerateRankingToFillInMarker(player)
-							if fillInMarker then
-								profile:SetLastUsedHighScoreName(fillInMarker)
-							else
-								profile:SetLastUsedHighScoreName('')
-							end
-							
-							setenv('keysetSDDRN' .. ToEnumShortString(player), 1)
-							if GAMESTATE:GetNumPlayersEnabled() == 1 or (getenv('keysetSDDRNP1') == 1 and getenv('keysetSDDRNP2') == 1) then
-								self:sleep(0.5):queuecommand('NextScreen')
-							end
+							NameEnter()
 						elseif selection == '←' then
-							if string.len(name) > 0 then
-								name = string.sub(name, 1, -2)
-							end
-						elseif ALLOWED_CHARACTERS_LOOKUP[selection] then
-							if string.len(name) < MAX_NAME_LENGTH then
-								name = name .. selection
-							end
-							if string.len(name) == MAX_NAME_LENGTH then
-								-- Move to Enter key
-								SELECTION_X = 9
-								SELECTION_Y = 5
-							end
+							NameBackspace()
+						else
+							NameAppend(selection)
 						end
-						SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
 					else
 						local deltaX = 0
 						local deltaY = 0
@@ -331,6 +392,7 @@ local t = Def.ActorFrame{
 								SELECTION_X = KEY_TO_GRID_MAP[keyY][keyX] + math.floor((KEY_WIDTH_MAP[keyY][keyX]-1)/2)
 							end
 							
+							UpdateSelectionBox()
 							SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
 						end
 						
@@ -340,14 +402,10 @@ local t = Def.ActorFrame{
 								SELECTION_Y = wrap1(SELECTION_Y + deltaY, GRID_ROWS)
 							end
 							
+							UpdateSelectionBox()
 							SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
 						end
 					end
-				
-					local keyX, keyY = GridXYToKeyXY(SELECTION_X, SELECTION_Y)
-					local x, y, width, height = GetSelectionBoxProperties(keyX, keyY)
-					self:xy(x, y):setsize(width, height)
-					self:GetParent():GetParent():GetChild('NameActor'):settext(name)
 				end
 			},
 		},
@@ -368,6 +426,7 @@ local t = Def.ActorFrame{
 			Font='DDRName Large',
 			Name='NameActor',
 			InitCommand=function(self)
+				NameTextActor = self
 				self:halign(1):xy(256, -120)
 			end,
 		},
