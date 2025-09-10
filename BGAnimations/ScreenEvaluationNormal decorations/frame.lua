@@ -25,7 +25,9 @@ local t = Def.ActorFrame{
 	end,
     --Input handler
     CodeMessageCommand=function(s,p)
-        if p.PlayerNumber==controller then
+			if p.PlayerNumber~=controller then return end
+			if getenv('EvaluationNameEntryOpen' .. controller) == 1 then return end
+			
 			if p.Name=="Left" then
 				if paneState > 0 then
 					SOUND:PlayOnce(THEME:GetPathS("ScreenOptions","change" ));
@@ -36,15 +38,12 @@ local t = Def.ActorFrame{
 					SOUND:PlayOnce(THEME:GetPathS("ScreenOptions","change" ));
 					paneState = paneState + 1;
 				end;
-			else
-				SCREENMAN:SystemMessage("Unknown button: "..p.Name);
 			end;
 			if controller == PLAYER_1 then
 				pPrefs.evalpane1 = paneState
 			else
 				pPrefs.evalpane2 = paneState
 			end
-        end;
     end, 
     Def.Sprite{
         Texture="_box",

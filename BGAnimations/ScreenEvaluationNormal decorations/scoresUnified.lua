@@ -10,6 +10,7 @@ local function RivalScore(pn, rival)
 		CurrentCourseChangedMessageCommand=function(s) s:playcommand("Set") end,
 		["CurrentSteps"..ToEnumShortString(pn).."ChangedMessageCommand"]=function(s) s:queuecommand("Set") end,
 		["CurrentTrail"..ToEnumShortString(pn).."ChangedMessageCommand"]=function(s) s:queuecommand("Set") end,
+		["ProfileDisplayName"..ToEnumShortString(pn).."ChangedMessageCommand"]=function(s) s:queuecommand("Set") end,
 		SetCommand=function(s)      
 			local c = s:GetChildren()
 			
