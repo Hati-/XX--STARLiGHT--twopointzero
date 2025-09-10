@@ -1,174 +1,274 @@
 local player = ...
-local defaultName = "STARLGHT"
+local defaultName = 'STARLGHT'
 
-local CHARACTER_MAP = {
-{"A","B","C","D","E","F","G","H","I","J"},
-{"K","L","M","N","O","P","Q","R","S","T"},
-{"U","V","W","X","Y","Z"},
-{"0","1","2","3","4","5","6","7","8","9"},
-{"?","!","$","&","-","."," ","←","Enter"}
+local name = ''
+setenv('keysetSDDRN' .. ToEnumShortString(player), 0)
+
+local MAX_NAME_LENGTH = 8
+local SELECTION_X, SELECTION_Y = 1, 1
+local GRID_CELL_WIDTH = 50
+local GRID_CELL_HEIGHT = 50
+local KEY_CHARACTER_MAP = {
+	{'A','B','C','D','E','F','G','H','I','J'},
+	{'K','L','M','N','O','P','Q','R','S','T'},
+	{'U','V','W','X','Y','Z'},
+	{'0','1','2','3','4','5','6','7','8','9'},
+	{'?','!','$','&','-','.','_','←','Enter'}
 }
+local SPECIAL_CHARACTERS = {'←', 'Enter'}
 
-local SELECTION_X, SELECTION_Y = 1,1
+local KEY_WIDTH_MAP = {}
+for keyY, _ in ipairs(KEY_CHARACTER_MAP) do KEY_WIDTH_MAP[keyY] = {} end
+KEY_WIDTH_MAP[5][9] = 2 -- Enter
+-- KEY_WIDTH_MAP[3][4] = 3 -- X (for testing)
+-- KEY_WIDTH_MAP[2][2] = 2 -- L (for testing)
 
-local name = "";
-setenv("keysetSDDRN"..ToEnumShortString(player),0)
+-- Lookup tables
+for keyY, row in ipairs(KEY_CHARACTER_MAP) do
+	local keyWidths = KEY_WIDTH_MAP[keyY]
+	for keyX, _ in ipairs(row) do
+		if keyWidths[keyX] == nil then
+			keyWidths[keyX] = 1
+		end
+	end
+end
+local GRID_ROWS = 0
+local GRID_COLS = 0
+local GRID_TO_KEY_MAP = {}
+for keyY, row in ipairs(KEY_WIDTH_MAP) do
+	local keyXMap = {}
+	GRID_TO_KEY_MAP[keyY] = keyXMap
+	for keyX, width in ipairs(row) do
+		for i=1, width do
+			keyXMap[#keyXMap+1] = keyX
+		end
+	end
+	
+	GRID_ROWS = math.max(GRID_ROWS, keyY)
+	GRID_COLS = math.max(GRID_COLS, #keyXMap)
+end
+local KEY_ROWS = 0
+local KEY_COLS = 0
+local KEY_TO_GRID_MAP = {}
+for keyY, row in ipairs(KEY_WIDTH_MAP) do
+	local gridXMap = {}
+	KEY_TO_GRID_MAP[keyY] = gridXMap
+	local gridX = 1
+	for keyX, width in ipairs(row) do
+		gridXMap[keyX] = gridX
+		gridX = gridX + width
+	end
+	
+	KEY_ROWS = math.max(KEY_ROWS, keyY)
+	KEY_COLS = math.max(KEY_COLS, #gridXMap)
+end
+local SPECIAL_CHARACTERS_LOOKUP = {}
+for i, character in ipairs(SPECIAL_CHARACTERS) do
+	SPECIAL_CHARACTERS_LOOKUP[character] = true
+end
+local ALLOWED_CHARACTERS_LOOKUP = {}
+for keyY, row in ipairs(KEY_CHARACTER_MAP) do
+	for keyX, character in ipairs(row) do
+		if not SPECIAL_CHARACTERS_LOOKUP[character] then
+			ALLOWED_CHARACTERS_LOOKUP[character] = true
+		end
+	end
+end
 
-local p1finished, p2finished = false, false;
-function genLetterBox()
+local function wrap(x, n)
+	if x < 0 then
+		x = x + math.floor((-x / n) + 1) * n
+	end
+	return x % n
+end
+local function wrap1(x, n) -- Variant that works with indices starting at 1 instead of 0
+	return wrap(x - 1, n) + 1
+end
+
+local function GridXYToKeyXY(gridX, gridY)
+	if gridY < 1 or gridY > #GRID_TO_KEY_MAP then
+		error('GridPosToKeySlot(x, y): y-value out of range. Got '..gridY..', but expects range [1, '..GRID_ROWS..']')
+	end
+	local keyXMap = GRID_TO_KEY_MAP[gridY]
+	if gridX < 1 or gridX > #keyXMap then
+		error('GridPosToKeySlot(x, y): x-value out of range. Got '..gridX..', but expects range [1, '..#keyXMap..']')
+	end
+	local keyX = keyXMap[gridX]
+	local keyY = gridY
+	return keyX, keyY
+end
+
+local function GetKeyProperties(keyX, keyY)
+	if keyY < 1 or keyY > KEY_ROWS then
+		error('GetKeyProperties(x, y): y-value out of range. Got '..keyY..', but expects range [1, '..KEY_ROWS..']')
+	end
+	local gridXMap = KEY_TO_GRID_MAP[keyY]
+	if keyX < 1 or keyX > #gridXMap then
+		error('GetKeyProperties(x, y): x-value out of range. Got '..keyX..', but expects range [1, '..#gridXMap..']')
+	end
+	local y = keyY - 1
+	local x = gridXMap[keyX] - 1
+	local width = KEY_WIDTH_MAP[keyY][keyX]
+	return x, y, width
+end
+
+local function GenerateLetterBox()
 	local f = Def.ActorFrame{}
-	for rowNum, row in ipairs(CHARACTER_MAP) do
-		for colNum, character in ipairs(row) do
+	
+	for keyY, row in ipairs(KEY_CHARACTER_MAP) do
+		for keyX, character in ipairs(row) do
+			local x, y, width = GetKeyProperties(keyX, keyY)
+			x = x * GRID_CELL_WIDTH + GRID_CELL_WIDTH / 2 * width
+			y = y * GRID_CELL_HEIGHT + GRID_CELL_HEIGHT / 2
+			width = width * GRID_CELL_WIDTH
+			local height = GRID_CELL_HEIGHT
+			
 			f[#f+1] = Def.ActorFrame{
-				InitCommand=function(s)
-					if character == "Enter" then
-						s:x(53*colNum)
+				InitCommand=function(self)
+					local c = self:GetChildren()
+					
+					local widthRatio = width/height
+					if widthRatio >= 1.5 then						
+						c.Sprite:Load(THEME:GetPathB('ScreenDDRNameEntry','overlay/endBOX'))
+						c.Sprite:zoomx(widthRatio / 2)
 					else
-						s:x(50*colNum)
+						c.Sprite:Load(THEME:GetPathB('ScreenDDRNameEntry','overlay/letterBOX'))
+						c.Sprite:zoomx(widthRatio)
 					end
-					s:y(50*rowNum)
+					self:xy(x, y)
+					
+					if SPECIAL_CHARACTERS_LOOKUP[character] then
+						c.Text:diffuse(Color.White):zoom(0.8)
+					else
+						c.Text:diffuse(color('#deff02')):zoom(1)
+					end
+					c.Text:settext(character)
 				end,
 				Def.Sprite{
-					InitCommand=function(s)
-						if character == "Enter" then
-							s:Load(THEME:GetPathB("ScreenDDRNameEntry","overlay/endBOX"))
-						else
-							s:Load(THEME:GetPathB("ScreenDDRNameEntry","overlay/letterBOX"))
-						end
-					end
-				};
+					Name='Sprite',
+				},
 				Def.BitmapText{
-					Font="_avenirnext lt pro bold/42px",
-					InitCommand=function(s)
-						if character == "Enter" or character == "←" then
-							s:diffuse(Color.White):zoom(0.8):addx(-2)
-						else
-							s:diffuse(color("#deff02")):zoom(1)
-						end
-						s:settext(character)
-					end
-				}
+					Name='Text',
+					Font='_avenirnext lt pro bold/42px',
+				},
 			}
 		end
 	end
 	return f
 end
 
+function GetSelectionBoxProperties(keyX, keyY)
+	local x, y, width = GetKeyProperties(keyX, keyY)
+	x = x * GRID_CELL_WIDTH + GRID_CELL_WIDTH / 2 * width
+	y = y * GRID_CELL_HEIGHT + GRID_CELL_HEIGHT / 2
+	width = width * GRID_CELL_WIDTH
+	local height = GRID_CELL_HEIGHT
+	
+	local widthRatio = width/height
+	if width/height >= 1.5 then
+		-- Some minor corrections because the endBOX anx letterBOX textures aren't exactly uniform to eachother
+		width = width*0.90
+		height = height*0.74
+		x = x - 1
+		y = y + 1
+	else
+		width = width*0.82
+		height = height*0.74
+	end
+	return x, y, width, height
+end
+
 local t = Def.ActorFrame{
 	Def.ActorFrame{
-		Name="Panes",
+		Name='Panes',
 		Def.ActorFrame{
 			InitCommand=function(self)
 				self:shadowlength(0):zoomy(0)
-			end;
-			OnCommand=function(s) s:sleep(0.3):linear(0.3):zoomy(1) end,
+			end,
+			OnCommand=function(self)
+				self:sleep(0.3):linear(0.3):zoomy(1)
+			end,
 			OffCommand=function(self)
 				self:linear(0.1):zoomy(0)
-			end;
+			end,
 			Def.Sprite{
-				Texture=THEME:GetPathG("","ScreenSelectProfile/BG01"),
-			};
+				Texture=THEME:GetPathG('','ScreenSelectProfile/BG01'),
+			},
 			Def.Quad{
-				InitCommand=function(s) s:setsize(512,440):y(-20):diffuse(Alpha(Color.Black,0.75)) end,
-			};
-		};
+				InitCommand=function(self)
+					self:setsize(512, 440):y(-20):diffuse(Alpha(Color.Black, 0.75))
+				end,
+			},
+		},
 		Def.ActorFrame{
-			InitCommand=function(s) s:y(-292) end,
-			OnCommand=function(s) s:y(0):sleep(0.3):linear(0.3):y(-292) end,
-     		OffCommand=function(self)
-				self:linear(0.1):y(0):sleep(0):diffusealpha(0)
-			end;
-			Def.Sprite{
-				Texture=THEME:GetPathG("","ScreenSelectProfile/BGTOP_"..ToEnumShortString(player)),
-				InitCommand=function(s) s:valign(1) end,
-			};
-		};
-		Def.ActorFrame{
-			Name="Bottom";
 			InitCommand=function(self)
-			  self:shadowlength(0)
-			end;
-			OnCommand=function(s) s:y(0):sleep(0.3):linear(0.3):y(286) end,
+				self:y(-292)
+			end,
+			OnCommand=function(self)
+				self:y(0):sleep(0.3):linear(0.3):y(-292)
+			end,
 			OffCommand=function(self)
 				self:linear(0.1):y(0):sleep(0):diffusealpha(0)
-			end;
+			end,
 			Def.Sprite{
-				Texture=THEME:GetPathG("","ScreenSelectProfile/BGBOTTOM"),
+				Texture=THEME:GetPathG('', 'ScreenSelectProfile/BGTOP_' .. ToEnumShortString(player)),
+				InitCommand=function(s) s:valign(1) end,
+			},
+		},
+		Def.ActorFrame{
+			Name='Bottom',
+			InitCommand=function(self)
+			  self:shadowlength(0)
+			end,
+			OnCommand=function(self)
+				self:y(0):sleep(0.3):linear(0.3):y(286)
+			end,
+			OffCommand=function(self)
+				self:linear(0.1):y(0):sleep(0):diffusealpha(0)
+			end,
+			Def.Sprite{
+				Texture=THEME:GetPathG('', 'ScreenSelectProfile/BGBOTTOM'),
 				InitCommand=function(s) s:valign(0) end,
-			};
+			},
 			Def.Sprite{
-				Texture=THEME:GetPathG("","ScreenSelectProfile/start game"),
+				Texture=THEME:GetPathG('', 'ScreenSelectProfile/start game'),
 			  	InitCommand=function(s) s:valign(0):diffusealpha(0) end,
 			  	OnCommand=function(s) s:sleep(0.8):diffusealpha(1) end,
-			};
-		};
+			},
+		},
 	},
 	Def.ActorFrame{
-		InitCommand=function(s) s:hibernate(0.6) end,
-		OffCommand=function(s) s:diffusealpha(0) end,
-		genLetterBox()..{
-			InitCommand=function(s) s:xy(-276,-120) end,
-		};
-		Def.Quad{
-			InitCommand=function(s) s:xy(-228,-68):diffuse(Alpha(Color.Red,0.75)):blend(Blend.Add):setsize(40,35) end,
-			NextScreenCommand=function(s)
-				SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+		InitCommand=function(self)
+			self:hibernate(0.6)
+		end,
+		OffCommand=function(self)
+			self:diffusealpha(0)
+		end,
+		Def.ActorFrame{
+			InitCommand=function(self)
+				-- local offsetX = -(KEY_COLS * GRID_CELL_WIDTH / 2)
+				local offsetX = -(GRID_COLS * GRID_CELL_WIDTH / 2)
+				local offsetY = -90
+				self:xy(offsetX, offsetY)
 			end,
-			CodeMessageCommand=function(s, params)
-				if params.PlayerNumber ~= player then return end
-				if getenv("SDDRNJoined"..player) == 1 then
-					if params.Name == "Left" or params.Name == "Left2" then
-						if SELECTION_X == 1 and SELECTION_Y == 1 then
-							SELECTION_X = 9
-							SELECTION_Y = 5
-						elseif SELECTION_X > 1 then
-							SELECTION_X = SELECTION_X -1
-						elseif SELECTION_Y > 1 then
-							SELECTION_Y = SELECTION_Y-1
-							SELECTION_X = #CHARACTER_MAP[SELECTION_Y]
-						end
-						SOUND:PlayOnce(THEME:GetPathS("ScreenOptions","change"), true)
-					elseif params.Name == "Right" or params.Name == "Right2" then
-						if SELECTION_X == 9 and SELECTION_Y == 5 then
-							SELECTION_X = 1
-							SELECTION_Y = 1
-						elseif SELECTION_X < #CHARACTER_MAP[SELECTION_Y] then
-							SELECTION_X = SELECTION_X + 1;
-						elseif SELECTION_Y < #CHARACTER_MAP then
-							SELECTION_X = 1
-							SELECTION_Y = SELECTION_Y+1
-						end
-						SOUND:PlayOnce(THEME:GetPathS("ScreenOptions","change"), true)
-					elseif params.Name == "Up" or params.Name == "Up2" then
-						if SELECTION_Y == 1 then
-							SELECTION_Y = 5
-							if SELECTION_X == 10 then
-								SELECTION_X = 9
-							end
-						elseif SELECTION_Y == 4 and (SELECTION_X >= 7 and SELECTION_X <= #CHARACTER_MAP[SELECTION_Y]) then
-							SELECTION_Y = 2
-						elseif SELECTION_Y > 1  and SELECTION_X < #CHARACTER_MAP[SELECTION_Y-1]+1 then
-							SELECTION_Y = SELECTION_Y - 1;
-						end
-						SOUND:PlayOnce(THEME:GetPathS("ScreenOptions","change"), true)
-					elseif params.Name == "Down" or params.Name == "Down2" then
-						if SELECTION_Y == 4 and SELECTION_X == 10 then
-							SELECTION_Y = 5
-							SELECTION_X = 9
-						elseif SELECTION_Y == 5 then
-							SELECTION_Y = 1
-							if SELECTION_X == 9 then
-								SELECTION_X = 10
-							end
-						elseif SELECTION_Y == 2 and (SELECTION_X >= 7 and SELECTION_X <= #CHARACTER_MAP[SELECTION_Y]) then
-							SELECTION_Y = 4
-						elseif SELECTION_Y < #CHARACTER_MAP and SELECTION_X < #CHARACTER_MAP[SELECTION_Y+1]+1 then
-							SELECTION_Y = SELECTION_Y + 1
-						end
-						SOUND:PlayOnce(THEME:GetPathS("ScreenOptions","change"), true)
-					elseif params.Name == "Start" then
-						local selection = CHARACTER_MAP[SELECTION_Y][SELECTION_X]
-						if selection == "Enter" then
+			GenerateLetterBox(),
+			Def.Quad{
+				InitCommand=function(self)
+					local keyX, keyY = GridXYToKeyXY(SELECTION_X, SELECTION_Y)
+					local x, y, width, height = GetSelectionBoxProperties(keyX, keyY)
+					self:diffuse(Alpha(Color.Red, 0.75)):blend(Blend.Add):xy(x, y):setsize(width, height)
+				end,
+				NextScreenCommand=function(self)
+					SCREENMAN:GetTopScreen():StartTransitioningScreen('SM_GoToNextScreen')
+				end,
+				CodeMessageCommand=function(self, params)
+					if params.PlayerNumber ~= player then return end
+					if getenv('SDDRNJoined' .. player) ~= 1 then return end
+					
+					if params.Name == 'Start' then
+						local keyX, keyY = GridXYToKeyXY(SELECTION_X, SELECTION_Y)
+						local selection = KEY_CHARACTER_MAP[keyY][keyX]
+						if selection == 'Enter' then
 							if string.len(name) == 0 then
 								name = defaultName
 							end
@@ -186,64 +286,92 @@ local t = Def.ActorFrame{
 								profile:SetLastUsedHighScoreName('')
 							end
 							
-							setenv("keysetSDDRN"..ToEnumShortString(player),1)
-							if GAMESTATE:GetNumPlayersEnabled() == 1 then
-								local mp = GAMESTATE:GetMasterPlayerNumber()
-								s:sleep(0.5):queuecommand("NextScreen")
-							else
-								if getenv("keysetSDDRNP1") == 1 and getenv("keysetSDDRNP2") == 1 then
-									s:sleep(0.5):queuecommand("NextScreen")
-								end
+							setenv('keysetSDDRN' .. ToEnumShortString(player), 1)
+							if GAMESTATE:GetNumPlayersEnabled() == 1 or (getenv('keysetSDDRNP1') == 1 and getenv('keysetSDDRNP2') == 1) then
+								self:sleep(0.5):queuecommand('NextScreen')
 							end
-						elseif selection == "←" then
+						elseif selection == '←' then
 							if string.len(name) > 0 then
-								name=string.sub(name,1,-2)
-							else
-								name=""
+								name = string.sub(name, 1, -2)
 							end
-						else
-							if string.len(name) < 7 then
-								name=name..selection
-							else
+						elseif ALLOWED_CHARACTERS_LOOKUP[selection] then
+							if string.len(name) < MAX_NAME_LENGTH then
+								name = name .. selection
+							end
+							if string.len(name) == MAX_NAME_LENGTH then
+								-- Move to Enter key
 								SELECTION_X = 9
 								SELECTION_Y = 5
-								if string.len(name) < 7 or string.len(name) ~= 8 then
-									name=name..selection
-								end
 							end
 						end
-						SOUND:PlayOnce(THEME:GetPathS("Common","start"), true)
-					end;
-				
-					local selection = CHARACTER_MAP[SELECTION_Y][SELECTION_X]
-					if selection == "Enter" then
-						s:x((53*SELECTION_X)-276)
-						s:setsize(92,35)
+						SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
 					else
-						s:x((50*SELECTION_X)-276):setsize(40,35)
+						local deltaX = 0
+						local deltaY = 0
+						if params.Name == 'Left' or params.Name == 'Left2' then
+							deltaX = -1
+						elseif params.Name == 'Right' or params.Name == 'Right2' then
+							deltaX =  1
+						elseif params.Name == 'Up' or params.Name == 'Up2' then
+							deltaY = -1 
+						elseif params.Name == 'Down' or params.Name == 'Down2' then
+							deltaY =  1
+						end
+						if deltaX ~= 0 then
+							local keyX, keyY = GridXYToKeyXY(SELECTION_X, SELECTION_Y)
+							keyX = keyX + deltaX
+							
+							if keyX < 1 then
+								SELECTION_Y = wrap1(SELECTION_Y - 1, GRID_ROWS)
+								SELECTION_X = #GRID_TO_KEY_MAP[SELECTION_Y]
+							elseif keyX > #KEY_CHARACTER_MAP[SELECTION_Y] then
+								SELECTION_Y = wrap1(SELECTION_Y + 1, GRID_ROWS)
+								SELECTION_X = 1
+							else
+								SELECTION_X = KEY_TO_GRID_MAP[keyY][keyX] + math.floor((KEY_WIDTH_MAP[keyY][keyX]-1)/2)
+							end
+							
+							SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
+						end
+						
+						if deltaY ~= 0 then
+							SELECTION_Y = wrap1(SELECTION_Y + deltaY, GRID_ROWS)
+							while SELECTION_X > #GRID_TO_KEY_MAP[SELECTION_Y] do -- We use GRID_TO_KEY_MAP to get grid columns per row
+								SELECTION_Y = wrap1(SELECTION_Y + deltaY, GRID_ROWS)
+							end
+							
+							SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
+						end
 					end
-					s:y((50*SELECTION_Y)-120)
-					s:GetParent():GetChild("NameActor"):settext(name)
+				
+					local keyX, keyY = GridXYToKeyXY(SELECTION_X, SELECTION_Y)
+					local x, y, width, height = GetSelectionBoxProperties(keyX, keyY)
+					self:xy(x, y):setsize(width, height)
+					self:GetParent():GetParent():GetChild('NameActor'):settext(name)
 				end
-			end;
-		};
+			},
+		},
 		Def.BitmapText{
-			Font="_avenirnext lt pro bold/36px",
-			InitCommand=function(s) s:xy(-250,-190):halign(0):zoom(0.9):strokecolor(Color.Black) end,
-			Text="Register a DANCER NAME.\nEnter the name you want to use."
-		};
+			Font='_avenirnext lt pro bold/36px',
+			InitCommand=function(self)
+				self:xy(-250, -190):halign(0):zoom(0.9):strokecolor(Color.Black)
+			end,
+			Text='Register a DANCER NAME.\nEnter the name you want to use.',
+		},
 		Def.Sprite{
-			Texture="nameframe",
-			InitCommand=function(s) s:y(-120) end,
-		};
+			Texture='nameframe',
+			InitCommand=function(self)
+				self:y(-120)
+			end,
+		},
 		Def.BitmapText{
-			Font="DDRName Large",
-			Name="NameActor";
-			InitCommand=function(s) s:halign(1):xy(256,-120) end,
-		};
+			Font='DDRName Large',
+			Name='NameActor',
+			InitCommand=function(self)
+				self:halign(1):xy(256, -120)
+			end,
+		},
 	}
-
-};
+}
 	
-
-return t;
+return t
