@@ -189,14 +189,18 @@ local function GenerateLetterBox()
 	return t
 end
 
-local function CreateNameEntryFrame(self)
+local function CreateNameEntryFrame()
+  local self = nil
   local function InputHandler(...)
-    self:InputHandler(...)
+   self:InputHandler(...)
   end
   
   return Def.ActorFrame{
     InitCommand=function(_self)
-      self.Frame = _self:GetParent() -- We're just a subframe, the actual main frame is this frame's parent
+      -- We're just an sub-ActorFrame, the main ActorFrame is this actor's parent
+      self = _self:GetParent()
+      self.NameTextActor = _self:GetChild('NameText')
+      self.SelectionBoxActor = _self:GetChild('LetterBoxFrame'):GetChild('SelectionBox')
     end,
     OnCommand=function()
       if self.AllowKeyboard then
@@ -263,6 +267,7 @@ local function CreateNameEntryFrame(self)
       end
     end,
     Def.ActorFrame{
+      Name='LetterBoxFrame',
       InitCommand=function(_self)
         -- local offsetX = -(KEY_COLS * GRID_CELL_WIDTH / 2)
         local offsetX = -(GRID_COLS * GRID_CELL_WIDTH / 2)
@@ -271,9 +276,11 @@ local function CreateNameEntryFrame(self)
       end,
       GenerateLetterBox(),
       Def.Quad{
+        Name='SelectionBox',
         InitCommand=function(_self)
-          self.SelectionBoxActor = _self
-          _self:diffuse(Alpha(Color.Red, 0.75)):blend(Blend.Add)  
+          _self:diffuse(Alpha(Color.Red, 0.75)):blend(Blend.Add)
+        end,
+        OnCommand=function()
           self:UpdateSelectionBox()
         end,
       },
@@ -285,53 +292,87 @@ local function CreateNameEntryFrame(self)
       end,
     },
     Def.BitmapText{
+      Name='NameText',
       Font='DDRName Large',
       InitCommand=function(_self)
-        self.NameTextActor = _self
         _self:halign(1):xy(256, -120)
       end,
     },
   }
 end
 
-local NameEntry = {}
-NameEntry.__index = NameEntry
-
--- Constructor
-function NameEntry:new(opts)
-  local properties = {
-    DefaultName = DEFAULT_NAME,
-    Player = nil, -- This option is required
-    AllowInputCallback = true,
-    EnterCallback = false,
-    AllowKeyboard = false,
-  }
-  for k, v in pairs(opts) do properties[k] = v end
-  
-  if not properties.Player or not GenerateRankingToFillInMarker(properties.Player) then
-    error('NameEntry(): Player option is missing or invalid, got "' .. tostring(properties.Player) .. '"!')
+local function Mixin(target, addon)
+  for k, v in pairs(addon) do
+    local vOriginal = target[k]
+    if vOriginal ~= nil then
+      target['_' .. k] = vOriginal
+    end
+    target[k] = v
   end
-  properties.PlayerName = ''
-  properties.SelectionX = 1
-  properties.SelectionY = 1
+end
+
+local function SetConstructor(target, ctor)
+  return setmetatable(target, {
+    __call = function(_, ...) return ctor(...) end
+  })
+end
+
+local NameEntry = {}
+SetConstructor(NameEntry, function(opts)
+  if not opts.Player or not GenerateRankingToFillInMarker(opts.Player) then
+    error('NameEntry(): Player option is missing or invalid, got "' .. tostring(opts.Player) .. '"!')
+  end
   
-  -- These are set during InitCommands
-  properties.Frame = nil
-  properties.NameTextActor = nil
-  properties.SelectionBoxActor = nil
-  
-  local obj = setmetatable(Def.ActorFrame(properties), self)
-  obj[#obj+1] = CreateNameEntryFrame(obj)
-  return obj
+  local t = Def.ActorFrame(opts)
+  t[#t+1] = Def.Actor{
+    InitCommand=function(self)
+      -- We're just an Actor, the main ActorFrame is this actor's parent
+      self = self:GetParent()
+      Mixin(self, NameEntry)
+      if type(self.Init) == 'function' then self:Init(opts) end
+    end
+  }
+  t[#t+1] = CreateNameEntryFrame()
+  return t
+end)
+
+local DefaultProperties = {
+  DefaultName         = DEFAULT_NAME,
+  Player              = false, -- This option is required
+  AllowKeyboard       = false,
+  AllowInputCallback  = true,
+  EnterCallback       = false,
+}
+function NameEntry:Init(opts)
+  for k, v in pairs(DefaultProperties) do
+    local optsValue = opts[k] 
+    if optsValue ~= nil then
+      self[k] = optsValue
+    else
+      self[k] = v
+    end
+  end
+  self:Reset()
+end
+
+function NameEntry:Reset()
+  self.PlayerName = ''
+  self.SelectionX = 1
+  self.SelectionY = 1
+  if self:IsReady() then
+    self.NameTextActor:settext(self.PlayerName)
+    self:UpdateSelectionBox()
+  end
 end
 
 function NameEntry:IsReady()
-  return self.Frame ~= nil and self.NameTextActor ~= nil and self.SelectionBoxActor ~= nil
+  -- These are set during InitCommand within CreateNameEntryFrame()
+  return self.NameTextActor ~= nil and self.SelectionBoxActor ~= nil
 end
 
 function NameEntry:RunCallback(callback)
   if type(callback) == 'function' then
-    return callback(self.Frame)
+    return callback(self)
   end
   return not not callback
 end
@@ -393,7 +434,6 @@ function NameEntry:NameEnter()
   end
   
   SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
-  
   self:RunCallback(self.EnterCallback)
 end
 
@@ -417,6 +457,4 @@ function NameEntry:InputHandler(event)
 	end
 end
 	
-return function(...)
-  return NameEntry:new(...)
-end
+return NameEntry
