@@ -319,12 +319,26 @@ local function CreateNameEntryFrame()
   }
 end
 
-
-
-SetConstructor(NameEntry, function(opts)
-  if not opts.Player or not GenerateRankingToFillInMarker(opts.Player) then
-    error('NameEntry(): Player option is missing or invalid, got "' .. tostring(opts.Player) .. '"!')
+local function ValidateOptions(calleeName, opts)
+  local player = opts.Player
+  
+  local invalidPlayer = true
+  if player then
+    for k, v in pairs(PlayerNumber) do
+      if v == player then
+        invalidPlayer = false
+        break
+      end
+    end
   end
+  if invalidPlayer then
+    error(calleeName .. ': Player option is missing or invalid, got ' .. tostring(player) .. '!')
+  end
+end
+
+-- NameEntry constructor
+SetConstructor(NameEntry, function(opts)
+  ValidateOptions('NameEntry()', opts)
   
   local t = Def.ActorFrame(opts)
   t[#t+1] = Def.Actor{
@@ -347,6 +361,8 @@ local DefaultProperties = {
   EnterCallback       = false,
 }
 function NameEntry:Init(opts)
+  ValidateOptions('NameEntry:Init()', opts) -- In case opts got changed betweem constructor call and InitCommand
+  
   for k, v in pairs(DefaultProperties) do
     local optsValue = opts[k] 
     if optsValue ~= nil then
@@ -386,10 +402,14 @@ function NameEntry:CheckReady()
   return true
 end
 
-function NameEntry:Update()
+function NameEntry:AssertReady(calleeName)
   if not self.IsReady then
-    error('NameEntry:Update(): tried to run when not ready!')
+    error('NameEntry:'..calleeName .. '(): Tried to execute when NameEntry is not ready!')
   end
+end
+
+function NameEntry:Update()
+  self:AssertReady('Update')
   self.NameTextActor:settext(self.PlayerName)
   self:UpdateSelectionBox()
 end
@@ -402,18 +422,21 @@ function NameEntry:RunCallback(callback)
 end
 
 function NameEntry:UpdateSelectionBox()
+  self:AssertReady('UpdateSelectionBox')
   local keyX, keyY = GridXYToKeyXY(self.SelectionX, self.SelectionY)
   local x, y, width, height = GetSelectionBoxProperties(keyX, keyY)
   self.SelectionBoxActor:xy(x, y):setsize(width, height)
 end
 
 function NameEntry:SelectEnterKey()
+  self:AssertReady('SelectEnterKey')
   self.SelectionX = ENTER_KEY_POS.X
   self.SelectionY = ENTER_KEY_POS.Y
   self:UpdateSelectionBox()
 end
 
 function NameEntry:NameAppend(char)
+  self:AssertReady('NameAppend')
   local nameChanged = false
   char = ALLOWED_CHARACTERS_LOOKUP[char]
   if not char then return nameChanged end
@@ -432,6 +455,7 @@ function NameEntry:NameAppend(char)
 end
 
 function NameEntry:NameBackspace()
+  self:AssertReady('NameBackspace')
   if string.len(self.PlayerName) <= 0 then return end
   self.PlayerName = string.sub(self.PlayerName, 1, -2)
   self.NameTextActor:settext(self.PlayerName)
@@ -439,6 +463,7 @@ function NameEntry:NameBackspace()
 end
 
 function NameEntry:NameEnter()
+  self:AssertReady('NameEnter')
   if string.len(self.PlayerName) == 0 then
     self.PlayerName = self.DefaultName
     self.NameTextActor:settext(self.PlayerName)
@@ -462,7 +487,7 @@ function NameEntry:NameEnter()
 end
 
 function NameEntry:InputHandler(event)
-  if not self.IsReady then return end
+  self:AssertReady('InputHandler')
 	if not self:RunCallback(self.AllowInputCallback) then return end
   if event.GameButton and event.GameButton ~= '' then return end -- Don't do anything if input is mapped to a GameButton
   if ToEnumShortString(event.type) ~= 'FirstPress' then return end
