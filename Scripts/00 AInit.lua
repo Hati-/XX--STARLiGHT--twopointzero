@@ -481,6 +481,16 @@ function HumanPlayers()
 	return values(GAMESTATE:GetHumanPlayers())
 end
 
+-- See https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/GameConstantsAndTypes.cpp#L16
+function GenerateRankingToFillInMarker(pn)
+	for k, v in pairs(PlayerNumber) do
+		if v == pn then
+			return '#P' .. k .. '#'
+		end
+	end
+	return nil
+end
+
 --not really related but this seems like an OK place
 function PlayerStageStats:FullComboType()
 	if self:FullComboOfScore('TapNoteScore_W1') then

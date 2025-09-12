@@ -330,17 +330,24 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
       end;
     };
     Def.BitmapText{
-      Font="_avenirnext lt pro bold/25px";
+      Font='_avenirnext lt pro bold/25px',
       InitCommand=function(self)
-		local name = PROFILEMAN:GetProfile(pn):GetDisplayName()
-		
-		if name == '' then
-			name = pn=="PlayerNumber_P2" and "PLAYER 2" or "PLAYER 1"
-		end
-        self:xy(pn=="PlayerNumber_P2" and SCREEN_RIGHT-134 or SCREEN_LEFT+134,_screen.cy-310)
+        self:queuecommand('Set')
+      end,
+  		['ProfileDisplayName'..ToEnumShortString(pn)..'ChangedMessageCommand']=function(self)
+        self:queuecommand('Set')
+      end,
+      SetCommand=function(self)
+        local name = PROFILEMAN:GetProfile(pn):GetDisplayName()
+        local isPlayer1 = (pn == PLAYER_1)
+        
+        if name == '' then
+          name = isPlayer1 and 'PLAYER 1' or 'PLAYER 2'
+        end
+        self:xy(isPlayer1 and SCREEN_LEFT+134 or SCREEN_RIGHT-134, _screen.cy-310)
         self:settext(name)
-      end;
-    };
+      end,
+    },
     -- Timing mode
     Def.Sprite{
       Texture="player",
@@ -357,9 +364,87 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
         -- Whenever OutFox supports split timing modes, update this
         self:settext(TimingMode)
       end;
-    };
+    },
+    Def.BitmapText{
+      Font="_avenirnext lt pro bold/20px",
+      Text="[Press SELECT to change name]",
+      InitCommand=function(self)
+        self:align(0,0):xy(3, _screen.cy-275):zoom(0.95)
+      end,
+    },
   }
-end;
+  
+  -- NameEntry
+  local NameEntryWrapper
+  local NameEntry
+  t[#t+1] = Def.ActorFrame{
+    InitCommand=function(self)
+      NameEntryWrapper = self
+      setenv('EvaluationNameEntryOpen' .. pn, 0)
+      self:draworder(10)
+      self:visible(false)
+      self:playcommand('Hide')
+    end,
+    ShowCommand=function(self)
+      self:visible(true)
+    end,
+    HideCommand=function(self)
+      self:sleep(0.1):queuecommand('MakeInvisible')
+    end,
+    MakeInvisibleCommand=function(self)
+      self:visible(false)
+      if NameEntry then
+        NameEntry:Reset()
+      end
+    end,
+    CodeMessageCommand=function(self, param)
+      if param.PlayerNumber ~= pn then return end
+      local isOpen = getenv('EvaluationNameEntryOpen' .. pn) == 1
+      
+      if isOpen then
+        if param.Name == 'Select' or param.Name == 'Back' then
+          setenv('EvaluationNameEntryOpen' .. pn, 0)
+          self:playcommand('Hide')
+        end
+      else
+        if param.Name == 'Select' then
+          setenv('EvaluationNameEntryOpen' .. pn, 1)
+          self:playcommand('Show')
+        elseif param.Name == 'Back' or param.Name == 'Start' then
+          -- ScreenEvaluation plays this sound before transitioning, so let's do it too
+          SOUND:PlayOnce(THEME:GetPathS('ScreenEvaluation', 'start'), true)
+          SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+        end
+      end
+    end,
+    loadfile(THEME:GetPathB("ScreenEvaluationNormal","decorations/nameEntry")){
+      Player=pn,
+      AllowKeyboard=(pn == PLAYER_1),
+      AllowInputCallback=function(self)
+        return getenv('EvaluationNameEntryOpen' .. pn) == 1
+      end,
+      EnterCallback=function(self)
+        setenv('EvaluationNameEntryOpen' .. pn, 0)
+        NameEntryWrapper:playcommand('Hide')
+        MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(pn)..'Changed')
+      end,
+      InitCommand=function(self)
+        -- Since we're just passing this options table to the NameEntry module, then this InitCommand
+        -- will be on the NameEntry object itself. We can therefore get the NameEntry object here.
+        NameEntry = self
+      end,
+    }..{
+      InitCommand=function(self)
+        if IsUsingWideScreen() then
+          self:x(_screen.cx-500)
+        else
+          self:x(_screen.cx-360)
+        end
+        self:y(_screen.cy)
+      end,
+    }
+  }
+end
 
 local mp = GAMESTATE:GetMasterPlayerNumber()
 local profileID
