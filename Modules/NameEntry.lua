@@ -4,6 +4,8 @@ if StarlightCache and StarlightCache.NameEntry and not DEBUG then
   return StarlightCache.NameEntry
 end
 
+local NameEntry = {}
+
 local DEFAULT_NAME = 'STEP'
 local MAX_NAME_LENGTH = 8
 local GRID_CELL_WIDTH = 50
@@ -144,6 +146,22 @@ local function wrap1(x, n) -- Variant that works with indices starting at 1 inst
 	return wrap(x - 1, n) + 1
 end
 
+local function Mixin(target, addon)
+  for k, v in pairs(addon) do
+    local vOriginal = target[k]
+    if vOriginal ~= nil then
+      target['_' .. k] = vOriginal
+    end
+    target[k] = v
+  end
+end
+
+local function SetConstructor(target, ctor)
+  return setmetatable(target, {
+    __call = function(_, ...) return ctor(...) end
+  })
+end
+
 local function GenerateLetterBox()
 	local t = Def.ActorFrame{}
 	
@@ -201,6 +219,9 @@ local function CreateNameEntryFrame()
       self = _self:GetParent()
       self.NameTextActor = _self:GetChild('NameText')
       self.SelectionBoxActor = _self:GetChild('LetterBoxFrame'):GetChild('SelectionBox')
+      
+      -- Mixin() might not have been ran yet, so call the NameEntry:CheckReady() method explicitly
+      NameEntry.CheckReady(self)
     end,
     OnCommand=function()
       if self.AllowKeyboard then
@@ -211,8 +232,8 @@ local function CreateNameEntryFrame()
       SCREENMAN:GetTopScreen():RemoveInputCallback(InputHandler)
     end,
     CodeMessageCommand=function(_self, params)
+      if not self.IsReady then return end
       if params.PlayerNumber ~= self.Player then return end
-      if not self:IsReady() then return end
       if not self:RunCallback(self.AllowInputCallback) then return end
       local SelectionX, SelectionY = self.SelectionX, self.SelectionY
       
@@ -280,9 +301,6 @@ local function CreateNameEntryFrame()
         InitCommand=function(_self)
           _self:diffuse(Alpha(Color.Red, 0.75)):blend(Blend.Add)
         end,
-        OnCommand=function()
-          self:UpdateSelectionBox()
-        end,
       },
     },
     Def.Sprite{
@@ -301,23 +319,8 @@ local function CreateNameEntryFrame()
   }
 end
 
-local function Mixin(target, addon)
-  for k, v in pairs(addon) do
-    local vOriginal = target[k]
-    if vOriginal ~= nil then
-      target['_' .. k] = vOriginal
-    end
-    target[k] = v
-  end
-end
 
-local function SetConstructor(target, ctor)
-  return setmetatable(target, {
-    __call = function(_, ...) return ctor(...) end
-  })
-end
 
-local NameEntry = {}
 SetConstructor(NameEntry, function(opts)
   if not opts.Player or not GenerateRankingToFillInMarker(opts.Player) then
     error('NameEntry(): Player option is missing or invalid, got "' .. tostring(opts.Player) .. '"!')
@@ -352,22 +355,43 @@ function NameEntry:Init(opts)
       self[k] = v
     end
   end
+  self.IsReady = false
   self:Reset()
+  self:CheckReady()
 end
 
 function NameEntry:Reset()
   self.PlayerName = ''
   self.SelectionX = 1
   self.SelectionY = 1
-  if self:IsReady() then
-    self.NameTextActor:settext(self.PlayerName)
-    self:UpdateSelectionBox()
+  if self.IsReady then
+    self:Update()
   end
 end
 
-function NameEntry:IsReady()
+function NameEntry:CheckReady()
+  -- This is set via Mixin() during InitCommand within the constructor
+  if self.Init == nil then
+    return false
+  end
   -- These are set during InitCommand within CreateNameEntryFrame()
-  return self.NameTextActor ~= nil and self.SelectionBoxActor ~= nil
+  if self.NameTextActor == nil and self.SelectionBoxActor == nil then
+    return false
+  end
+  if self.IsReady then
+    return false
+  end
+  self.IsReady = true
+  self:Update()
+  return true
+end
+
+function NameEntry:Update()
+  if not self.IsReady then
+    error('NameEntry:Update(): tried to run when not ready!')
+  end
+  self.NameTextActor:settext(self.PlayerName)
+  self:UpdateSelectionBox()
 end
 
 function NameEntry:RunCallback(callback)
@@ -438,7 +462,7 @@ function NameEntry:NameEnter()
 end
 
 function NameEntry:InputHandler(event)
-  if not self:IsReady() then return end
+  if not self.IsReady then return end
 	if not self:RunCallback(self.AllowInputCallback) then return end
   if event.GameButton and event.GameButton ~= '' then return end -- Don't do anything if input is mapped to a GameButton
   if ToEnumShortString(event.type) ~= 'FirstPress' then return end
