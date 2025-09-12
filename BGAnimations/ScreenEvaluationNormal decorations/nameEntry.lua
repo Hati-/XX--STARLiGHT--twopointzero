@@ -2,6 +2,11 @@ local opts = ...
 local pn = opts.Player
 local NameEntry = LoadModule('NameEntry.lua')
 
+if not opts.DefaultName then
+  -- We should probably not amend opts, but cba to clone it
+  opts.DefaultName = 'STARLGHT'
+end
+
 return Def.ActorFrame{
 	Def.ActorFrame{
 		Name='Panes',
@@ -65,24 +70,20 @@ return Def.ActorFrame{
 			},
 		},
 	},
-  NameEntry{
-		DefaultName='STARLGHT',
-		Player=pn,
-		AllowKeyboard=(pn == PLAYER_1),
-    AllowInputCallback=opts.AllowInputCallback or nil,
-    EnterCallback=opts.EnterCallback or nil,
-		ShowCommand=function(self)
-			self:hibernate(0.1):diffusealpha(1)
-		end,
-		HideCommand=function(self)
-			self:diffusealpha(0)
-		end,
-		Def.BitmapText{
-			Font='_avenirnext lt pro bold/36px',
-			Text='Change the DANCER NAME \nused when saving this score.',
+  Def.ActorFrame{
+    ShowCommand=function(self)
+      self:hibernate(0.1):diffusealpha(1)
+    end,
+    HideCommand=function(self)
+      self:diffusealpha(0)
+    end,
+    NameEntry(opts),
+    Def.BitmapText{
+      Font='_avenirnext lt pro bold/36px',
+      Text='Change the DANCER NAME \nused when saving this score.',
       InitCommand=function(self)
         self:xy(-250, -190):halign(0):zoom(0.9):strokecolor(Color.Black)
       end,
-		},
+    },
 	}
 }

@@ -375,10 +375,11 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
   }
   
   -- NameEntry
-  local NameEntryFrame 
+  local NameEntryWrapper
+  local NameEntry
   t[#t+1] = Def.ActorFrame{
     InitCommand=function(self)
-      NameEntryFrame = self
+      NameEntryWrapper = self
       setenv('EvaluationNameEntryOpen' .. pn, 0)
       self:draworder(10)
       self:visible(false)
@@ -392,6 +393,9 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
     end,
     MakeInvisibleCommand=function(self)
       self:visible(false)
+      if NameEntry then
+        NameEntry:Reset()
+      end
     end,
     CodeMessageCommand=function(self, param)
       if param.PlayerNumber ~= pn then return end
@@ -415,13 +419,19 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
     end,
     loadfile(THEME:GetPathB("ScreenEvaluationNormal","decorations/nameEntry")){
       Player=pn,
+      AllowKeyboard=(pn == PLAYER_1),
       AllowInputCallback=function(self)
         return getenv('EvaluationNameEntryOpen' .. pn) == 1
       end,
       EnterCallback=function(self)
         setenv('EvaluationNameEntryOpen' .. pn, 0)
-        NameEntryFrame:playcommand('Hide')
+        NameEntryWrapper:playcommand('Hide')
         MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(pn)..'Changed')
+      end,
+      InitCommand=function(self)
+        -- Since we're just passing this options table to the NameEntry module, then this InitCommand
+        -- will be on the NameEntry object itself. We can therefore get the NameEntry object here.
+        NameEntry = self
       end,
     }..{
       InitCommand=function(self)
