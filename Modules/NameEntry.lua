@@ -484,6 +484,7 @@ function NameEntry:NameEnter()
   
   SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
   self:RunCallback(self.EnterCallback)
+  MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(self.Player)..'Changed')
 end
 
 function NameEntry:InputHandler(event)
