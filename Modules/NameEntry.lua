@@ -210,7 +210,7 @@ end
 local function CreateNameEntryFrame()
   local self = nil
   local function InputHandler(...)
-   self:InputHandler(...)
+    self:InputHandler(...)
   end
   
   return Def.ActorFrame{
@@ -224,68 +224,10 @@ local function CreateNameEntryFrame()
       NameEntry.CheckReady(self)
     end,
     OnCommand=function()
-      if self.AllowKeyboard then
-        SCREENMAN:GetTopScreen():AddInputCallback(InputHandler)
-      end
+      SCREENMAN:GetTopScreen():AddInputCallback(InputHandler)
     end,
     OffCommand=function()
       SCREENMAN:GetTopScreen():RemoveInputCallback(InputHandler)
-    end,
-    CodeMessageCommand=function(_self, params)
-      if not self.IsReady then return end
-      if params.PlayerNumber ~= self.Player then return end
-      if not self:RunCallback(self.AllowInputCallback) then return end
-      local SelectionX, SelectionY = self.SelectionX, self.SelectionY
-      
-      if params.Name == 'Start' then
-        local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
-        local selection = KEY_CHARACTER_MAP[keyY][keyX]
-        if selection == 'Enter' then
-          self:NameEnter()
-        elseif selection == '←' then
-          self:NameBackspace()
-        else
-          self:NameAppend(selection)
-        end
-      else
-        local deltaX, deltaY = 0, 0
-        if     params.Name == 'Left'  or params.Name == 'Left2'  then deltaX = -1
-        elseif params.Name == 'Right' or params.Name == 'Right2' then deltaX =  1
-        elseif params.Name == 'Up'    or params.Name == 'Up2'    then deltaY = -1 
-        elseif params.Name == 'Down'  or params.Name == 'Down2'  then deltaY =  1
-        end
-        
-        local selectionChanged = false
-        if deltaX ~= 0 then
-          local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
-          keyX = keyX + deltaX
-          
-          if keyX < 1 then
-            SelectionY = wrap1(SelectionY - 1, GRID_ROWS)
-            SelectionX = #GRID_TO_KEY_MAP[SelectionY]
-          elseif keyX > #KEY_CHARACTER_MAP[SelectionY] then
-            SelectionY = wrap1(SelectionY + 1, GRID_ROWS)
-            SelectionX = 1
-          else
-            SelectionX = KEY_TO_GRID_MAP[keyY][keyX] + math.floor((KEY_WIDTH_MAP[keyY][keyX]-1)/2)
-          end
-          selectionChanged = true
-        end
-        
-        if deltaY ~= 0 then
-          SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
-          while SelectionX > #GRID_TO_KEY_MAP[SelectionY] do -- We use GRID_TO_KEY_MAP to get num of grid columns per row
-            SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
-          end
-          selectionChanged = true
-        end
-        
-        if selectionChanged then
-          self.SelectionX, self.SelectionY = SelectionX, SelectionY
-          self:UpdateSelectionBox()
-          SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
-        end
-      end
     end,
     Def.ActorFrame{
       Name='LetterBoxFrame',
@@ -359,6 +301,11 @@ local DefaultProperties = {
   AllowKeyboard       = false,
   AllowInputCallback  = true,
   EnterCallback       = false,
+  KeyLeft             = 'MenuLeft',
+  KeyRight            = 'MenuRight',
+  KeyUp               = 'MenuUp',
+  KeyDown             = 'MenuDown',
+  KeyEnter            = 'Start',
 }
 function NameEntry:Init(opts)
   ValidateOptions('NameEntry:Init()', opts) -- In case opts got changed betweem constructor call and InitCommand
@@ -484,26 +431,90 @@ function NameEntry:NameEnter()
   
   SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
   self:RunCallback(self.EnterCallback)
+  MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(self.Player)..'Changed')
 end
 
 function NameEntry:InputHandler(event)
   self:AssertReady('InputHandler')
+  local pressType =  ToEnumShortString(event.type)
+  if pressType == 'Release' then return end
 	if not self:RunCallback(self.AllowInputCallback) then return end
-  if event.GameButton and event.GameButton ~= '' then return end -- Don't do anything if input is mapped to a GameButton
-  if ToEnumShortString(event.type) ~= 'FirstPress' then return end
-  if ToEnumShortString(event.DeviceInput.device) ~= 'Key' then return end -- Only allow keyboard input
-  local key = ToEnumShortString(event.DeviceInput.button):lower()
-	
-	if key == 'backspace' then
-		self:NameBackspace()
-	elseif key == 'enter' then -- In case the enter key isn't bound to a GameButton
-		self:NameEnter()
-	else
-		if self:NameAppend(key) then
-			-- Move to Enter key so we can easily complete the name entry if the enter key is bound to the Start GameButton
-			self:SelectEnterKey()
-		end
-	end
+  
+  local gameButton = event.GameButton
+  if gameButton and gameButton ~= '' then
+    if event.PlayerNumber ~= self.Player then return end
+    local SelectionX, SelectionY = self.SelectionX, self.SelectionY
+    
+    if gameButton == self.KeyEnter then
+      if pressType ~= 'FirstPress' then return end
+      local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
+      local selection = KEY_CHARACTER_MAP[keyY][keyX]
+      
+      if selection == 'Enter' then
+        self:NameEnter()
+      elseif selection == '←' then
+        self:NameBackspace()
+      else
+        self:NameAppend(selection)
+      end
+    else
+      local selectionChanged = false
+      local deltaX, deltaY = 0, 0
+      if     gameButton == self.KeyLeft  then deltaX = -1
+      elseif gameButton == self.KeyRight then deltaX =  1
+      elseif gameButton == self.KeyUp    then deltaY = -1 
+      elseif gameButton == self.KeyDown  then deltaY =  1
+      end
+      
+      if deltaX ~= 0 then
+        local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
+        keyX = keyX + deltaX
+        
+        if keyX < 1 then
+          SelectionY = wrap1(SelectionY - 1, GRID_ROWS)
+          SelectionX = #GRID_TO_KEY_MAP[SelectionY]
+        elseif keyX > #KEY_CHARACTER_MAP[SelectionY] then
+          SelectionY = wrap1(SelectionY + 1, GRID_ROWS)
+          SelectionX = 1
+        else
+          SelectionX = KEY_TO_GRID_MAP[keyY][keyX] + math.floor((KEY_WIDTH_MAP[keyY][keyX]-1)/2)
+        end
+        selectionChanged = true
+      end
+      
+      if deltaY ~= 0 then
+        SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
+        while SelectionX > #GRID_TO_KEY_MAP[SelectionY] do -- We use GRID_TO_KEY_MAP to get num of grid columns per row
+          SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
+        end
+        selectionChanged = true
+      end
+      
+      if selectionChanged then
+        self.SelectionX, self.SelectionY = SelectionX, SelectionY
+        self:UpdateSelectionBox()
+        SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
+      end
+    end
+  elseif self.AllowKeyboard and ToEnumShortString(event.DeviceInput.device) == 'Key' then
+    local key = ToEnumShortString(event.DeviceInput.button):lower()
+    
+    if key == 'backspace' then
+      self:NameBackspace()
+    elseif pressType == 'FirstPress' then
+      if key == 'enter' then -- In case the enter key isn't bound to a GameButton
+        self:NameEnter()
+      else
+        local nameChanged = self:NameAppend(key)
+        
+        -- If name was changed then move the cursor to the Enter key so we can easily
+        -- complete the name entry if the enter key is bound to the Start GameButton.
+        if nameChanged then
+          self:SelectEnterKey()
+        end
+      end
+    end
+  end
 end
 	
 return NameEntry

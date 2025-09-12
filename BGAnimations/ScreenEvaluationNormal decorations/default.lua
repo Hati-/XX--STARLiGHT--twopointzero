@@ -426,7 +426,6 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
       EnterCallback=function(self)
         setenv('EvaluationNameEntryOpen' .. pn, 0)
         NameEntryWrapper:playcommand('Hide')
-        MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(pn)..'Changed')
       end,
       InitCommand=function(self)
         -- Since we're just passing this options table to the NameEntry module, then this InitCommand
