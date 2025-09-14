@@ -375,7 +375,7 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
   }
   
   -- NameEntry
-  local NameEntry, OpenNameEntry = loadfile(THEME:GetPathB('', '_NameEntry'))(pn)
+  local NameEntry, OpenNameEntry = loadfile(THEME:GetPathB('', '_NameEntry'))(pn, 'Change the DANCER NAME \nused when saving this score.')
   t[#t+1] = NameEntry .. {
       InitCommand=function(self)
           local offsetX

@@ -1,4 +1,6 @@
-local pn = ...
+local args = {...}
+local pn = args[1]
+local text = args[2]
 
 local enabledPlayers = GAMESTATE:GetEnabledPlayers()
 local isSoloPlayer = #enabledPlayers == 1 and enabledPlayers[1] == pn
@@ -81,6 +83,7 @@ local t = Def.ActorFrame{
         -- will be on the NameEntry object itself. We can therefore get the NameEntry object here.
         NameEntry = self
       end,
+      Text=text,
     },
   },
 }
