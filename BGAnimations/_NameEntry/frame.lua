@@ -9,7 +9,6 @@ end
 
 return Def.ActorFrame{
 	Def.ActorFrame{
-		Name='Panes',
 		Def.ActorFrame{
 			InitCommand=function(self)
 				self:shadowlength(0)

@@ -375,83 +375,20 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
   }
   
   -- NameEntry
-  local NameEntryWrapper
-  local NameEntry
-  t[#t+1] = Def.ActorFrame{
-    InitCommand=function(self)
-      NameEntryWrapper = self
-      setenv('NameEntryOpen' .. pn, 0)
-      
-      if IsUsingWideScreen() then
-        self:xy(_screen.cx-500, _screen.cy)
-      else
-        self:xy(_screen.cx-360, _screen.cy)
-      end
-      self:draworder(10)
-      self:visible(false)
-      self:playcommand('Hide')
-    end,
-    ShowCommand=function(self)
-      self:visible(true)
-    end,
-    HideCommand=function(self)
-      self:sleep(0.1):queuecommand('MakeInvisible')
-    end,
-    MakeInvisibleCommand=function(self)
-      self:visible(false)
-      if NameEntry then
-        NameEntry:Reset()
-      end
-    end,
-    OnCommand=function(self)
-      -- Because SCREENMAN:set_input_redirected(pn, true) blocks CodeMessageCommand inputs as well we have to use a 
-      -- InputCallback to get inputs while it's active.
-      local screen = Var('LoadingScreen')
-      local openButton = THEME:GetMetric(screen, 'OpenNameEntryButton')
-      local closeButton = THEME:GetMetric(screen, 'CloseNameEntryButton')
-      self.InputHandler = function(event)
-        if event.PlayerNumber ~= pn then return end
-        if ToEnumShortString(event.type) ~= 'FirstPress' then return end
-        local button = event.GameButton
-        if not button or button == '' then return end
-        local isOpen = getenv('NameEntryOpen' .. pn) == 1
-        
-        if isOpen then
-          if button == openButton or button == closeButton then
-            SCREENMAN:set_input_redirected(pn, false)
-            setenv('NameEntryOpen' .. pn, 0)
-            self:playcommand('Hide')
-          end
-        else
-          if button == openButton then
-            SCREENMAN:set_input_redirected(pn, true)
-            setenv('NameEntryOpen' .. pn, 1)
-            self:playcommand('Show')
-          end
-        end
-      end
-      SCREENMAN:GetTopScreen():AddInputCallback(self.InputHandler)
-    end,
-    OffCommand=function(self)
-      SCREENMAN:GetTopScreen():RemoveInputCallback(self.InputHandler)
-    end,
-    loadfile(THEME:GetPathB('ScreenEvaluationNormal', 'decorations/nameEntry')){
-      Player=pn,
-      AllowKeyboard=(pn == PLAYER_1),
-      AllowInputCallback=function(self)
-        return getenv('NameEntryOpen' .. pn) == 1
-      end,
-      EnterCallback=function(self)
-        SCREENMAN:set_input_redirected(pn, false)
-        setenv('NameEntryOpen' .. pn, 0)
-        NameEntryWrapper:playcommand('Hide')
-      end,
+  local NameEntry, OpenNameEntry = loadfile(THEME:GetPathB('', '_NameEntry'))(pn)
+  t[#t+1] = NameEntry .. {
       InitCommand=function(self)
-        -- Since we're just passing this options table to the NameEntry module, then this InitCommand
-        -- will be on the NameEntry object itself. We can therefore get the NameEntry object here.
-        NameEntry = self
+          local offsetX
+          if IsUsingWideScreen() then
+              offsetX = 500
+          else
+              offsetX = 360
+          end
+          if pn == PLAYER_1 then
+              offsetX = offsetX * -1
+          end
+          self:xy(_screen.cx + offsetX, _screen.cy)
       end,
-    },
   }
 end
 
