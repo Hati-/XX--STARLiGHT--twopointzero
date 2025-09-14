@@ -26,7 +26,6 @@ local t = Def.ActorFrame{
     --Input handler
     CodeMessageCommand=function(s,p)
 			if p.PlayerNumber~=controller then return end
-			if getenv('EvaluationNameEntryOpen' .. controller) == 1 then return end
 			
 			if p.Name=="Left" then
 				if paneState > 0 then

@@ -380,7 +380,13 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
   t[#t+1] = Def.ActorFrame{
     InitCommand=function(self)
       NameEntryWrapper = self
-      setenv('EvaluationNameEntryOpen' .. pn, 0)
+      setenv('NameEntryOpen' .. pn, 0)
+      
+      if IsUsingWideScreen() then
+        self:xy(_screen.cx-500, _screen.cy)
+      else
+        self:xy(_screen.cx-360, _screen.cy)
+      end
       self:draworder(10)
       self:visible(false)
       self:playcommand('Hide')
@@ -397,34 +403,47 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
         NameEntry:Reset()
       end
     end,
-    CodeMessageCommand=function(self, param)
-      if param.PlayerNumber ~= pn then return end
-      local isOpen = getenv('EvaluationNameEntryOpen' .. pn) == 1
-      
-      if isOpen then
-        if param.Name == 'Select' or param.Name == 'Back' then
-          setenv('EvaluationNameEntryOpen' .. pn, 0)
-          self:playcommand('Hide')
-        end
-      else
-        if param.Name == 'Select' then
-          setenv('EvaluationNameEntryOpen' .. pn, 1)
-          self:playcommand('Show')
-        elseif param.Name == 'Back' or param.Name == 'Start' then
-          -- ScreenEvaluation plays this sound before transitioning, so let's do it too
-          SOUND:PlayOnce(THEME:GetPathS('ScreenEvaluation', 'start'), true)
-          SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
+    OnCommand=function(self)
+      -- Because SCREENMAN:set_input_redirected(pn, true) blocks CodeMessageCommand inputs as well we have to use a 
+      -- InputCallback to get inputs while it's active.
+      local screen = Var('LoadingScreen')
+      local openButton = THEME:GetMetric(screen, 'OpenNameEntryButton')
+      local closeButton = THEME:GetMetric(screen, 'CloseNameEntryButton')
+      self.InputHandler = function(event)
+        if event.PlayerNumber ~= pn then return end
+        if ToEnumShortString(event.type) ~= 'FirstPress' then return end
+        local button = event.GameButton
+        if not button or button == '' then return end
+        local isOpen = getenv('NameEntryOpen' .. pn) == 1
+        
+        if isOpen then
+          if button == openButton or button == closeButton then
+            SCREENMAN:set_input_redirected(pn, false)
+            setenv('NameEntryOpen' .. pn, 0)
+            self:playcommand('Hide')
+          end
+        else
+          if button == openButton then
+            SCREENMAN:set_input_redirected(pn, true)
+            setenv('NameEntryOpen' .. pn, 1)
+            self:playcommand('Show')
+          end
         end
       end
+      SCREENMAN:GetTopScreen():AddInputCallback(self.InputHandler)
     end,
-    loadfile(THEME:GetPathB("ScreenEvaluationNormal","decorations/nameEntry")){
+    OffCommand=function(self)
+      SCREENMAN:GetTopScreen():RemoveInputCallback(self.InputHandler)
+    end,
+    loadfile(THEME:GetPathB('ScreenEvaluationNormal', 'decorations/nameEntry')){
       Player=pn,
       AllowKeyboard=(pn == PLAYER_1),
       AllowInputCallback=function(self)
-        return getenv('EvaluationNameEntryOpen' .. pn) == 1
+        return getenv('NameEntryOpen' .. pn) == 1
       end,
       EnterCallback=function(self)
-        setenv('EvaluationNameEntryOpen' .. pn, 0)
+        SCREENMAN:set_input_redirected(pn, false)
+        setenv('NameEntryOpen' .. pn, 0)
         NameEntryWrapper:playcommand('Hide')
       end,
       InitCommand=function(self)
@@ -432,16 +451,7 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
         -- will be on the NameEntry object itself. We can therefore get the NameEntry object here.
         NameEntry = self
       end,
-    }..{
-      InitCommand=function(self)
-        if IsUsingWideScreen() then
-          self:x(_screen.cx-500)
-        else
-          self:x(_screen.cx-360)
-        end
-        self:y(_screen.cy)
-      end,
-    }
+    },
   }
 end
 
