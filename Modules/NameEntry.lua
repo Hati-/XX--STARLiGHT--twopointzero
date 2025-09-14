@@ -495,6 +495,12 @@ function NameEntry:SelectEnterKey()
   self:UpdateSelectionBox()
 end
 
+function NameEntry:SetText(name)
+  self:AssertReady('SetName')
+  self.PlayerName = name
+  self.NameTextActor:settext(self.PlayerName)
+end
+
 function NameEntry:NameAppend(char)
   self:AssertReady('NameAppend')
   local nameChanged = false
