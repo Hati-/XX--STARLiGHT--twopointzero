@@ -100,7 +100,7 @@ local t = Def.ActorFrame{
         -- Instead, lets get the command function directly and call it ourselves.
         local commandFunc = NameEntryWrapper:GetCommand('HideTweenDone')
         if type(commandFunc) == 'function' then
-          commandFunc()
+          commandFunc(NameEntryWrapper)
         end
       end
     },
