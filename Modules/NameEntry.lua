@@ -629,6 +629,15 @@ function NameEntry:InputHandler(event)
       else
         local char = DeviceButtonToChar(button, true)
         if not char then return end
+        
+        -- Some spacebar fallbacks in case space is not allowed
+        if char == ' ' and not ALLOWED_CHARACTERS_LOOKUP[char] then
+          if     ALLOWED_CHARACTERS_LOOKUP['_'] then char = '_'
+          elseif ALLOWED_CHARACTERS_LOOKUP['-'] then char = '-'
+          elseif ALLOWED_CHARACTERS_LOOKUP['.'] then char = '.'
+          end
+        end
+        
         local nameChanged = self:NameAppend(char)
         
         -- If name was changed then move the cursor to the Enter key so we can easily
