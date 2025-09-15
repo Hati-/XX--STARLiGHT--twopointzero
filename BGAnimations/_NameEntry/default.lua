@@ -37,8 +37,12 @@ local t = Def.ActorFrame{
       -- Because SCREENMAN:set_input_redirected(pn, true) also blocks CodeMessageCommand inputs we have to use a 
       -- InputCallback to recieve inputs while it's active.
       local screen = Var('LoadingScreen')
-      local openButton = THEME:GetMetric(screen, 'OpenNameEntryButton')
-      local closeButton = THEME:GetMetric(screen, 'CloseNameEntryButton')
+      local openButton
+      local closeButton
+      if screen then
+        openButton = THEME:GetMetric(screen, 'OpenNameEntryButton')
+        closeButton = THEME:GetMetric(screen, 'CloseNameEntryButton')
+      end
       self.InputHandler = function(event)
         if event.PlayerNumber ~= pn then return end
         if ToEnumShortString(event.type) ~= 'FirstPress' then return end
