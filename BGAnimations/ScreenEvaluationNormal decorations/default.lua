@@ -377,18 +377,18 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
   -- NameEntry
   local NameEntry, OpenNameEntry = loadfile(THEME:GetPathB('', '_NameEntry'))(pn, 'Change the DANCER NAME \nused when saving this score.')
   t[#t+1] = NameEntry .. {
-      InitCommand=function(self)
-          local offsetX
-          if IsUsingWideScreen() then
-              offsetX = 500
-          else
-              offsetX = 360
-          end
-          if pn == PLAYER_1 then
-              offsetX = offsetX * -1
-          end
-          self:xy(_screen.cx + offsetX, _screen.cy)
-      end,
+    InitCommand=function(self)
+      local offsetX
+      if IsUsingWideScreen() then
+          offsetX = 500
+      else
+          offsetX = 360
+      end
+      if pn == PLAYER_1 then
+          offsetX = offsetX * -1
+      end
+      self:xy(_screen.cx + offsetX, _screen.cy)
+    end,
   }
 end
 
