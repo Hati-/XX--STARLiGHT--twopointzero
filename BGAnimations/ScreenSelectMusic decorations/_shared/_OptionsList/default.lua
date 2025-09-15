@@ -282,7 +282,7 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
         ShowCommand=function()
             OptionsListActor:visible(false)
         end,
-        HideCommand=function()
+        HideTweenDoneCommand=function()
             OptionsListActor:visible(true)
         end,
     }

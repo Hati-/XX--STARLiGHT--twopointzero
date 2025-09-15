@@ -20,7 +20,8 @@ local function CloseNameEntry()
 end
 
 local t = Def.ActorFrame{
-  -- Wrap in a simple ActorFrame so upstream can append their own InitCommand, ShowCommand, and HideCommand
+  -- Simple ActorFrame wrapper so upstream can add their own InitCommand, ShowCommand, HideCommand, and
+  -- HideTweenDoneCommand etc.
   Def.ActorFrame{
     InitCommand=function(self)
       NameEntryWrapper = self:GetParent()
@@ -31,15 +32,6 @@ local t = Def.ActorFrame{
     end,
     ShowCommand=function()
       NameEntryWrapper:visible(true)
-    end,
-    HideCommand=function()
-      NameEntryWrapper:sleep(0.1):queuecommand('MakeInvisible')
-    end,
-    MakeInvisibleCommand=function()
-      NameEntryWrapper:visible(false)
-      if NameEntry then
-          NameEntry:Reset()
-      end
     end,
     OnCommand=function(self)
       -- Because SCREENMAN:set_input_redirected(pn, true) also blocks CodeMessageCommand inputs we have to use a 
@@ -84,6 +76,23 @@ local t = Def.ActorFrame{
         NameEntry = self
       end,
       Text=text,
+    }..{
+      HideTweenDoneCommand=function()
+        NameEntryWrapper:visible(false)
+        if NameEntry then
+            NameEntry:Reset()
+        end
+        
+        -- Propogate the HideTweenDoneCommand upstream so they can also hook into HideTweenDoneCommand. 
+        -- We can't use playcommand() and queuecommand() here due to how they work on ActorFrames. On ActorFrames they
+        -- propagate commands to their children downstream recursively, even with ActorFrame:propagate(false), causing
+        -- them to create an infinite recursion loop and lock the game up.
+        -- Instead, lets get the command function directly and call it ourselves.
+        local commandFunc = NameEntryWrapper:GetCommand('HideTweenDone')
+        if type(commandFunc) == 'function' then
+          commandFunc()
+        end
+      end
     },
   },
 }

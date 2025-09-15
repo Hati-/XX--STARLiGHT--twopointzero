@@ -11,6 +11,13 @@ if not opts.Text then
 end
 
 return Def.ActorFrame{
+	Def.Actor{
+		HideCommand=function(self)
+			-- Let upstream use HideTweenDoneCommand to hook when the Hide tweening 
+			-- is done because only we know when it's actually done here.
+			self:GetParent():sleep(0.1):queuecommand('HideTweenDone')
+		end,
+	},
 	Def.ActorFrame{
 		InitCommand=function(self)
 			self:shadowlength(0)
