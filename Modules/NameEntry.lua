@@ -474,9 +474,9 @@ function NameEntry:Update()
   self:UpdateSelectionBox()
 end
 
-function NameEntry:RunCallback(callback)
+function NameEntry:RunCallback(callback, ...)
   if type(callback) == 'function' then
-    return callback(self)
+    return callback(self, ...)
   end
   return not not callback
 end
@@ -530,9 +530,16 @@ end
 
 function NameEntry:NameEnter()
   self:AssertReady('NameEnter')
+  local params = {
+    Player = self.Player,
+    Name = self.PlayerName,
+    IsDefaultName = false,
+  }
   if string.len(self.PlayerName) == 0 then
     self.PlayerName = self.DefaultName
     self.NameTextActor:settext(self.PlayerName)
+    params.Name = self.PlayerName
+    params.IsDefaultName = true
   end
   local profile = PROFILEMAN:GetProfile(self.Player)
   profile:SetDisplayName(self.PlayerName) -- Will be used later to replace the Fill-In-Marker
@@ -549,7 +556,7 @@ function NameEntry:NameEnter()
   end
   
   SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
-  self:RunCallback(self.EnterCallback)
+  self:RunCallback(self.EnterCallback, params)
   MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(self.Player)..'Changed')
 end
 

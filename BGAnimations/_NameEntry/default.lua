@@ -71,7 +71,7 @@ local t = Def.ActorFrame{
       AllowInputCallback=function(self)
         return getenv('NameEntryOpen' .. pn) == 1
       end,
-      EnterCallback=function(self)
+      EnterCallback=function(self, params)
         CloseNameEntry()
       end,
       InitCommand=function(self)
