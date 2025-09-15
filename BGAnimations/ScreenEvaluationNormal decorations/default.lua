@@ -367,15 +367,15 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
     },
     Def.BitmapText{
       Font="_avenirnext lt pro bold/20px",
-      Text="[Press SELECT to change name]",
+      Text="[PRESS &SELECT; TO CHANGE NAME]",
       InitCommand=function(self)
-        self:align(0,0):xy(3, _screen.cy-275):zoom(0.95)
+        self:align(0,0):xy(3, _screen.cy-273):zoom(0.93)
       end,
     },
   }
   
   -- NameEntry
-  local NameEntry, OpenNameEntry = loadfile(THEME:GetPathB('', '_NameEntry'))(pn, 'Change the DANCER NAME \nused when saving this score.')
+  local NameEntry, OpenNameEntry = loadfile(THEME:GetPathB('', '_NameEntry'))(pn, 'Change the DANCER NAME \nused for saving this score.')
   t[#t+1] = NameEntry .. {
     InitCommand=function(self)
       local offsetX
