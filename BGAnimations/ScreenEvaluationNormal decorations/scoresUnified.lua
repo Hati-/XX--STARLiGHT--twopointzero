@@ -65,9 +65,8 @@ local function RivalScore(pn, rival)
 			c.ScoreName:settext(name)
 			
 			if isYou then
-				local nameRightX = c.ScoreName:GetX() + c.ScoreName:GetWidth()
 				c.YouIndicator:visible(true)
-				c.YouIndicator:halign(0):x(nameRightX + 8)
+				c.YouIndicator:x(c.ScoreName:GetX() + c.ScoreName:GetWidth() + 8)
 				c.YouIndicator:glowblink():effectcolor1(color('1,1,1,0')):effectcolor2(color('1,1,1,0.2')):effectperiod(0.2)
 			else
 				c.YouIndicator:visible(false)
@@ -96,9 +95,12 @@ local function RivalScore(pn, rival)
 			Text='YOU',
 			InitCommand=function(self)
 				self:visible(false)
-				self:zoom(0.95):valign(0.75):skewx(-0.15)
-				self:halign(0.5):x(70)
-				self:diffusecolor(color('#ffd800')):strokecolor(Color.Black)
+				self:zoom(0.95):align(0, 0.75):x(52):skewx(-0.15)
+				local colorTop = color('#ffff00')
+				local hueOffset = 20
+				local colorTopHue = ColorToHSV(colorTop).Hue
+				local colorBottom = Hue(colorTop, colorTopHue - hueOffset)
+				self:diffusetopedge(colorTop):diffusebottomedge(colorBottom):strokecolor(Color.Black)
 			end,
 		},
 		ScoreAndGrade.CreateScoreActor{	
