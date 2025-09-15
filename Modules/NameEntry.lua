@@ -541,7 +541,7 @@ function NameEntry:NameEnter()
   -- set the score's name after ScreenGameplay even when in event mode. See:
   -- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ProfileManager.cpp#L859
   -- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/GameState.cpp#L2108
-  local fillInMarker = GenerateRankingToFillInMarker(self.Player)
+  local fillInMarker = PlayerNumberToRankingFillInMarker(self.Player)
   if fillInMarker then
     profile:SetLastUsedHighScoreName(fillInMarker)
   else

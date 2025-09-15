@@ -482,13 +482,18 @@ function HumanPlayers()
 end
 
 -- See https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/GameConstantsAndTypes.cpp#L16
-function GenerateRankingToFillInMarker(pn)
-	for k, v in pairs(PlayerNumber) do
-		if v == pn then
-			return '#P' .. k .. '#'
-		end
-	end
-	return nil
+local PLAYER_TO_FILL_IN_MARKER_LOOKUP = {}
+local FILL_IN_MARKER_TO_PLAYER_LOOKUP = {}
+for k, v in pairs(PlayerNumber) do
+	local fillInMarker = '#P' .. k .. '#'
+	PLAYER_TO_FILL_IN_MARKER_LOOKUP[v] = fillInMarker
+	FILL_IN_MARKER_TO_PLAYER_LOOKUP[fillInMarker] = v
+end
+function PlayerNumberToRankingFillInMarker(pn)
+	return PLAYER_TO_FILL_IN_MARKER_LOOKUP[pn]
+end
+function RankingFillInMarkerToPlayerNumber(fillInMarker)
+	return FILL_IN_MARKER_TO_PLAYER_LOOKUP[fillInMarker]
 end
 
 --not really related but this seems like an OK place
