@@ -48,14 +48,28 @@ local function RivalScore(pn, rival)
 			c.ScoreName:visible(true)
 			
 			local name
+			local isYou = false
 			if score:IsFillInMarker() then
-				c.ScoreName:settext(PROFILEMAN:GetProfile(pn):GetDisplayName())
+				local scorePlayer = RankingFillInMarkerToPlayerNumber(score:GetName())
+				if scorePlayer then
+					name = PROFILEMAN:GetProfile(scorePlayer):GetDisplayName()
+					if scorePlayer == pn then
+						isYou = true
+					end
+				end
+			end
+			
+			if not name then
+				name = score:GetName()
+			end
+			c.ScoreName:settext(name)
+			
+			if isYou then
 				local nameRightX = c.ScoreName:GetX() + c.ScoreName:GetWidth()
 				c.YouIndicator:visible(true)
 				c.YouIndicator:halign(0):x(nameRightX + 8)
 				c.YouIndicator:glowblink():effectcolor1(color('1,1,1,0')):effectcolor2(color('1,1,1,0.2')):effectperiod(0.2)
 			else
-				c.ScoreName:settext(score:GetName())
 				c.YouIndicator:visible(false)
 				c.YouIndicator:stopeffect()
 			end
