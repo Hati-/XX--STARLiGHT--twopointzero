@@ -13,10 +13,14 @@ local function OpenNameEntry()
   setenv('NameEntryOpen' .. pn, 1) -- This env lets other active InputCallbacks detect whenever NameEntry is open
   NameEntryWrapper:playcommand('Show')
 end
-local function CloseNameEntry()
+local function CloseNameEntry(delay)
   SCREENMAN:set_input_redirected(pn, false)
   setenv('NameEntryOpen' .. pn, 0)
-  NameEntryWrapper:playcommand('Hide')
+  if delay then
+    NameEntryWrapper:sleep(delay):queuecommand('Hide')
+  else
+    NameEntryWrapper:playcommand('Hide')
+  end
 end
 
 local t = Def.ActorFrame{
@@ -72,7 +76,9 @@ local t = Def.ActorFrame{
         return getenv('NameEntryOpen' .. pn) == 1
       end,
       EnterCallback=function(self, params)
-        CloseNameEntry()
+        -- Have a small close delay so the users can see the default name being used when NameEntry is left blank
+        local delay = params.IsDefaultName and 0.5 or 0.1
+        CloseNameEntry(delay)
       end,
       InitCommand=function(self)
         -- Since we're just passing this options table to the NameEntry module, then this InitCommand

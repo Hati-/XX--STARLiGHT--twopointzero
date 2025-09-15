@@ -3,6 +3,8 @@ local NameEntry = LoadModule('NameEntry.lua')
 
 setenv('keysetSDDRN' .. ToEnumShortString(player), 0)
 
+local DefaultName = 'STARLGHT'
+
 return Def.ActorFrame{
 	Def.ActorFrame{
 		Name='Panes',
@@ -21,16 +23,16 @@ return Def.ActorFrame{
 			},
 			Def.Quad{
 				InitCommand=function(self)
-					self:setsize(512, 440):y(-20):diffuse(Alpha(Color.Black, 0.75))
+					self:setsize(512, 500):y(-20):diffuse(Alpha(Color.Black, 0.8))
 				end,
 			},
 		},
 		Def.ActorFrame{
 			InitCommand=function(self)
-				self:y(-292)
+				self:y(-291)
 			end,
 			OnCommand=function(self)
-				self:y(0):sleep(0.3):linear(0.3):y(-292)
+				self:y(0):sleep(0.3):linear(0.3):y(-291)
 			end,
 			OffCommand=function(self)
 				self:linear(0.1):y(0):sleep(0):diffusealpha(0)
@@ -65,7 +67,7 @@ return Def.ActorFrame{
 		},
 	},
 	NameEntry{
-		DefaultName='STARLGHT',
+		DefaultName=DefaultName,
 		Player=player,
 		AllowKeyboard=(player == PLAYER_1),
 		AllowInputCallback=function(self)
@@ -88,10 +90,18 @@ return Def.ActorFrame{
 		end,
 		Def.BitmapText{
 			Font='_avenirnext lt pro bold/36px',
-			InitCommand=function(self)
-				self:xy(-250, -190):halign(0):zoom(0.9):strokecolor(Color.Black)
-			end,
 			Text='Register a DANCER NAME.\nEnter the name you want to use.',
+			InitCommand=function(self)
+        self:xy(-250, -225):halign(0):zoom(0.9):strokecolor(Color.Black)
+			end,
+		},
+		Def.BitmapText{
+			Font='_avenirnext lt pro bold/25px',
+			Text='(Enter blank name to default to ' .. DefaultName .. ')',
+			InitCommand=function(self)
+				self:xy(-247, -170):zoom(0.8)
+				self:halign(0):strokecolor(Color.Black):skewx(-0.15)
+			end,
 		},
 	}
 }
