@@ -1,4 +1,8 @@
-return Def.Actor{}
+return Def.Actor{
+  OnCommand=function()
+    SCREENMAN:GetTopScreen():PostScreenMessage('SM_GoToNextScreen', 0)
+  end
+}
 -- return Def.ActorFrame{
 -- 	StorageDevicesChangedMessageCommand=function(self, params)
 -- 		MemCardInsert()
