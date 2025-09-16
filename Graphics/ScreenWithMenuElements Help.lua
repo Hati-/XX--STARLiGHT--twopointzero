@@ -1,17 +1,26 @@
 return Def.ActorFrame{
-	Def.Sprite{
-		Texture="_footer/backer",
-	};
-	Def.HelpDisplay {
-		File = THEME:GetPathF("HelpDisplay", "text");
+	Def.ActorFrame{
 		InitCommand=function(self)
-			local s = THEME:GetString(Var "LoadingScreen","HelpText");
-			self:SetTipsColonSeparated(s);
+			self:zoomx(1.15)
+		end,
+		Def.Sprite{
+			Texture='_footer/backer',
+		},
+		Def.Sprite{
+			Texture='_footer/backer',
+		},
+	},
+	Def.HelpDisplay{
+		File = THEME:GetPathF('HelpDisplay', 'text'),
+		InitCommand=function(self)
+			local text = THEME:GetString(Var('LoadingScreen'), 'HelpText')
+			self:SetTipsColonSeparated(text)
 			self:SetSecsBetweenSwitches(5)
 			self:shadowlength(0)
-		end;
+			self:strokecolor(Color.Black)
+		end,
 		SetHelpTextCommand=function(self, params)
-			self:SetTipsColonSeparated( params.Text );
-		end;
-	};
+			self:SetTipsColonSeparated(params.Text)
+		end,
+	},
 }
