@@ -565,7 +565,7 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
                 elseif OptionsListMenu == "NoteSkins" and params.Selection + 1 > 5 then
                     OptionsListActor:stoptweening():linear(0.1):y(base_y - (22 * (params.Selection - 5)))
                 elseif params.Selection + 1 > 9 then
-                    OptionsListActor:stoptweening():linear(0.1):y(base_y - (22 * (params.Selection - 7)))
+                    OptionsListActor:stoptweening():linear(0.1):y(base_y - (22 * (params.Selection - 5)))
                 else
                     OptionsListActor:stoptweening():linear(0.1):y(base_y)
                 end
