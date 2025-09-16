@@ -4,7 +4,7 @@ local function CreditsText()
 		InitCommand=function(s) s:xy(_screen.cx,SCREEN_BOTTOM-16):strokecolor(Color.Black):playcommand("Refresh") end,
 		RefreshCommand=function(self)
 		--Other coin modes
-			if GAMESTATE:IsEventMode() then self:settext('EVENT MODE') return end
+			if GAMESTATE:IsEventMode() then self:settext('') return end
 			if GAMESTATE:GetCoinMode()=='CoinMode_Free' then self:settext('FREE PLAY') return end
 			if GAMESTATE:GetCoinMode()=='CoinMode_Home' then self:settext('HOME MODE') return end
 			if GAMESTATE:GetCoinMode()=='CoinMode_Pay' then
