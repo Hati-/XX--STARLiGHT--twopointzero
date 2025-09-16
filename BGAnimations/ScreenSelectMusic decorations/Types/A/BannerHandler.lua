@@ -112,8 +112,8 @@ return Def.ActorFrame{
       InitCommand=function(s) s:halign(1):zoom(0.8):xy(585, 5) end,
     },
     Def.BitmapText{
-      Name="SongLengthSymbol",
-      Font="_misc 16px",
+      Name='SongLengthSymbol',
+      Font='Common Normal',
       Text='♪',
       InitCommand=function(s) s:halign(1):zoom(1.1):xy(520, 5) end,
     },
