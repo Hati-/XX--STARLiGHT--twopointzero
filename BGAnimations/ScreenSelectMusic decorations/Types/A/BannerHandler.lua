@@ -35,11 +35,18 @@ return Def.ActorFrame{
       local Jacket = s:GetChild("Jacket Area"):GetChild("Jacket")
       local Title = s:GetChild("Info"):GetChild("Title")
       local Artist = s:GetChild("Info"):GetChild("Artist")
+      local SongLength = s:GetChild("Info"):GetChild("SongLength")
+      local SongLengthSymbol = s:GetChild("Info"):GetChild("SongLengthSymbol")
       if not mw then return end
       if song then
           Jacket:Load(jk.GetSongGraphicPath(song,"Jacket"))
           Title:visible(true):settext(song:GetDisplayFullTitle())
           Artist:visible(true):settext(song:GetDisplayArtist() ~= "Unknown artist" and song:GetDisplayArtist() or '')
+          -- local seconds = song:MusicLengthSeconds()
+          local seconds = song:GetLastSecond()
+          local minutes = math.floor(seconds / 60)
+          SongLength:settextf('%01d:%02d', minutes, seconds - minutes * 60)
+          SongLengthSymbol:x(SongLength:GetX() - SongLength:GetWidth()*SongLength:GetZoomX())
       end
       Jacket:scaletofit(-120,-120,120,120)
   end,
@@ -93,12 +100,23 @@ return Def.ActorFrame{
       Name="Title",
       Font="_avenirnext lt pro bold/36px",
       InitCommand=function(s) s:maxwidth(540):halign(0):y(-34):diffuse(Color.Black) end,
-    };
+    },
     Def.BitmapText{
       Name="Artist",
       Font="_avenirnext lt pro bold/36px",
       InitCommand=function(s) s:maxwidth(500):halign(0):zoomx(0.78):zoomy(0.65) end,
-    };
+    },
+    Def.BitmapText{
+      Name="SongLength",
+      Font="_avenirnext lt pro bold/36px",
+      InitCommand=function(s) s:halign(1):zoom(0.8):xy(585, 5) end,
+    },
+    Def.BitmapText{
+      Name="SongLengthSymbol",
+      Font="_misc 16px",
+      Text='♪',
+      InitCommand=function(s) s:halign(1):zoom(1.1):xy(520, 5) end,
+    },
   },
   loadfile(THEME:GetPathB("ScreenSelectMusic","decorations/_shared/_CDTITLE.lua"))(0,50)..{
     InitCommand=function(s)
