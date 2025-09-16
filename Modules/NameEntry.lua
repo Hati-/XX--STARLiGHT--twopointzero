@@ -437,6 +437,7 @@ function NameEntry:Init(opts)
 end
 
 function NameEntry:Reset()
+  self.EnterPressed = false
   self.PlayerName = ''
   self.SelectionX = 1
   self.SelectionY = 1
@@ -560,12 +561,18 @@ function NameEntry:NameEnter()
   MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(self.Player)..'Changed')
 end
 
+local PRESS_FIRST = 'FirstPress'
+local PRESS_REPEAT = 'Repeat'
+local PRESS_RELEASE = 'Release'
+
 function NameEntry:InputHandler(event)
   self:AssertReady('InputHandler')
   UpdateKeyModifiers(event.DeviceInput)
   local pressType = ToEnumShortString(event.type)
-  if pressType == 'Release' then return end
-	if not self:RunCallback(self.AllowInputCallback) then return end
+	if not self:RunCallback(self.AllowInputCallback) then
+    self.EnterPressed = false
+    return
+  end
   
   local gameButton = event.GameButton
   if gameButton and gameButton ~= '' then
@@ -573,18 +580,25 @@ function NameEntry:InputHandler(event)
     local SelectionX, SelectionY = self.SelectionX, self.SelectionY
     
     if gameButton == self.KeyEnter then
-      if pressType ~= 'FirstPress' then return end
       local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
       local selection = KEY_CHARACTER_MAP[keyY][keyX]
       
       if selection == 'Enter' then
-        self:NameEnter()
-      elseif selection == '←' then
+        if pressType == PRESS_FIRST then
+          self.EnterPressed = true
+        elseif pressType == PRESS_RELEASE then
+          if self.EnterPressed then
+            self:NameEnter()
+          end
+          self.EnterPressed = false
+        end
+      elseif selection == '←' and (pressType == PRESS_FIRST or pressType == PRESS_REPEAT) then
         self:NameBackspace()
-      else
+      elseif pressType == PRESS_FIRST then
         self:NameAppend(selection)
       end
     else
+      if not (pressType == PRESS_FIRST or pressType == PRESS_REPEAT) then return end
       local selectionChanged = false
       local deltaX, deltaY = 0, 0
       if     gameButton == self.KeyLeft  then deltaX = -1
@@ -627,13 +641,22 @@ function NameEntry:InputHandler(event)
     local button = ToEnumShortString(event.DeviceInput.button)
     local buttonLower = button:lower()
     
-    if buttonLower == 'backspace' then
-      self:NameBackspace()
+    -- In case the enter key isn't bound to a GameButton
+    if buttonLower == 'enter' then
+      if pressType == PRESS_FIRST then
+        self.EnterPressed = true
+      elseif pressType == PRESS_RELEASE then
+        if self.EnterPressed then
+          self:NameEnter()
+        end
+        self.EnterPressed = false
+      end
     else
-      if pressType ~= 'FirstPress' then return end
-      if buttonLower == 'enter' then -- In case the enter key isn't bound to a GameButton
-        self:NameEnter()
-      else
+      self.EnterPressed = false -- Disregard enter trigger if another key pressed while enter is held down
+    
+      if buttonLower == 'backspace' and (pressType == PRESS_FIRST or pressType == PRESS_REPEAT)  then
+        self:NameBackspace()
+      elseif pressType == PRESS_FIRST then
         local char = DeviceButtonToChar(button, true)
         if not char then return end
         

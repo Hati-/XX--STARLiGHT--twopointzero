@@ -214,13 +214,19 @@ local function GetMiniIndex(Mini)
     return index[Mini]
 end
 
+local function GetNumOptionsListItems(menu)
+    local listOptions = THEME:GetMetric('ScreenOptionsMaster', menu)
+    -- First command is always number of items
+    return tonumber(string.match(listOptions, '^([^;]+)'))
+end
+
 local GetOptionListItemsCache = {}
 local function GetOptionListItems(menu)
     if GetOptionListItemsCache[menu] then
         return GetOptionListItemsCache[menu]
     end
     local menuItems = {}
-    local numItems = tonumber(THEME:GetMetric('ScreenOptionsMaster', menu))
+    local numItems = GetNumOptionsListItems(menu)
     for i=1, numItems do
         local commands = THEME:GetMetric('ScreenOptionsMaster', menu .. ',' .. i)
         local names = {}
@@ -499,7 +505,7 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
         OptionsMenuChangedMessageCommand=function(self, params)
             if params.Player == pn then
                 OptionsListMenu = params.Menu
-                numRows = tonumber(THEME:GetMetric("ScreenOptionsMaster", OptionsListMenu))
+                numRows = GetNumOptionsListItems( OptionsListMenu)
                 if OptionsListMenu ~= "SongMenu" and OptionsListMenu ~= "AdvMenu" and OptionsListMenu ~= "RemMenu" then
                     if OptionsListMenu == "NoteSkins"
                     or OptionsListMenu == "Characters"
@@ -546,8 +552,7 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
                 
                 if params.Type == 'OptionsListStart' and OptionsListMenu == 'SongMenu' then
                     local menuItems = GetOptionListItems('SongMenu')
-                    local selectedItem = menuItems[params.Selection]
-                    if menuItems[params.Selection] == 'ChangeProfileName' then
+                    if menuItems[params.Selection + 1] == 'ChangeProfileName' then
                         OpenNameEntry()
                     end
                 end
