@@ -214,6 +214,37 @@ local function GetMiniIndex(Mini)
     return index[Mini]
 end
 
+local GetOptionListItemsCache = {}
+local function GetOptionListItems(menu)
+    if GetOptionListItemsCache[menu] then
+        return GetOptionListItemsCache[menu]
+    end
+    local menuItems = {}
+    local numItems = tonumber(THEME:GetMetric('ScreenOptionsMaster', menu))
+    for i=1, numItems do
+        local commands = THEME:GetMetric('ScreenOptionsMaster', menu .. ',' .. i)
+        local names = {}
+        for command in string.gmatch(commands, '([^;]+)') do
+            local args = {}
+            for arg in string.gmatch(command, '([^,]+)') do
+                table.insert(args, arg)
+                if #args >= 2 then
+                    break
+                end
+            end
+            if args[1] == 'name' then
+                table.insert(names, args[2])
+            end
+            if #names >= 1 then
+                break
+            end
+        end
+        menuItems[i] = names[1]
+    end
+    GetOptionListItemsCache[menu] = menuItems
+    return menuItems
+end
+
 local function getSelectionImage(key, getAssetPath, specialKeyImages)
     local image
     for specialKey, specialImage in pairs(specialKeyImages) do
@@ -412,6 +443,29 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
             },
         }
     end]]
+    
+    -- NameEntry
+    local NameEntry, OpenNameEntry = loadfile(THEME:GetPathB('', '_NameEntry'))(pn)
+    t[#t+1] = NameEntry .. {
+        InitCommand=function(self)
+            local offsetX
+            if IsUsingWideScreen() then
+                offsetX = 566
+            else
+                offsetX = 360
+            end
+            if pn == PLAYER_1 then
+                offsetX = offsetX * -1
+            end
+            self:xy(_screen.cx + offsetX, _screen.cy)
+        end,
+        ShowCommand=function()
+            OptionsListActor:visible(false)
+        end,
+        HideTweenDoneCommand=function()
+            OptionsListActor:visible(true)
+        end,
+    }
 
     t[#t+1] = Def.ActorFrame{
         InitCommand=function(s)
@@ -473,7 +527,7 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
 
         OptionsListLeftMessageCommand=function(self, params) self:playcommand("Adjust", params) end,
         OptionsListRightMessageCommand=function(self, params) self:playcommand("Adjust", params) end,
-        OptionsListStartMessageCommand=function(self, params) self:playcommand("Adjust", params) end,
+        OptionsListStartMessageCommand=function(self, params) params.Type = 'OptionsListStart'; self:playcommand("Adjust", params) end,
         
         -- If we're doing START+LEFT or START+RIGHT to change a setting without entering the setting's submenu then
         -- OptionsListMenu and params.Selection is wrong. Don't run AdjustCommand on this ActorFrame if that's the case. 
@@ -489,6 +543,14 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
             
             if params.Player == pn then
                 local base_y = 350
+                
+                if params.Type == 'OptionsListStart' and OptionsListMenu == 'SongMenu' then
+                    local menuItems = GetOptionListItems('SongMenu')
+                    local selectedItem = menuItems[params.Selection]
+                    if menuItems[params.Selection] == 'ChangeProfileName' then
+                        OpenNameEntry()
+                    end
+                end
 
                 -- Handle scrolling in different options menus
                 if OptionsListMenu == "CharaDS" then
@@ -503,7 +565,7 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
                     OptionsListActor:stoptweening():linear(0.1):y(base_y)
                 end
                 local sel = params.Selection
-                if OptionsListMenu == "SongMenu" or OptionsListMenu == "AdvMenu" then
+                if OptionsListMenu == "SongMenu" or OptionsListMenu == "AdvMenu" then                    
                     if sel+1 <= numRows then
                         local itemName = string.gsub(THEME:GetMetric("ScreenOptionsMaster",OptionsListMenu..","..params.Selection+1):split(";")[1],"name,","")
                         self:GetChild("Explanation"):GetChild("ExpText"):settext(THEME:GetString("OptionExplanations",itemName))

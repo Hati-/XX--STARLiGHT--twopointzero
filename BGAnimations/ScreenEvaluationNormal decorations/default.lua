@@ -367,81 +367,28 @@ for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
     },
     Def.BitmapText{
       Font="_avenirnext lt pro bold/20px",
-      Text="[Press SELECT to change name]",
+      Text="[PRESS &SELECT; TO CHANGE NAME]",
       InitCommand=function(self)
-        self:align(0,0):xy(3, _screen.cy-275):zoom(0.95)
+        self:align(0,0):xy(3, _screen.cy-273):zoom(0.93)
       end,
     },
   }
   
   -- NameEntry
-  local NameEntryWrapper
-  local NameEntry
-  t[#t+1] = Def.ActorFrame{
+  local NameEntry, OpenNameEntry = loadfile(THEME:GetPathB('', '_NameEntry'))(pn, 'Change the DANCER NAME \nused for saving this score.')
+  t[#t+1] = NameEntry .. {
     InitCommand=function(self)
-      NameEntryWrapper = self
-      setenv('EvaluationNameEntryOpen' .. pn, 0)
-      self:draworder(10)
-      self:visible(false)
-      self:playcommand('Hide')
-    end,
-    ShowCommand=function(self)
-      self:visible(true)
-    end,
-    HideCommand=function(self)
-      self:sleep(0.1):queuecommand('MakeInvisible')
-    end,
-    MakeInvisibleCommand=function(self)
-      self:visible(false)
-      if NameEntry then
-        NameEntry:Reset()
-      end
-    end,
-    CodeMessageCommand=function(self, param)
-      if param.PlayerNumber ~= pn then return end
-      local isOpen = getenv('EvaluationNameEntryOpen' .. pn) == 1
-      
-      if isOpen then
-        if param.Name == 'Select' or param.Name == 'Back' then
-          setenv('EvaluationNameEntryOpen' .. pn, 0)
-          self:playcommand('Hide')
-        end
+      local offsetX
+      if IsUsingWideScreen() then
+          offsetX = 500
       else
-        if param.Name == 'Select' then
-          setenv('EvaluationNameEntryOpen' .. pn, 1)
-          self:playcommand('Show')
-        elseif param.Name == 'Back' or param.Name == 'Start' then
-          -- ScreenEvaluation plays this sound before transitioning, so let's do it too
-          SOUND:PlayOnce(THEME:GetPathS('ScreenEvaluation', 'start'), true)
-          SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
-        end
+          offsetX = 360
       end
+      if pn == PLAYER_1 then
+          offsetX = offsetX * -1
+      end
+      self:xy(_screen.cx + offsetX, _screen.cy)
     end,
-    loadfile(THEME:GetPathB("ScreenEvaluationNormal","decorations/nameEntry")){
-      Player=pn,
-      AllowKeyboard=(pn == PLAYER_1),
-      AllowInputCallback=function(self)
-        return getenv('EvaluationNameEntryOpen' .. pn) == 1
-      end,
-      EnterCallback=function(self)
-        setenv('EvaluationNameEntryOpen' .. pn, 0)
-        NameEntryWrapper:playcommand('Hide')
-      end,
-      InitCommand=function(self)
-        -- Since we're just passing this options table to the NameEntry module, then this InitCommand
-        -- will be on the NameEntry object itself. We can therefore get the NameEntry object here.
-        NameEntry = self
-      end,
-    }..{
-      InitCommand=function(self)
-        if IsUsingWideScreen() then
-          self:x(_screen.cx-500)
-        else
-          self:x(_screen.cx-360)
-        end
-        self:y(_screen.cy)
-      end,
-    }
   }
 end
 

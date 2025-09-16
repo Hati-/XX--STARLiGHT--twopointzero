@@ -146,6 +146,119 @@ local function wrap1(x, n) -- Variant that works with indices starting at 1 inst
 	return wrap(x - 1, n) + 1
 end
 
+local isHoldingShift = false
+local isHoldingCtrl = false
+local function UpdateKeyModifiers(DeviceInput)
+  local button = ToEnumShortString(DeviceInput.button):lower()
+  if button == 'left shift' or button == 'right shift' then
+    isHoldingShift = DeviceInput.down
+  elseif button == 'left ctrl' or button == 'right ctrl' then
+    isHoldingCtrl = DeviceInput.down
+  end
+end
+
+--[[
+  We can't get and use the computer's current keyboard layout because the INPUTMAN->DeviceInputToChar(...) function is 
+  not exposed anywhere in Lua. The closest thing we have is to use ScreenTextEntry, but that is designed to work as a
+  popup for text input.
+  
+  I tried to hack ScreenTextEntry to run in the background just to be a proxy for INPUTMAN->DeviceInputToChar(...), but
+  I encountered two problems:
+    - If we use SCREENMAN:AddNewScreenToTop("ScreenTextEntry") and make ScreenTextEntry a hidden top screen, then inputs
+      for any underlying screen will be blocked which makes them unresponsive. This is due to how input handling for the
+      screen stack works. We still want the underlying screen to be able to handle inputs themselves and be responsive
+      while the NameEntry is active. Because of this input blocking, creating a hidden ScreenTextEntry popup with
+      SCREENMAN:AddNewScreenToTop("ScreenTextEntry") doesn't work well if we just want to use it to capture keypresses
+      and proxy INPUTMAN->DeviceInputToChar(...) in the background.
+    - If we use the OverlayScreens metric to run ScreenTextEntry (or another screen that uses that class) as an overlay, 
+      then inputs that ScreenTextEntry handles wont fall through to the current top screen. This is due to how overlay
+      input handling works. ScreenTextEntry handles a lot of inputs such as the Start and Menu navigation keys which 
+      means the current top screen will lose a lot of inputs and become really unresponsive as well. We therefore can't
+      use the OverlayScreens metric to make a hidden a ScreenTextEntry overlay just to capture keyboard presses either.
+  See: https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ScreenManager.cpp#L537
+  
+  Alternatively we could make our own screen, for example a "ScreenNameEntry", that uses the ScreenTextEntry class and
+  have it popup using SCREENMAN:AddNewScreenToTop("ScreenNameEntry"), but that requires us to change how we approach the
+  NameEntry entirely. Things will also become tricky if we want support multiple players at the same time or scenarios
+  were we don't want to block other player's input whenever a player is using ScreenNameEntry. Lets keep it simple and
+  not do this for now.
+  
+  Currently, the most simple and flexible approach is to handle keyboard modifiers ourself and have our own keyboard
+  layout. We can copy the default InputHandler::DeviceButtonToChar(...) behavior, which mimics the US keyboard layout:
+  https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/arch/InputHandler/InputHandler.cpp#L42
+--]]
+local DEVICE_BUTTON_LOOKUP = {
+  ['space']     = ' ',
+  ['period']    = '.',
+  ['comma']     = ',',
+  ['backslash'] = '\\',
+  ['tab']       = '\t',
+  ['kp 0']      = '0',
+  ['kp 1']      = '1',
+  ['kp 2']      = '2',
+  ['kp 3']      = '3',
+  ['kp 4']      = '4',
+  ['kp 5']      = '5',
+  ['kp 6']      = '6',
+  ['kp 7']      = '7',
+  ['kp 8']      = '8',
+  ['kp 9']      = '9',
+  ['kp /']      = '/',
+  ['kp *']      = '*',
+  ['kp -']      = '-',
+  ['kp +']      = '+',
+  ['kp .']      = '.',
+  ['kp =']      = '=',
+}
+local DEVICE_BUTTON_SHIFT_LOOKUP = {
+  ['`']  = '~',
+  ['1']  = '!',
+  ['2']  = '@',
+  ['3']  = '#',
+  ['4']  = '$',
+  ['5']  = '%',
+  ['6']  = '^',
+  ['7']  = '&',
+  ['8']  = '*',
+  ['9']  = '(',
+  ['0']  = ')',
+  ['-']  = '_',
+  ['=']  = '+',
+  ['[']  = '{',
+  [']']  = '}',
+  ['\''] = '"',
+  ['\\'] = '|',
+  [';']  = ':',
+  [',']  = '<',
+  ['.']  = '>',
+  ['/']  = '?',
+}
+local function DeviceButtonToChar(button, useCurrentKeyModifiers) 
+  local char
+  
+  if string.len(button) == 1 then
+    local asciiByte = string.byte(button)
+    if asciiByte > 31 and asciiByte < 127 then
+      char = button
+    end
+  end
+  
+  if not char then
+    char = DEVICE_BUTTON_LOOKUP[button:lower()]
+  end
+  
+  if char and useCurrentKeyModifiers and isHoldingShift and not isHoldingCtrl then
+    local shifted = DEVICE_BUTTON_SHIFT_LOOKUP[char]
+    if shifted then
+      char = shifted
+    else
+      char = char:upper()
+    end
+  end
+  
+  return char
+end
+
 local function Mixin(target, addon)
   for k, v in pairs(addon) do
     local vOriginal = target[k]
@@ -361,9 +474,9 @@ function NameEntry:Update()
   self:UpdateSelectionBox()
 end
 
-function NameEntry:RunCallback(callback)
+function NameEntry:RunCallback(callback, ...)
   if type(callback) == 'function' then
-    return callback(self)
+    return callback(self, ...)
   end
   return not not callback
 end
@@ -380,6 +493,12 @@ function NameEntry:SelectEnterKey()
   self.SelectionX = ENTER_KEY_POS.X
   self.SelectionY = ENTER_KEY_POS.Y
   self:UpdateSelectionBox()
+end
+
+function NameEntry:SetText(name)
+  self:AssertReady('SetName')
+  self.PlayerName = name
+  self.NameTextActor:settext(self.PlayerName)
 end
 
 function NameEntry:NameAppend(char)
@@ -411,9 +530,16 @@ end
 
 function NameEntry:NameEnter()
   self:AssertReady('NameEnter')
+  local params = {
+    Player = self.Player,
+    Name = self.PlayerName,
+    IsDefaultName = false,
+  }
   if string.len(self.PlayerName) == 0 then
     self.PlayerName = self.DefaultName
     self.NameTextActor:settext(self.PlayerName)
+    params.Name = self.PlayerName
+    params.IsDefaultName = true
   end
   local profile = PROFILEMAN:GetProfile(self.Player)
   profile:SetDisplayName(self.PlayerName) -- Will be used later to replace the Fill-In-Marker
@@ -422,7 +548,7 @@ function NameEntry:NameEnter()
   -- set the score's name after ScreenGameplay even when in event mode. See:
   -- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ProfileManager.cpp#L859
   -- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/GameState.cpp#L2108
-  local fillInMarker = GenerateRankingToFillInMarker(self.Player)
+  local fillInMarker = PlayerNumberToRankingFillInMarker(self.Player)
   if fillInMarker then
     profile:SetLastUsedHighScoreName(fillInMarker)
   else
@@ -430,13 +556,14 @@ function NameEntry:NameEnter()
   end
   
   SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
-  self:RunCallback(self.EnterCallback)
+  self:RunCallback(self.EnterCallback, params)
   MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(self.Player)..'Changed')
 end
 
 function NameEntry:InputHandler(event)
   self:AssertReady('InputHandler')
-  local pressType =  ToEnumShortString(event.type)
+  UpdateKeyModifiers(event.DeviceInput)
+  local pressType = ToEnumShortString(event.type)
   if pressType == 'Release' then return end
 	if not self:RunCallback(self.AllowInputCallback) then return end
   
@@ -497,15 +624,28 @@ function NameEntry:InputHandler(event)
       end
     end
   elseif self.AllowKeyboard and ToEnumShortString(event.DeviceInput.device) == 'Key' then
-    local key = ToEnumShortString(event.DeviceInput.button):lower()
+    local button = ToEnumShortString(event.DeviceInput.button)
+    local buttonLower = button:lower()
     
-    if key == 'backspace' then
+    if buttonLower == 'backspace' then
       self:NameBackspace()
-    elseif pressType == 'FirstPress' then
-      if key == 'enter' then -- In case the enter key isn't bound to a GameButton
+    else
+      if pressType ~= 'FirstPress' then return end
+      if buttonLower == 'enter' then -- In case the enter key isn't bound to a GameButton
         self:NameEnter()
       else
-        local nameChanged = self:NameAppend(key)
+        local char = DeviceButtonToChar(button, true)
+        if not char then return end
+        
+        -- Some spacebar fallbacks in case space is not allowed
+        if char == ' ' and not ALLOWED_CHARACTERS_LOOKUP[char] then
+          if     ALLOWED_CHARACTERS_LOOKUP['_'] then char = '_'
+          elseif ALLOWED_CHARACTERS_LOOKUP['-'] then char = '-'
+          elseif ALLOWED_CHARACTERS_LOOKUP['.'] then char = '.'
+          end
+        end
+        
+        local nameChanged = self:NameAppend(char)
         
         -- If name was changed then move the cursor to the Enter key so we can easily
         -- complete the name entry if the enter key is bound to the Start GameButton.
