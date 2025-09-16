@@ -228,5 +228,13 @@ return Def.ActorFrame{
 		loadfile(THEME:GetPathB("ScreenSelectMusic","decorations/Types/A/BPM.lua"))()..{
 			InitCommand=function(s) s:xy(140,48) end,
 		};
-	};
+	},
+	StandardDecorationFromFileOptional('Help', 'Help') .. {
+		StartSelectingStepsMessageCommand=function(self)
+			self:playcommand('Off')
+		end,
+		SongUnchosenMessageCommand=function(self)
+			self:playcommand('On')
+		end,
+	}
 }
