@@ -42,7 +42,7 @@ return Def.ActorFrame{
 		},
 		Def.Quad{
 			InitCommand=function(self)
-				self:setsize(512, 500):y(-20):diffuse(Alpha(Color.Black, 0.8))
+				self:setsize(512, 584):y(0):diffuse(Alpha(Color.Black, 0.8))
 			end,
 		},
 	},
@@ -81,6 +81,9 @@ return Def.ActorFrame{
 		},
 	},
   Def.ActorFrame{
+		InitCommand=function(self)
+			self:y(-30)
+		end,
     ShowCommand=function(self)
       self:hibernate(tweenTime):diffusealpha(1)
     end,

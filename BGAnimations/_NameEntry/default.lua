@@ -76,8 +76,8 @@ local t = Def.ActorFrame{
         return getenv('NameEntryOpen' .. pn) == 1
       end,
       EnterCallback=function(self, params)
-        -- Have a small close delay so the users can see the default name being used when NameEntry is left blank
-        local delay = params.IsDefaultName and 0.5 or 0.1
+        -- Have a small close delay so the user can see what name gets used when it's a preset default/recent name
+        local delay = params.IsPresetName and 0.5 or 0.1
         CloseNameEntry(delay)
       end,
       InitCommand=function(self)
