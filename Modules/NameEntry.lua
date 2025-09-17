@@ -6,16 +6,12 @@ end
 local NameEntry = {}
 StarlightCache.NameEntry = NameEntry
 
--- Have this array persist across NameEntry usage until game is restarted
-local RecentNames = _G['NameEntry_RecentNames']
-if not RecentNames then
-  RecentNames = {}
-  _G['NameEntry_RecentNames'] = RecentNames
-end
-
+-- Some hardcoded configuration constants
 local MAX_RECENT_NAMES = 6
 local RECENT_NAMES_COLS = 2
 local RECENT_NAMES_MARGIN = 5
+local SAVE_RECENT_NAMES_TO_DISK = true
+local SAVE_RECENT_NAMES_NAMESPACE = 'NameEntry_RecentNames'
 
 local DEFAULT_NAME = 'STEP'
 local MAX_NAME_LENGTH = 8
@@ -102,6 +98,49 @@ end
 local RECENT_NAMES_GRID_WIDTH = GRID_COLS / RECENT_NAMES_COLS
 local RECENT_NAMES_GRID_HEIGHT = 1
 
+local RecentNames
+
+local function SaveRecentNames()
+  if SAVE_RECENT_NAMES_TO_DISK then
+    local stringValue = table.concat(RecentNames, '\n')
+    return SetUserPref(SAVE_RECENT_NAMES_NAMESPACE, stringValue)
+  else
+    _G[SAVE_RECENT_NAMES_NAMESPACE] = RecentNames
+    return true
+  end
+end
+
+local function LoadRecentNames()
+  local success = false
+  if SAVE_RECENT_NAMES_TO_DISK then
+    local names = {}
+    local stringValue = GetUserPref(SAVE_RECENT_NAMES_NAMESPACE)
+    if stringValue then
+      for name in string.gmatch(stringValue, '([^\n\r]+)') do
+        name = name:gsub('^%s+', ''):gsub('%s+$', '') -- trim whitespace from start and end
+        if name ~= '' then
+          table.insert(names, name)
+        end
+      end
+    end
+    if #names > 0 then
+      RecentNames = names
+      success = true
+    end
+  else
+    local RecentNames = _G[SAVE_RECENT_NAMES_NAMESPACE]
+    success = true
+  end
+  
+  if not RecentNames then
+    -- If there's no recent names stored
+    RecentNames = {}
+    SaveRecentNames()
+  end
+  return success
+end
+LoadRecentNames()
+
 -- These are for testing
 -- RecentNames[1] = nil
 -- RecentNames[1] = 'A'
@@ -145,6 +184,8 @@ local function AddRecentName(name)
   for i = MAX_RECENT_NAMES + 1, #RecentNames do
     RecentNames[i] = nil
   end
+  
+  SaveRecentNames()
 end
 
 local function GetRecentNames()
