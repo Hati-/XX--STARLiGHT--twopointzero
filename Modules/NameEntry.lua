@@ -3,8 +3,19 @@ local DEBUG = false
 if StarlightCache and StarlightCache.NameEntry and not DEBUG then
   return StarlightCache.NameEntry
 end
-
 local NameEntry = {}
+StarlightCache.NameEntry = NameEntry
+
+-- Have this array persist across NameEntry usage until game is restarted
+local RecentNames = _G['NameEntry_RecentNames']
+if not RecentNames then
+  RecentNames = {}
+  _G['NameEntry_RecentNames'] = RecentNames
+end
+
+local MAX_RECENT_NAMES = 6
+local RECENT_NAMES_COLS = 2
+local RECENT_NAMES_MARGIN = 5
 
 local DEFAULT_NAME = 'STEP'
 local MAX_NAME_LENGTH = 8
@@ -88,31 +99,126 @@ for keyY, row in ipairs(KEY_CHARACTER_MAP) do
 	end
 end
 
+local RECENT_NAMES_GRID_WIDTH = GRID_COLS / RECENT_NAMES_COLS
+local RECENT_NAMES_GRID_HEIGHT = 1
+
+-- These are for testing
+-- RecentNames[1] = nil
+-- RecentNames[1] = 'A'
+-- RecentNames[2] = 'B'
+-- RecentNames[3] = 'C'
+-- RecentNames[4] = 'D'
+-- RecentNames[5] = 'E'
+-- RecentNames[6] = 'F'
+
+local function AddRecentName(name)
+  if RecentNames[1] == name then return end
+  
+  -- See if name exists
+  local pos
+  for i = 1, #RecentNames do
+    if RecentNames[i] == name then
+      pos = i - 1
+      break
+    end
+  end
+
+  if not pos then
+    -- Not found: shift whole list
+    pos = #RecentNames
+  end
+  
+  if pos > 0 then
+    -- Shift block [1, pos] right by 1
+    if table.move then
+      table.move(RecentNames, 1, pos, 2)
+    else
+      for i = pos, 1, -1 do
+        RecentNames[i + 1] = RecentNames[i]
+      end
+    end
+  end
+  
+  RecentNames[1] = name
+  
+  -- Truncate list past the max limit
+  for i = MAX_RECENT_NAMES + 1, #RecentNames do
+    RecentNames[i] = nil
+  end
+end
+
+local function GetRecentNames()
+  return RecentNames
+end
+
+local function GetNumRecentNamesRows()
+  return math.floor((#RecentNames / RECENT_NAMES_COLS) + 0.5)
+end
+
+local function GetNumRecentNamesCols(recentNameRow)
+  if recentNameRow then
+    if recentNameRow < GetNumRecentNamesRows() then
+      return RECENT_NAMES_COLS
+    end
+    return ((#RecentNames - 1) % RECENT_NAMES_COLS) + 1
+  end
+  return math.min(#RecentNames, RECENT_NAMES_COLS)
+end
+
+local function GetNumRecentNamesRows()
+  return math.ceil(#RecentNames / RECENT_NAMES_COLS)
+end
+
 local function GridXYToKeyXY(gridX, gridY)
-	if gridY < 1 or gridY > #GRID_TO_KEY_MAP then
-		error('GridPosToKeySlot(x, y): y-value out of range. Got '..gridY..', but expects range [1, '..GRID_ROWS..']')
+  local maxRows = GRID_ROWS + GetNumRecentNamesRows()
+	if gridY < 1 or gridY > maxRows then
+		error('GridXYToKeyXY(x, y): y-value out of range. Got '..gridY..', but expects range [1, '..maxRows..']')
 	end
-	local keyXMap = GRID_TO_KEY_MAP[gridY]
-	if gridX < 1 or gridX > #keyXMap then
-		error('GridPosToKeySlot(x, y): x-value out of range. Got '..gridX..', but expects range [1, '..#keyXMap..']')
-	end
-	local keyX = keyXMap[gridX]
-	local keyY = gridY
-	return keyX, keyY
+  local keyX, keyY
+  if gridY <= GRID_ROWS then
+    local keyXMap = GRID_TO_KEY_MAP[gridY]
+    if gridX < 1 or gridX > #keyXMap then
+      error('GridXYToKeyXY(x, y): x-value out of range. Got '..gridX..', but expects range [1, '..#keyXMap..']')
+    end
+    keyX = keyXMap[gridX]
+  else
+    local recentNamesRow = gridY - GRID_ROWS
+    local numCols = RECENT_NAMES_COLS * RECENT_NAMES_GRID_WIDTH
+    if gridX < 1 or gridX > numCols then
+      error('GridXYToKeyXY(x, y): x-value out of range. Got '..gridX..', but expects range [1, '..numCols..']')
+    end
+    keyX = math.ceil(gridX / RECENT_NAMES_GRID_WIDTH)
+  end
+  
+  keyY = gridY
+  return keyX, keyY
 end
 
 local function GetKeyProperties(keyX, keyY)
-	if keyY < 1 or keyY > KEY_ROWS then
-		error('GetKeyProperties(x, y): y-value out of range. Got '..keyY..', but expects range [1, '..KEY_ROWS..']')
+  local maxRows = KEY_ROWS + GetNumRecentNamesRows()
+	if keyY < 1 or keyY > maxRows then
+		error('GetKeyProperties(x, y): y-value out of range. Got '..keyY..', but expects range [1, '..maxRows..']')
 	end
-	local gridXMap = KEY_TO_GRID_MAP[keyY]
-	if keyX < 1 or keyX > #gridXMap then
-		error('GetKeyProperties(x, y): x-value out of range. Got '..keyX..', but expects range [1, '..#gridXMap..']')
-	end
-	local y = keyY - 1
-	local x = gridXMap[keyX] - 1
-	local width = KEY_WIDTH_MAP[keyY][keyX]
-	return x, y, width
+  local x, y, width
+  if keyY <= KEY_ROWS then
+    local gridXMap = KEY_TO_GRID_MAP[keyY]
+    if keyX < 1 or keyX > #gridXMap then
+      error('GetKeyProperties(x, y): x-value out of range1. Got '..keyX..', but expects range [1, '..#gridXMap..']')
+    end
+    x = gridXMap[keyX] - 1
+    width = KEY_WIDTH_MAP[keyY][keyX]
+  else
+    local recentNamesRow = keyY - KEY_ROWS
+    local numCols = GetNumRecentNamesCols(recentNamesRow)
+    if keyX < 1 or keyX > numCols then
+      error('GetKeyProperties(x, y): x-value out of range2. Got '..keyX..', but expects range [1, '..numCols..']')
+    end
+    x = (keyX - 1) * RECENT_NAMES_GRID_WIDTH
+    width = RECENT_NAMES_GRID_WIDTH
+  end
+  
+  y = keyY - 1
+  return x, y, width
 end
 
 local function GetSelectionBoxProperties(keyX, keyY)
@@ -133,6 +239,11 @@ local function GetSelectionBoxProperties(keyX, keyY)
 		width = width*0.82
 		height = height*0.74
 	end
+  
+  if keyY > KEY_ROWS then
+    y = y + RECENT_NAMES_MARGIN
+  end
+  
 	return x, y, width, height
 end
 
@@ -320,6 +431,42 @@ local function GenerateLetterBox()
 	return t
 end
 
+local function GenerateRecentNamesList()
+  local t = Def.ActorFrame{}
+  local width = RECENT_NAMES_GRID_WIDTH * GRID_CELL_WIDTH
+  local height = RECENT_NAMES_GRID_HEIGHT * GRID_CELL_HEIGHT
+  
+  for i = 1, MAX_RECENT_NAMES do
+    local x = (i - 1) % RECENT_NAMES_COLS
+    local y = math.floor((i - 1) / RECENT_NAMES_COLS)
+		x = x * width + width / 2
+    y = y * height + height / 2
+    
+    t[#t+1] = Def.ActorFrame{
+      InitCommand=function(self)
+        self:name('RecentName' .. i)
+        local c = self:GetChildren()
+        	
+        local widthRatio = width/height
+        c.Sprite:Load(THEME:GetPathB('ScreenDDRNameEntry', 'overlay/endBOX'))
+        c.Sprite:zoomx(widthRatio / 2)
+        self:xy(x, y)
+        
+        c.Text:diffuse(Color.White):zoom(0.8):maxwidth(width)
+        c.Text:settext('##NAME' .. i .. '##') -- If we see these then something is wrong
+      end,
+      Def.Sprite{
+        Name='Sprite',
+      },
+      Def.BitmapText{
+        Name='Text',
+        Font='_avenirnext lt pro bold/42px',
+      },
+    }
+  end
+  return t
+end
+
 local function CreateNameEntryFrame()
   local self = nil
   local function InputHandler(...)
@@ -332,6 +479,7 @@ local function CreateNameEntryFrame()
       self = _self:GetParent()
       self.NameTextActor = _self:GetChild('NameText')
       self.SelectionBoxActor = _self:GetChild('LetterBoxFrame'):GetChild('SelectionBox')
+      self.RecentNamesFrame = _self:GetChild('LetterBoxFrame'):GetChild('RecentNamesFrame')
       
       -- Mixin() might not have been ran yet, so call the NameEntry:CheckReady() method explicitly
       NameEntry.CheckReady(self)
@@ -351,6 +499,12 @@ local function CreateNameEntryFrame()
         _self:xy(offsetX, offsetY)
       end,
       GenerateLetterBox(),
+      GenerateRecentNamesList() .. {
+        Name = 'RecentNamesFrame',
+        InitCommand = function(_self)
+          _self:y(GRID_ROWS * GRID_CELL_HEIGHT + RECENT_NAMES_MARGIN)
+        end
+      },
       Def.Quad{
         Name='SelectionBox',
         InitCommand=function(_self)
@@ -452,7 +606,9 @@ function NameEntry:CheckReady()
     return false
   end
   -- These are set during InitCommand within CreateNameEntryFrame()
-  if self.NameTextActor == nil and self.SelectionBoxActor == nil then
+  if self.NameTextActor == nil
+  or self.SelectionBoxActor == nil
+  or self.RecentNamesFrame == nil then
     return false
   end
   if self.IsReady then
@@ -473,6 +629,17 @@ function NameEntry:Update()
   self:AssertReady('Update')
   self.NameTextActor:settext(self.PlayerName)
   self:UpdateSelectionBox()
+  
+  for i = 1, MAX_RECENT_NAMES do
+    local name = RecentNames[i]
+    local RecentName = self.RecentNamesFrame:GetChild('RecentName' .. i)
+    if name then
+      RecentName:visible(true)
+      RecentName:GetChild('Text'):settext(name)
+    else
+      RecentName:visible(false)
+    end
+  end
 end
 
 function NameEntry:RunCallback(callback, ...)
@@ -485,6 +652,7 @@ end
 function NameEntry:UpdateSelectionBox()
   self:AssertReady('UpdateSelectionBox')
   local keyX, keyY = GridXYToKeyXY(self.SelectionX, self.SelectionY)
+  -- SCREENMAN:SystemMessage('GRID ' .. self.SelectionX .. ',' .. self.SelectionY .. ' = KEY ' .. keyX .. ',' .. keyY)
   local x, y, width, height = GetSelectionBoxProperties(keyX, keyY)
   self.SelectionBoxActor:xy(x, y):setsize(width, height)
 end
@@ -529,19 +697,30 @@ function NameEntry:NameBackspace()
   SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
 end
 
-function NameEntry:NameEnter()
+function NameEntry:NameEnter(name)
   self:AssertReady('NameEnter')
   local params = {
     Player = self.Player,
     Name = self.PlayerName,
     IsDefaultName = false,
+    IsRecentName = false,
+    IsPresetName = false,
   }
-  if string.len(self.PlayerName) == 0 then
-    self.PlayerName = self.DefaultName
-    self.NameTextActor:settext(self.PlayerName)
-    params.Name = self.PlayerName
+  
+  if name then
+    params.IsRecentName = true
+  elseif string.len(self.PlayerName) == 0 then
     params.IsDefaultName = true
+    name = self.DefaultName
   end
+  
+  if name then
+    params.IsPresetName = true
+    params.Name = name
+    self.PlayerName = name
+    self.NameTextActor:settext(name)
+  end
+  
   local profile = PROFILEMAN:GetProfile(self.Player)
   profile:SetDisplayName(self.PlayerName) -- Will be used later to replace the Fill-In-Marker
   
@@ -557,6 +736,7 @@ function NameEntry:NameEnter()
   end
   
   SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
+  AddRecentName(self.PlayerName)
   self:RunCallback(self.EnterCallback, params)
   MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(self.Player)..'Changed')
 end
@@ -581,21 +761,36 @@ function NameEntry:InputHandler(event)
     
     if gameButton == self.KeyEnter then
       local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
-      local selection = KEY_CHARACTER_MAP[keyY][keyX]
-      
-      if selection == 'Enter' then
+      if keyY <= KEY_ROWS then
+        -- Letterbox
+        local selection = KEY_CHARACTER_MAP[keyY][keyX]
+        
+        if selection == 'Enter' then
+          if pressType == PRESS_FIRST then
+            self.EnterPressed = true
+          elseif pressType == PRESS_RELEASE then
+            if self.EnterPressed then
+              self:NameEnter()
+            end
+            self.EnterPressed = false
+          end
+        elseif selection == '←' and (pressType == PRESS_FIRST or pressType == PRESS_REPEAT) then
+          self:NameBackspace()
+        elseif pressType == PRESS_FIRST then
+          self:NameAppend(selection)
+        end
+      else
+        -- Recent names
         if pressType == PRESS_FIRST then
           self.EnterPressed = true
         elseif pressType == PRESS_RELEASE then
           if self.EnterPressed then
-            self:NameEnter()
+            local nameIndex = (keyY - KEY_ROWS - 1) * RECENT_NAMES_COLS + keyX
+            local name = RecentNames[nameIndex]
+            self:NameEnter(name)
           end
           self.EnterPressed = false
         end
-      elseif selection == '←' and (pressType == PRESS_FIRST or pressType == PRESS_REPEAT) then
-        self:NameBackspace()
-      elseif pressType == PRESS_FIRST then
-        self:NameAppend(selection)
       end
     else
       if not (pressType == PRESS_FIRST or pressType == PRESS_REPEAT) then return end
@@ -611,27 +806,66 @@ function NameEntry:InputHandler(event)
         local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
         keyX = keyX + deltaX
         
-        if keyX < 1 then
-          SelectionY = wrap1(SelectionY - 1, GRID_ROWS)
-          SelectionX = #GRID_TO_KEY_MAP[SelectionY]
-        elseif keyX > #KEY_CHARACTER_MAP[SelectionY] then
-          SelectionY = wrap1(SelectionY + 1, GRID_ROWS)
-          SelectionX = 1
+        if keyY <= KEY_ROWS then
+          -- Navigating letterbox
+          if keyX < 1 then
+            SelectionY = wrap1(SelectionY - 1, GRID_ROWS)
+            SelectionX = #GRID_TO_KEY_MAP[SelectionY]
+          elseif keyX > #KEY_CHARACTER_MAP[SelectionY] then
+            SelectionY = wrap1(SelectionY + 1, GRID_ROWS)
+            SelectionX = 1
+          else
+            SelectionX = KEY_TO_GRID_MAP[keyY][keyX] + math.floor((KEY_WIDTH_MAP[keyY][keyX]-1)/2)
+          end
         else
-          SelectionX = KEY_TO_GRID_MAP[keyY][keyX] + math.floor((KEY_WIDTH_MAP[keyY][keyX]-1)/2)
+          -- Navigating recent names
+          local nameRows = GetNumRecentNamesRows()
+          if keyX < 1 then
+            SelectionY = wrap1(SelectionY - GRID_ROWS - 1, nameRows) + GRID_ROWS
+            keyX = GetNumRecentNamesCols(SelectionY - GRID_ROWS)
+          elseif keyX > GetNumRecentNamesCols(SelectionY - GRID_ROWS) then
+            if keyX > GetNumRecentNamesCols(1) then
+              SelectionY = wrap1(SelectionY - GRID_ROWS + 1, nameRows) + GRID_ROWS
+              keyX = 1
+            else
+              SelectionY = wrap1(SelectionY - GRID_ROWS - 1, nameRows) + GRID_ROWS
+            end
+          end
+          SelectionX = 1 + math.floor((keyX - 1) * RECENT_NAMES_GRID_WIDTH + (RECENT_NAMES_GRID_WIDTH-1)/2)
         end
         selectionChanged = true
       end
       
       if deltaY ~= 0 then
-        SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
-        while SelectionX > #GRID_TO_KEY_MAP[SelectionY] do -- We use GRID_TO_KEY_MAP to get num of grid columns per row
+        local numNamesRow = GetNumRecentNamesRows()
+        
+        -- Only switch between navigating within letterbox or recent names if the user tries to cross the boundary
+        if SelectionY <= GRID_ROWS and deltaY < 0 then
           SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
+        elseif SelectionY > GRID_ROWS and deltaY > 0 then
+          SelectionY = wrap1(SelectionY + deltaY - GRID_ROWS, numNamesRow) + GRID_ROWS
+        else
+          local numTotalRows = GRID_ROWS + numNamesRow
+          SelectionY = wrap1(SelectionY + deltaY, numTotalRows)
+        end
+        
+        if SelectionY <= GRID_ROWS then
+          -- Navigating letterbox
+          while SelectionX > #GRID_TO_KEY_MAP[SelectionY] do -- We use GRID_TO_KEY_MAP to get num of grid columns per row
+            SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
+          end
+        else
+          -- Navigating recent names
+          local namesCols = GetNumRecentNamesCols(SelectionY - GRID_ROWS)
+          if SelectionX > namesCols * RECENT_NAMES_GRID_WIDTH then
+            SelectionX = 1 + math.floor((namesCols - 1) * RECENT_NAMES_GRID_WIDTH + (RECENT_NAMES_GRID_WIDTH-1)/2)
+          end
         end
         selectionChanged = true
       end
       
       if selectionChanged then
+        self.EnterPressed = false -- Disregard enter trigger if selection moved
         self.SelectionX, self.SelectionY = SelectionX, SelectionY
         self:UpdateSelectionBox()
         SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)

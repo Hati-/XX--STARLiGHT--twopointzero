@@ -23,7 +23,7 @@ return Def.ActorFrame{
 			},
 			Def.Quad{
 				InitCommand=function(self)
-					self:setsize(512, 500):y(-20):diffuse(Alpha(Color.Black, 0.8))
+					self:setsize(512, 584):y(0):diffuse(Alpha(Color.Black, 0.8))
 				end,
 			},
 		},
@@ -83,7 +83,7 @@ return Def.ActorFrame{
 			SCREENMAN:GetTopScreen():StartTransitioningScreen('SM_GoToNextScreen')
 		end,
 		InitCommand=function(self)
-			self:hibernate(0.6)
+			self:y(-30):hibernate(0.6)
 		end,
 		OffCommand=function(self)
 			self:diffusealpha(0)
