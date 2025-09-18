@@ -1018,13 +1018,20 @@ local function CalculateTopAndBottomRecursively(self)
   return top, bottom
 end
 
--- Dirty hack solution, but it works for now. Just make sure we don't call it a lot.
--- NOTE: This will most likely fail if called this during InitCommand as NameEntry is not yet fully initialized!
---       Should we perhaps detect if it's called during InitCommand and warn about it?
+-- Dirty hacky solution, but it works for now to let upstream center the NameEntry.
+-- XXX: This will most likely fail if called this during InitCommand as NameEntry is not yet fully initialized!
+--      Should we perhaps detect if it's called during InitCommand and warn about it?
 function NameEntry:CalculateTopAndBottom()
   self:AssertReady('CalculateTopAndBottom')
-  local top, bottom = CalculateTopAndBottomRecursively(self)
-  local unusedBottom
+  local top, bottom
+  if self.CachedTopAndBottom then
+    -- XXX: This will be wrong if upstream changes actors within the NameEntry frame. Lets hope they know what they're
+    --      doing and will do NameEntry.CachedTopAndBottom = null to clear the cache before calling this function.
+    top, bottom = self.CachedTopAndBottom[1], self.CachedTopAndBottom[2]
+  else
+    top, bottom = CalculateTopAndBottomRecursively(self)
+    self.CachedTopAndBottom = { top, bottom }
+  end
   if self.ShowRecentNames then
     local maxRecentNamesRows = math.ceil(MAX_RECENT_NAMES / RECENT_NAMES_COLS)
     local numRecentNamesRows = GetNumRecentNamesRows()
