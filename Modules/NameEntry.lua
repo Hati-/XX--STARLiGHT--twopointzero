@@ -9,7 +9,7 @@ StarlightCache.NameEntry = NameEntry
 -- Some hardcoded configuration constants
 local MAX_RECENT_NAMES = 6
 local RECENT_NAMES_COLS = 2
-local RECENT_NAMES_MARGIN = 5
+local RECENT_NAMES_MARGIN = 25
 local SAVE_RECENT_NAMES_TO_DISK = true
 local SAVE_RECENT_NAMES_NAMESPACE = 'NameEntry_RecentNames'
 
@@ -530,7 +530,15 @@ local function CreateNameEntryFrame()
             Name = 'RecentNamesFrame',
             InitCommand = function(_self2)
               _self2:y(GRID_ROWS * GRID_CELL_HEIGHT + RECENT_NAMES_MARGIN)
-            end
+            end,
+            Def.BitmapText{
+              Name='RecentNamesHeader',
+              Font='_avenirnext lt pro bold/20px',
+              Text='RECENT DANCER NAMES:',
+              InitCommand=function(_self2)
+                _self2:align(0.5, 1):xy(GRID_COLS * GRID_CELL_WIDTH / 2, -2)
+              end
+            }
           }
         end)
         self.RecentNamesFrame = LetterBoxFrame:GetChild('RecentNamesFrame')
@@ -684,6 +692,9 @@ function NameEntry:Update()
   self:UpdateSelectionBox()
   
   if self.ShowRecentNames then
+    local header = self.RecentNamesFrame:GetChild('RecentNamesHeader')
+    header:visible(#RecentNames ~= 0)
+    
     for i = 1, MAX_RECENT_NAMES do
       local name = RecentNames[i]
       local RecentName = self.RecentNamesFrame:GetChild('RecentName' .. i)
@@ -971,5 +982,48 @@ function NameEntry:InputHandler(event)
     end
   end
 end
-	
+
+local function CalculateTopAndBottomRecursively(self)
+  local offset = self:GetY()
+  local top, bottom = 0, 0
+  
+  if self.GetChildren then -- Is ActorFrame
+    for name, children in pairs(self:GetChildren()) do
+      -- Entries can be arrays due to conflicting names. To make it easier for ourselves lets make everything an array.
+      if #children == 0 then
+        children = { children }  -- if not an array then make it an array
+      end
+      for i, child in ipairs(children) do
+        local _top, _bottom = CalculateTopAndBottomRecursively(child, p)
+        top = math.min(top - offset, _top) + offset
+        bottom = math.max(bottom - offset, _bottom) + offset
+      end
+    end
+  elseif self.GetHeight then -- Is Actor with height
+    local heightHalf = self:GetHeight() / 2
+    top = offset - heightHalf
+    bottom = offset + heightHalf
+  end
+  
+  return top, bottom
+end
+
+-- Dirty hack solution, but it works for now. Just make sure we don't call it a lot.
+-- NOTE: This will most likely fail if called this during InitCommand as NameEntry is not yet fully initialized!
+--       Should we perhaps detect if it's called during InitCommand and warn about it?
+function NameEntry:CalculateTopAndBottom()
+  self:AssertReady('CalculateTopAndBottom')
+  local top, bottom = CalculateTopAndBottomRecursively(self)
+  local unusedBottom
+  if self.ShowRecentNames then
+    local maxRecentNamesRows = math.ceil(MAX_RECENT_NAMES / RECENT_NAMES_COLS)
+    local numRecentNamesRows = GetNumRecentNamesRows()
+    bottom = bottom - (maxRecentNamesRows - numRecentNamesRows) * RECENT_NAMES_GRID_HEIGHT * GRID_CELL_HEIGHT
+    if numRecentNamesRows == 0 then
+      bottom = bottom - RECENT_NAMES_MARGIN
+    end
+  end
+  return top, bottom
+end
+
 return NameEntry
