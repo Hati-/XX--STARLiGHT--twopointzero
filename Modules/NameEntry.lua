@@ -100,6 +100,13 @@ local RECENT_NAMES_GRID_HEIGHT = 1
 
 local RecentNames
 
+local function TruncateRecentNames()
+  -- Truncate list past the max limit
+  for i = MAX_RECENT_NAMES + 1, #RecentNames do
+    RecentNames[i] = nil
+  end
+end
+
 local function SaveRecentNames()
   if SAVE_RECENT_NAMES_TO_DISK then
     local stringValue = table.concat(RecentNames, '\n')
@@ -132,13 +139,17 @@ local function LoadRecentNames()
     success = true
   end
   
-  if not RecentNames then
+  if RecentNames then
+    TruncateRecentNames()
+  else
     -- If there's no recent names stored
     RecentNames = {}
     SaveRecentNames()
   end
   return success
 end
+
+-- Load recent names on startup
 LoadRecentNames()
 
 -- These are for testing
@@ -180,16 +191,8 @@ local function AddRecentName(name)
   
   RecentNames[1] = name
   
-  -- Truncate list past the max limit
-  for i = MAX_RECENT_NAMES + 1, #RecentNames do
-    RecentNames[i] = nil
-  end
-  
+  TruncateRecentNames()
   SaveRecentNames()
-end
-
-local function GetRecentNames()
-  return RecentNames
 end
 
 local function GetNumRecentNamesRows()
