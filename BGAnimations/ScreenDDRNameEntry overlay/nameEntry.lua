@@ -5,11 +5,13 @@ setenv('keysetSDDRN' .. ToEnumShortString(player), 0)
 
 -- local DefaultName = 'STARLGHT'
 local DefaultName = 'ANONYMOUS'
+local height = 620
 
 return Def.ActorFrame{
 	Def.ActorFrame{
 		Name='Panes',
 		Def.ActorFrame{
+			Name='Background',
 			InitCommand=function(self)
 				self:shadowlength(0):zoomy(0)
 			end,
@@ -21,19 +23,23 @@ return Def.ActorFrame{
 			end,
 			Def.Sprite{
 				Texture=THEME:GetPathG('', 'ScreenSelectProfile/BG01'),
+				InitCommand=function(self)
+					self:zoomy(height/586)
+				end
 			},
 			Def.Quad{
+				Name='BackgroundInner',
 				InitCommand=function(self)
-					self:setsize(512, 584):y(0):diffuse(Alpha(Color.Black, 0.8))
+					self:setsize(512, height):y(0):diffuse(Alpha(Color.Black, 0.8))
 				end,
 			},
 		},
 		Def.ActorFrame{
 			InitCommand=function(self)
-				self:y(-291)
+				self:y(-height/2+2)
 			end,
 			OnCommand=function(self)
-				self:y(0):sleep(0.3):linear(0.3):y(-291)
+				self:y(0):sleep(0.3):linear(0.3):y(-height/2+2)
 			end,
 			OffCommand=function(self)
 				self:linear(0.1):y(0):sleep(0):diffusealpha(0)
@@ -51,7 +57,7 @@ return Def.ActorFrame{
 				self:shadowlength(0)
 			end,
 			OnCommand=function(self)
-				self:y(0):sleep(0.3):linear(0.3):y(286)
+				self:y(0):sleep(0.3):linear(0.3):y(height/2-5)
 			end,
 			OffCommand=function(self)
 				self:linear(0.1):y(0):sleep(0):diffusealpha(0)
@@ -69,6 +75,7 @@ return Def.ActorFrame{
 	},
 	NameEntry{
 		DefaultName=DefaultName,
+		-- ShowRecentNames=false,
 		Player=player,
 		AllowKeyboard=(player == PLAYER_1),
 		AllowInputCallback=function(self)
@@ -83,8 +90,15 @@ return Def.ActorFrame{
 		NextScreenCommand=function()
 			SCREENMAN:GetTopScreen():StartTransitioningScreen('SM_GoToNextScreen')
 		end,
-		InitCommand=function(self)
-			self:y(-30):hibernate(0.6)
+		BeginCommand=function(self)
+			local top, bottom = self:CalculateTopAndBottom()
+			self:y(-(top + bottom)/2)
+			
+			local bg = self:GetParent():GetChild('Panes'):GetChild('Background'):GetChild('BackgroundInner')
+			bg:setsize(bg:GetWidth(), math.min(height, bottom - top + 50))
+		end,
+		OnCommand=function(self)
+			self:hibernate(0.6)
 		end,
 		OffCommand=function(self)
 			self:diffusealpha(0)
