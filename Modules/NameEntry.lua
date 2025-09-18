@@ -427,8 +427,8 @@ local function SetConstructor(target, ctor)
   })
 end
 
-local function GenerateLetterBox()
-	local t = Def.ActorFrame{}
+local function GenerateLetterBox(properties)
+	local t = Def.ActorFrame(properties or {})
 	
 	for keyY, row in ipairs(KEY_CHARACTER_MAP) do
 		for keyX, character in ipairs(row) do
@@ -472,8 +472,8 @@ local function GenerateLetterBox()
 	return t
 end
 
-local function GenerateRecentNamesList()
-  local t = Def.ActorFrame{}
+local function GenerateRecentNamesList(properties)
+  local t = Def.ActorFrame(properties or {})
   local width = RECENT_NAMES_GRID_WIDTH * GRID_CELL_WIDTH
   local height = RECENT_NAMES_GRID_HEIGHT * GRID_CELL_HEIGHT
   
@@ -516,11 +516,25 @@ local function CreateNameEntryFrame()
   
   return Def.ActorFrame{
     InitCommand=function(_self)
+      local SelectionBoxFrame = _self:GetChild('SelectionBoxFrame')
+      local LetterBoxFrame = SelectionBoxFrame:GetChild('LetterBoxFrame')
+      
       -- We're just an sub-ActorFrame, the main ActorFrame is this actor's parent
       self = _self:GetParent()
       self.NameTextActor = _self:GetChild('NameText')
-      self.SelectionBoxActor = _self:GetChild('LetterBoxFrame'):GetChild('SelectionBox')
-      self.RecentNamesFrame = _self:GetChild('LetterBoxFrame'):GetChild('RecentNamesFrame')
+      self.SelectionBoxActor = SelectionBoxFrame:GetChild('SelectionBox')
+      
+      if self.ShowRecentNames then
+        LetterBoxFrame:AddChild(function()
+          return GenerateRecentNamesList{
+            Name = 'RecentNamesFrame',
+            InitCommand = function(_self2)
+              _self2:y(GRID_ROWS * GRID_CELL_HEIGHT + RECENT_NAMES_MARGIN)
+            end
+          }
+        end)
+        self.RecentNamesFrame = LetterBoxFrame:GetChild('RecentNamesFrame')
+      end
       
       -- Mixin() might not have been ran yet, so call the NameEntry:CheckReady() method explicitly
       NameEntry.CheckReady(self)
@@ -532,19 +546,16 @@ local function CreateNameEntryFrame()
       SCREENMAN:GetTopScreen():RemoveInputCallback(InputHandler)
     end,
     Def.ActorFrame{
-      Name='LetterBoxFrame',
+      Name='SelectionBoxFrame',
       InitCommand=function(_self)
         -- local offsetX = -(KEY_COLS * GRID_CELL_WIDTH / 2)
         local offsetX = -(GRID_COLS * GRID_CELL_WIDTH / 2)
         local offsetY = -90
         _self:xy(offsetX, offsetY)
       end,
-      GenerateLetterBox(),
-      GenerateRecentNamesList() .. {
-        Name = 'RecentNamesFrame',
-        InitCommand = function(_self)
-          _self:y(GRID_ROWS * GRID_CELL_HEIGHT + RECENT_NAMES_MARGIN)
-        end
+      Def.ActorFrame{ -- This ActorFrame is to ensure the SelectionBox is drawn over RecentNamesFrame
+        Name='LetterBoxFrame',
+        GenerateLetterBox(),
       },
       Def.Quad{
         Name='SelectionBox',
@@ -609,6 +620,7 @@ local DefaultProperties = {
   AllowKeyboard       = false,
   AllowInputCallback  = true,
   EnterCallback       = false,
+  ShowRecentNames     = true,
   KeyLeft             = 'MenuLeft',
   KeyRight            = 'MenuRight',
   KeyUp               = 'MenuUp',
@@ -649,7 +661,7 @@ function NameEntry:CheckReady()
   -- These are set during InitCommand within CreateNameEntryFrame()
   if self.NameTextActor == nil
   or self.SelectionBoxActor == nil
-  or self.RecentNamesFrame == nil then
+  or (self.ShowRecentNames and self.RecentNamesFrame == nil) then
     return false
   end
   if self.IsReady then
@@ -671,14 +683,16 @@ function NameEntry:Update()
   self.NameTextActor:settext(self.PlayerName)
   self:UpdateSelectionBox()
   
-  for i = 1, MAX_RECENT_NAMES do
-    local name = RecentNames[i]
-    local RecentName = self.RecentNamesFrame:GetChild('RecentName' .. i)
-    if name then
-      RecentName:visible(true)
-      RecentName:GetChild('Text'):settext(name)
-    else
-      RecentName:visible(false)
+  if self.ShowRecentNames then
+    for i = 1, MAX_RECENT_NAMES do
+      local name = RecentNames[i]
+      local RecentName = self.RecentNamesFrame:GetChild('RecentName' .. i)
+      if name then
+        RecentName:visible(true)
+        RecentName:GetChild('Text'):settext(name)
+      else
+        RecentName:visible(false)
+      end
     end
   end
 end
@@ -883,10 +897,13 @@ function NameEntry:InputHandler(event)
         -- Only switch between navigating within letterbox or recent names if the user tries to cross the boundary
         if SelectionY <= GRID_ROWS and deltaY < 0 then
           SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
-        elseif SelectionY > GRID_ROWS and deltaY > 0 then
+        elseif SelectionY > GRID_ROWS and deltaY > 0 and self.ShowRecentNames then
           SelectionY = wrap1(SelectionY + deltaY - GRID_ROWS, numNamesRow) + GRID_ROWS
         else
-          local numTotalRows = GRID_ROWS + numNamesRow
+          local numTotalRows = GRID_ROWS
+          if self.ShowRecentNames then
+            numTotalRows = numTotalRows + numNamesRow
+          end
           SelectionY = wrap1(SelectionY + deltaY, numTotalRows)
         end
         
