@@ -991,6 +991,7 @@ function NameEntry:InputHandler(event)
       end
     end
   end
+  return true
 end
 
 local function CalculateTopAndBottomRecursively(self)
