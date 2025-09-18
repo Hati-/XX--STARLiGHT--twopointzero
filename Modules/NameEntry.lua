@@ -629,6 +629,7 @@ local DefaultProperties = {
   AllowInputCallback  = true,
   EnterCallback       = false,
   ShowRecentNames     = true,
+  FocusRecentNames    = false,
   KeyLeft             = 'MenuLeft',
   KeyRight            = 'MenuRight',
   KeyUp               = 'MenuUp',
@@ -654,8 +655,14 @@ end
 function NameEntry:Reset()
   self.EnterPressed = false
   self.PlayerName = ''
-  self.SelectionX = 1
-  self.SelectionY = 1
+  
+  if self.ShowRecentNames and self.FocusRecentNames and #RecentNames > 0 then
+    self.SelectionX = 1
+    self.SelectionY = GRID_ROWS + 1
+  else
+    self.SelectionX = 1
+    self.SelectionY = 1
+  end
   if self.IsReady then
     self:Update()
   end
