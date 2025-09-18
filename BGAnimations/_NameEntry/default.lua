@@ -71,6 +71,7 @@ local t = Def.ActorFrame{
     end,
     loadfile(THEME:GetPathB('', '_NameEntry/frame')){
       Player=pn,
+      FocusRecentNames=true,
       AllowKeyboard=(isSoloPlayer or pn == PLAYER_1),
       AllowInputCallback=function(self)
         return getenv('NameEntryOpen' .. pn) == 1
