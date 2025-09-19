@@ -109,7 +109,7 @@ function RemoveOverlayInputCallback(callback)
 	if not OverlayScreen then
 		error('RemoveOverlayInputCallback(): Cannot be called before overlay screen object is retrieved.')
 	end
-	table.remove(inputCallbacks, callback)
+
 	OverlayScreen:RemoveInputCallback(callback)
 end
 
@@ -123,9 +123,10 @@ t[#t+1] = Def.Actor{
 	ScreenChangedMessageCommand=function()
 		-- Because overlay screens are persistent, we need to remove callbacks manually to make it behave like expected
 		if #inputCallbacks == 0 then return end		
-		for _, callback in pairs(inputCallbacks) do
+		for _, callback in ipairs(inputCallbacks) do
 			RemoveOverlayInputCallback(callback)
 		end
+		inputCallbacks[1] = nil -- clears array
 	end
 }
 
