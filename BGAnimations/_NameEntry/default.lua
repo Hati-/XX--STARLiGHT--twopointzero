@@ -42,6 +42,7 @@ local t = Def.ActorFrame{
   -- HideTweenDoneCommand, and EnterCommand etc.
   Def.ActorFrame{
     InitCommand=function(self)
+      SCREENMAN:set_input_redirected(pn, false) -- In case something went wrong
       NameEntryWrapper = self:GetParent()
       
       NameEntryWrapper:draworder(10)
