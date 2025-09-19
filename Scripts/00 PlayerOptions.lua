@@ -1378,7 +1378,7 @@ end
 function GetPartyModeOption(pn)
 	local value = getenv('PartyMode' .. ToEnumShortString(pn))
 	if value == nil then
-		value = false -- Default value
+		value = 'ON_AFTER_FIRST_STAGE' -- Default value
 		SetPartyModeOption(pn, value)
 	end
 	return value
