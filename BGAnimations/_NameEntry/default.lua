@@ -8,19 +8,33 @@ local isSoloPlayer = #enabledPlayers == 1 and enabledPlayers[1] == pn
 local NameEntryWrapper
 local NameEntry
 
+local oldRedirectState = {}
+local function SetRedirectState(player, value)
+	if oldRedirectState[player] == nil then
+		oldRedirectState[player] = SCREENMAN:get_input_redirected(player)
+	end
+	SCREENMAN:set_input_redirected(player, value)
+end
+local function RestoreRedirectState(player)
+	if oldRedirectState[player] ~= nil then
+		SCREENMAN:set_input_redirected(player, oldRedirectState[player])
+		oldRedirectState[player] = nil
+	end
+end
+
 local function OpenNameEntry()
-  SCREENMAN:set_input_redirected(pn, true)
   setenv('NameEntryOpen' .. pn, 1) -- This env lets other active InputCallbacks detect whenever NameEntry is open
+  SetRedirectState(pn, true)
   NameEntryWrapper:playcommand('Show')
 end
 local function CloseNameEntry(delay)
-  SCREENMAN:set_input_redirected(pn, false)
-  setenv('NameEntryOpen' .. pn, 0)
+  RestoreRedirectState(pn) 
   if delay then
     NameEntryWrapper:sleep(delay):queuecommand('Hide')
   else
     NameEntryWrapper:playcommand('Hide')
   end
+  setenv('NameEntryOpen' .. pn, 0)
 end
 
 local t = Def.ActorFrame{
