@@ -585,7 +585,7 @@ local function CreateNameEntryFrame()
       Name='NameText',
       Font='DDRName Large',
       InitCommand=function(_self)
-        _self:halign(1):xy(256, -120)
+        _self:halign(1):xy(256, -120):maxwidth(360)
       end,
     },
   }
