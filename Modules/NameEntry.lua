@@ -633,6 +633,7 @@ local DefaultProperties = {
   EnterCallback       = false,
   ShowRecentNames     = true,
   FocusRecentNames    = false,
+  PreviewPresetNames  = true,
   KeyLeft             = 'MenuLeft',
   KeyRight            = 'MenuRight',
   KeyUp               = 'MenuUp',
@@ -731,6 +732,9 @@ function NameEntry:UpdateSelectionBox()
   -- SCREENMAN:SystemMessage('GRID ' .. self.SelectionX .. ',' .. self.SelectionY .. ' = KEY ' .. keyX .. ',' .. keyY)
   local x, y, width, height = GetSelectionBoxProperties(keyX, keyY)
   self.SelectionBoxActor:xy(x, y):setsize(width, height)
+  if self.PreviewPresetNames then
+    self:PreviewSelection()
+  end
 end
 
 function NameEntry:SelectEnterKey()
@@ -738,6 +742,29 @@ function NameEntry:SelectEnterKey()
   self.SelectionX = ENTER_KEY_POS.X
   self.SelectionY = ENTER_KEY_POS.Y
   self:UpdateSelectionBox()
+end
+
+function NameEntry:PreviewSelection()
+  self:AssertReady('PreviewSelection')
+  local name
+  local keyX, keyY = GridXYToKeyXY(self.SelectionX, self.SelectionY)
+  if keyY <= KEY_ROWS then
+    local selection = KEY_CHARACTER_MAP[keyY][keyX]
+    if selection == 'Enter' then
+      if string.len(self.PlayerName) == 0 then
+        name = self.DefaultName
+      end
+    end
+  else
+    local nameIndex = (keyY - KEY_ROWS - 1) * RECENT_NAMES_COLS + keyX
+    name = RecentNames[nameIndex]
+  end
+  
+  if name then
+    self.NameTextActor:settext(name)
+  else
+    self.NameTextActor:settext(self.PlayerName)
+  end
 end
 
 function NameEntry:SetText(name)
