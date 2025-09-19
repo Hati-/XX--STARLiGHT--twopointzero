@@ -11,10 +11,6 @@ end
 local OpenNameEntry
 local playerIsReady = {}
 
-local function IsInPartyMode(player)
-	return GetPartyModeOption(player)
-end
-
 local function SetPlayerReadyState(player, value)
 	if playerIsReady[player] == value then return end
 	playerIsReady[player] = value
@@ -29,7 +25,7 @@ local function SetPlayerReadyState(player, value)
 	local anyPlayersInPartyMode = false
 	for _, pn in ipairs(GAMESTATE:GetHumanPlayers()) do
 		allPlayersAreReady = allPlayersAreReady and playerIsReady[pn]
-		anyPlayersInPartyMode = anyPlayersInPartyMode or IsInPartyMode(pn)
+		anyPlayersInPartyMode = anyPlayersInPartyMode or GetPlayerPartyMode(pn)
 	end
 	
 	if anyPlayersInPartyMode and allPlayersAreReady then
@@ -44,7 +40,7 @@ local function DiffOverlayInputHandler(event)
 	local player, button = event.PlayerNumber, event.button
 	if not button or button == '' then return end -- We only care about GameButtons being pressed
 	if not player then return end
-	if not IsInPartyMode(player) then return end
+	if not GetPlayerPartyMode(player) then return end
 	if getenv('NameEntryOpen' .. player) == 1 then return end
 	if getenv('OPList') == 1 then	return end
 	local pressType = ToEnumShortString(event.type)

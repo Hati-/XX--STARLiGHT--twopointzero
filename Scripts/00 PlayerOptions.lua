@@ -1384,6 +1384,17 @@ function SetPartyModeOption(pn, value)
 	setenv('PartyMode' .. ToEnumShortString(pn), value)
 end
 
+function GetPlayerPartyMode(pn)
+	local value = GetPartyModeOption(pn)
+	if value == 'ON_AFTER_FIRST_STAGE' then
+		return (STATSMAN:GetStagesPlayed() > 0)
+	elseif type(value) == 'boolean' then
+		return value
+	else
+		error('Unknown party mode option "' .. tostring(value) .. '"')
+	end
+end
+
 function PartyMode()
 	local t = {
 		Name='Party Mode',
@@ -1391,8 +1402,8 @@ function PartyMode()
 		SelectType='SelectOne',
 		ExportOnChange=false,
 		Default=false,
-		Choices={ 'Off', 'On' },
-		Values={ false, true },
+		Choices={ 'Off', 'On after first stage', 'On' },
+		Values={ false, 'ON_AFTER_FIRST_STAGE', true },
 		OneChoiceForAllPlayers=false,
 		LoadSelections=function(self, list, pn)
 			local partyMode = GetPartyModeOption(pn)
