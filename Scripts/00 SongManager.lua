@@ -1208,24 +1208,24 @@ function DanceStageSong()
   local danceStage = songDanceStageTable[fullSongTitle]
   if danceStage then
     return danceStage
-  else
-    local RDS = math.random(1, 8)
-    if RDS == 1 then
-      return "(X) BOOM BOOM BOOM"
-    elseif RDS == 2 then
-      return "(X2) BOOM LIGHT"
-    elseif RDS == 3 then
-      return "(X) CRYSTALDIUM"
-    elseif RDS == 4 then
-      return "(X2) CYBER"
-    elseif RDS == 5 then
-      return "(X) DANCING RAYS"
-    elseif RDS == 6 then
-      return "(X) DAWN STREETS"
-    elseif RDS == 7 then
-      return "(X) LOVE SWEETS"
-    elseif RDS == 8 then
-      return "(X) CAPTURE ME"
-    end
+  -- else
+  --   local RDS = math.random(1, 8)
+  --   if RDS == 1 then
+  --     return "(X) BOOM BOOM BOOM"
+  --   elseif RDS == 2 then
+  --     return "(X2) BOOM LIGHT"
+  --   elseif RDS == 3 then
+  --     return "(X) CRYSTALDIUM"
+  --   elseif RDS == 4 then
+  --     return "(X2) CYBER"
+  --   elseif RDS == 5 then
+  --     return "(X) DANCING RAYS"
+  --   elseif RDS == 6 then
+  --     return "(X) DAWN STREETS"
+  --   elseif RDS == 7 then
+  --     return "(X) LOVE SWEETS"
+  --   elseif RDS == 8 then
+  --     return "(X) CAPTURE ME"
+  --   end
   end
 end
