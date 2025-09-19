@@ -96,4 +96,38 @@ t[#t+1] = Def.ActorFrame {
 	HideSystemMessageMessageCommand = function(s) s:finishtweening() end,
 };
 
+local OverlayScreen
+local inputCallbacks = {}
+function AddOverlayInputCallback(callback)
+	if not OverlayScreen then
+		error('AddOverlayInputCallback(): Cannot be called before overlay screen object is retrieved.')
+	end
+	table.insert(inputCallbacks, callback)
+	OverlayScreen:AddInputCallback(callback)
+end
+function RemoveOverlayInputCallback(callback)
+	if not OverlayScreen then
+		error('RemoveOverlayInputCallback(): Cannot be called before overlay screen object is retrieved.')
+	end
+
+	OverlayScreen:RemoveInputCallback(callback)
+end
+
+t[#t+1] = Def.Actor{
+	BeginCommand=function(self)
+		OverlayScreen = self:GetParent():GetParent()
+		if not OverlayScreen or OverlayScreen:GetName() ~= Var('LoadingScreen') then
+			error('Failed to get overlay screen! AddOverlayInputCallback() and RemoveOverlayInputCallback() will not work!')
+		end
+	end,
+	ScreenChangedMessageCommand=function()
+		-- Because overlay screens are persistent, we need to remove callbacks manually to make it behave like expected
+		if #inputCallbacks == 0 then return end		
+		for _, callback in ipairs(inputCallbacks) do
+			RemoveOverlayInputCallback(callback)
+		end
+		inputCallbacks[1] = nil -- clears array
+	end
+}
+
 return t

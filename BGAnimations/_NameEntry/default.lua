@@ -8,26 +8,41 @@ local isSoloPlayer = #enabledPlayers == 1 and enabledPlayers[1] == pn
 local NameEntryWrapper
 local NameEntry
 
+local oldRedirectState = {}
+local function SetRedirectState(player, value)
+	if oldRedirectState[player] == nil then
+		oldRedirectState[player] = SCREENMAN:get_input_redirected(player)
+	end
+	SCREENMAN:set_input_redirected(player, value)
+end
+local function RestoreRedirectState(player)
+	if oldRedirectState[player] ~= nil then
+		SCREENMAN:set_input_redirected(player, oldRedirectState[player])
+		oldRedirectState[player] = nil
+	end
+end
+
 local function OpenNameEntry()
-  SCREENMAN:set_input_redirected(pn, true)
   setenv('NameEntryOpen' .. pn, 1) -- This env lets other active InputCallbacks detect whenever NameEntry is open
+  SetRedirectState(pn, true)
   NameEntryWrapper:playcommand('Show')
 end
 local function CloseNameEntry(delay)
-  SCREENMAN:set_input_redirected(pn, false)
-  setenv('NameEntryOpen' .. pn, 0)
+  RestoreRedirectState(pn) 
   if delay then
     NameEntryWrapper:sleep(delay):queuecommand('Hide')
   else
     NameEntryWrapper:playcommand('Hide')
   end
+  setenv('NameEntryOpen' .. pn, 0)
 end
 
 local t = Def.ActorFrame{
-  -- Simple ActorFrame wrapper so upstream can add their own InitCommand, ShowCommand, HideCommand, and
-  -- HideTweenDoneCommand etc.
+  -- Simple ActorFrame wrapper so upstream can add their own InitCommand, ShowCommand, HideCommand,
+  -- HideTweenDoneCommand, and EnterCommand etc.
   Def.ActorFrame{
     InitCommand=function(self)
+      SCREENMAN:set_input_redirected(pn, false) -- In case something went wrong
       NameEntryWrapper = self:GetParent()
       
       NameEntryWrapper:draworder(10)
@@ -80,6 +95,9 @@ local t = Def.ActorFrame{
         -- Have a small close delay so the user can see what name gets used when it's a preset default/recent name
         local delay = params.IsPresetName and 0.5 or 0.1
         CloseNameEntry(delay)
+        
+        -- Propogate Enter callback upstream
+        NameEntryWrapper:playcommand('Enter')
       end,
       InitCommand=function(self)
         -- Since we're just passing this options table to the NameEntry module, then this InitCommand

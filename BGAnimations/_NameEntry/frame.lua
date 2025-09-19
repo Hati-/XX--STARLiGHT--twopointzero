@@ -8,7 +8,7 @@ if not opts.DefaultName then
   opts.DefaultName = 'ANONYMOUS'
 end
 if not opts.Text then
-	opts.Text = 'Change the DANCER NAME \nused when saving your score.'
+	opts.Text = 'Enter the DANCER NAME to be\nshown when saving your score.'
 end
 
 local tweenTime = 0.1

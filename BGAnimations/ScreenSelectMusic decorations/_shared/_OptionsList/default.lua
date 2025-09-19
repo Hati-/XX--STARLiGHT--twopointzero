@@ -449,29 +449,6 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
             },
         }
     end]]
-    
-    -- NameEntry
-    local NameEntry, OpenNameEntry = loadfile(THEME:GetPathB('', '_NameEntry'))(pn)
-    t[#t+1] = NameEntry .. {
-        InitCommand=function(self)
-            local offsetX
-            if IsUsingWideScreen() then
-                offsetX = 566
-            else
-                offsetX = 360
-            end
-            if pn == PLAYER_1 then
-                offsetX = offsetX * -1
-            end
-            self:xy(_screen.cx + offsetX, _screen.cy)
-        end,
-        ShowCommand=function()
-            OptionsListActor:visible(false)
-        end,
-        HideTweenDoneCommand=function()
-            OptionsListActor:visible(true)
-        end,
-    }
 
     t[#t+1] = Def.ActorFrame{
         InitCommand=function(s)
@@ -553,7 +530,18 @@ for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
                 if params.Type == 'OptionsListStart' and OptionsListMenu == 'SongMenu' then
                     local menuItems = GetOptionListItems('SongMenu')
                     if menuItems[params.Selection + 1] == 'ChangeProfileName' then
-                        OpenNameEntry()
+                        -- OpenNameEntry is defined in BGAnimations\ScreenSelectMusic decorations\default.lua
+                        local OpenNameEntry = self.ctx.OpenNameEntry
+                        if OpenNameEntry then
+                            OpenNameEntry(pn, {
+                                ShowCommand=function()
+                                    OptionsListActor:visible(false)
+                                end,
+                                HideTweenDoneCommand=function()
+                                    OptionsListActor:visible(true)
+                                end,
+                            })
+                        end
                     end
                 end
 
