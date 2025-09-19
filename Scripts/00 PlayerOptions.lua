@@ -1371,3 +1371,45 @@ function OptionRowTargetScore()
 	return t
 end
 
+function GetPartyModeOption(pn)
+	local value = getenv('PartyMode' .. ToEnumShortString(pn))
+	if value == nil then
+		value = false -- Default value
+		SetPartyModeOption(pn, value)
+	end
+	return value
+end
+
+function SetPartyModeOption(pn, value)
+	setenv('PartyMode' .. ToEnumShortString(pn), value)
+end
+
+function PartyMode()
+	local t = {
+		Name='Party Mode',
+		LayoutType='ShowAllInRow',
+		SelectType='SelectOne',
+		ExportOnChange=false,
+		Default=false,
+		Choices={ 'Off', 'On' },
+		Values={ false, true },
+		OneChoiceForAllPlayers=false,
+		LoadSelections=function(self, list, pn)
+			local partyMode = GetPartyModeOption(pn)
+			for i, value in ipairs(self.Values) do
+				if value == partyMode then
+					list[i] = true
+				end
+			end
+		end,
+		SaveSelections = function(self, list, pn)
+			for i, value in ipairs(self.Values) do
+				if list[i] then
+					SetPartyModeOption(pn, value)
+				end
+			end
+		end,
+	}
+	setmetatable(t, t)
+	return t
+end

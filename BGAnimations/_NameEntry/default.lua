@@ -24,8 +24,8 @@ local function CloseNameEntry(delay)
 end
 
 local t = Def.ActorFrame{
-  -- Simple ActorFrame wrapper so upstream can add their own InitCommand, ShowCommand, HideCommand, and
-  -- HideTweenDoneCommand etc.
+  -- Simple ActorFrame wrapper so upstream can add their own InitCommand, ShowCommand, HideCommand,
+  -- HideTweenDoneCommand, and EnterCommand etc.
   Def.ActorFrame{
     InitCommand=function(self)
       NameEntryWrapper = self:GetParent()
@@ -80,6 +80,9 @@ local t = Def.ActorFrame{
         -- Have a small close delay so the user can see what name gets used when it's a preset default/recent name
         local delay = params.IsPresetName and 0.5 or 0.1
         CloseNameEntry(delay)
+        
+        -- Propogate Enter callback upstream
+        NameEntryWrapper:playcommand('Enter')
       end,
       InitCommand=function(self)
         -- Since we're just passing this options table to the NameEntry module, then this InitCommand

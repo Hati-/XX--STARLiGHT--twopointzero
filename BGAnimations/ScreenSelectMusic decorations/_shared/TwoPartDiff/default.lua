@@ -8,38 +8,103 @@ if ThemePrefs.Get("SV") == "onepointzero" then
 	ver = "1_"
 end
 
+local OpenNameEntry
+local playerIsReady = {}
 
-local keyset={false,false}
+local function IsInPartyMode(player)
+	return GetPartyModeOption(player)
+end
 
-local function DiffInputHandler(event)
-	local pn= event.PlayerNumber
-	local button = event.button
-	if event.type == "InputEventType_Release" then return end
+local function SetPlayerReadyState(player, value)
+	if playerIsReady[player] == value then return end
+	playerIsReady[player] = value
 	
-	if (button == "Start") and GAMESTATE:IsPlayerEnabled(pn) and not keyset[pn] and getenv("OPList") == 0 then
-		keyset[pn] = true
-		MESSAGEMAN:Broadcast("OK"..pn)
+	if not value then
+		MESSAGEMAN:Broadcast('TwoPartPlayerUnready'..ToEnumShortString(player))	
+		return
+	end
+	MESSAGEMAN:Broadcast('TwoPartPlayerReady'..ToEnumShortString(player))
+	
+	local allPlayersAreReady = true
+	local anyPlayersInPartyMode = false
+	for _, pn in ipairs(GAMESTATE:GetHumanPlayers()) do
+		allPlayersAreReady = allPlayersAreReady and playerIsReady[pn]
+		anyPlayersInPartyMode = anyPlayersInPartyMode or IsInPartyMode(pn)
+	end
+	
+	if anyPlayersInPartyMode and allPlayersAreReady then
+		-- XXX: Doing this will skip the 2-player Routine steps selection and validation logic unless we handle that
+		-- ourselves. Sadly we have no other option if we want to trigger ScreenSelectMusic::MenuStart() from Lua. See:
+		-- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ScreenSelectMusic.cpp#L1381
+		SCREENMAN:GetTopScreen():PostScreenMessage('SM_MenuTimer', 0)
+	end
+end
+
+local function DiffOverlayInputHandler(event)
+	local player, button = event.PlayerNumber, event.button
+	if not button or button == '' then return end -- We only care about GameButtons being pressed
+	if not player then return end
+	if not IsInPartyMode(player) then return end
+	if getenv('NameEntryOpen' .. player) == 1 then return end
+	if getenv('OPList') == 1 then	return end
+	local pressType = ToEnumShortString(event.type)
+	
+	-- If the player is ready then block all inputs except Select to unready (mimics Stepmania behavior)
+	if playerIsReady[player] then
+		if button == 'Select' and pressType == 'FirstPress' then
+			SetPlayerReadyState(player, false)
+		end
+		return true
+	end
+	
+	if button == 'Start' and pressType == 'FirstPress' then
+		OpenNameEntry(player, {
+			EnterCommand=function(self)
+				SetPlayerReadyState(player, true)
+			end
+		})
+		return true -- Blocks ScreenSelectMusic::MenuStart() from being called later this frame
 	end
 end
 
 local af = Def.ActorFrame{
-	InitCommand=function(s) s:visible(ThemePrefs.Get("ShowDiffSelect")) end,
-	StartSelectingStepsMessageCommand=function(s)
-		s:sleep(0.5):queuecommand("Add")
+	InitCommand=function(self)
+		self:visible(ThemePrefs.Get('ShowDiffSelect'))
+	end,
+	BeginCommand=function(self)
+		OpenNameEntry = self.ctx.OpenNameEntry
+	end,
+	StartSelectingStepsMessageCommand=function(self)
+		self:playcommand('Add')
+		self:sleep(0.5):queuecommand('SetOPStop0')
+	end,
+	StepsChosenMessageCommand=function(self, params)
+		SetPlayerReadyState(params.Player, true)
+	end,
+	StepsUnchosenMessageCommand=function(self, params)
+		SetPlayerReadyState(params.Player, false)
 	end,
 	SongUnchosenMessageCommand=function(self)
-		self:playcommand("Remove")
-	end,
-	RemoveCommand=function(self)
-		SCREENMAN:GetTopScreen():RemoveInputCallback(DiffInputHandler)
-		setenv("OPStop",1)
-	end,
-	AddCommand=function(self)
-		SCREENMAN:GetTopScreen():AddInputCallback(DiffInputHandler)
-		setenv("OPStop",0)
+		self:playcommand('Remove')
 	end,
 	OffCommand=function(self)
-		self:playcommand("Remove")
+		self:playcommand('Remove')
+	end,
+	AddCommand=function(self)
+		AddOverlayInputCallback(DiffOverlayInputHandler)
+	end,
+	SetOPStop0Command=function()
+		 -- The code handling this env is completely broken, but I'm still mimicing how the old TwoPart code sets it
+		 -- anyway because we don't wanna make this functionality even more broken then it already is. /s
+		setenv('OPStop', 0)
+	end,
+	RemoveCommand=function(self)
+		RemoveOverlayInputCallback(DiffOverlayInputHandler)
+		setenv('OPStop', 1)
+		
+		for _, pn in ipairs(GAMESTATE:GetHumanPlayers()) do
+			SetPlayerReadyState(pn, false)
+		end
 	end,
 	--[[Def.Quad{
 		InitCommand=function(s)
@@ -365,14 +430,22 @@ local function genScrollerFrame(pn)
 			Def.Sprite{
 				Texture="cursor",
 				Name="Highlight",
-				InitCommand=function(s) s:visible(false):diffuseramp():effectcolor1(Alpha(PlayerColor(pn),0)):effectcolor2(Alpha(PlayerColor(pn),1)):effectclock("beatnooffset") end,
+				InitCommand=function(self)
+					self:visible(false):playcommand('Anim')
+				end,
+				AnimCommand=function(self)
+					self:diffuseramp():effectcolor1(Alpha(PlayerColor(pn), 0)):effectcolor2(Alpha(PlayerColor(pn), 1)):effectclock('beatnooffset')
+				end,
 				CheckItemCommand=function (self)
 					if not self.indexValue then return end
 					local scrollerActor = self:GetParent():GetParent()
 					self:visible( self.indexValue == scrollerActor:GetDestinationItem() )
 				end,
-				["OK"..pn.."MessageCommand"]=function(self)
+				['TwoPartPlayerReady'..ToEnumShortString(pn)..'MessageCommand']=function(self)
 					self:stopeffect():diffuse(PlayerColor(pn))
+				end,
+				['TwoPartPlayerUnready'..ToEnumShortString(pn)..'MessageCommand']=function(self)
+					self:playcommand('Anim')
 				end,
 			},
 			Def.Sprite{
@@ -465,8 +538,11 @@ for _,pn in pairs(GAMESTATE:GetEnabledPlayers()) do
 		Text="Please wait...",
 		InitCommand=function(s) s:diffusealpha(0):y(60):strokecolor(Color.Black):sleep(0.4) end,
 		AnimCommand=function(s) s:finishtweening():cropright(0.2):linear(0.5):cropright(0):queuecommand("Anim") end,
-		["OK"..pn.."MessageCommand"]=function(s)
-			s:x(-100):decelerate(0.4):x(0):diffusealpha(1):queuecommand("Anim")
+		['TwoPartPlayerReady'..ToEnumShortString(pn)..'MessageCommand']=function(self)
+			self:x(-100):decelerate(0.4):x(0):diffusealpha(1):queuecommand('Anim')
+		end,
+		['TwoPartPlayerUnready'..ToEnumShortString(pn)..'MessageCommand']=function(self)
+			self:playcommand('Remove')
 		end,
 		RemoveCommand=function (self)
 			self:stoptweening():decelerate(0.4):x(0):diffusealpha(0)
