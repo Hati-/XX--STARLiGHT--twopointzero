@@ -5,10 +5,46 @@ end
 
 local screen = Var"LoadingScreen"
 
+local heldButtonsPerPlayer = {}
+local function SetHeld(pn, button, state)
+  local heldButtons = heldButtonsPerPlayer[pn]
+  if not heldButtons then
+    heldButtons = {}
+    heldButtonsPerPlayer[pn] = heldButtons
+  end
+  heldButtons[button] = state
+end
+local function IsHeld(pn, button)
+  local heldButtons = heldButtonsPerPlayer[pn]
+  if not heldButtons then return false end
+  return not not heldButtons[button]
+end
+
 local function InputHandler(event)
   local player = event.PlayerNumber
   local MusicWheel = SCREENMAN:GetTopScreen("ScreenSelectMusic"):GetChild("MusicWheel");
   local overlay = SCREENMAN:GetTopScreen()
+  local button = event.GameButton
+  
+  if button and button ~= '' then
+    local pressType = ToEnumShortString(event.type)
+    if pressType == 'FirstPress' or pressType == 'Repeat' then
+      SetHeld(player, button, true)
+    elseif pressType == 'Release' then
+      SetHeld(player, button, false)
+    end
+    
+    -- Close song group as soon as we get the FirstPress while holding down Select. "@Select-MenuUp" CodeDetector only 
+    -- works if we release Select just after the FirstPress. Doing this in an InputCallback makes it more responsive.
+    if MusicWheel and IsHeld(player, 'Select') and button == 'MenuUp' and pressType == 'FirstPress' then
+      MusicWheel:SetOpenSection('')
+      
+      if ThemePrefs.Get('WheelType') == 'A' then
+        MusicWheel:Move(1) -- Move one step down to cancel out the default MenuUp action
+      end
+    end
+  end
+  
   if event.type == "InputEventType_Release" then return false end
   if event.DeviceInput.button == "DeviceButton_left mouse button" then
     MESSAGEMAN:Broadcast("MouseLeftClick")
@@ -77,6 +113,7 @@ return Def.ActorFrame{
   OffCommand=function(self) 
     SCREENMAN:GetTopScreen():RemoveInputCallback(InputHandler)
     SCREENMAN:GetTopScreen():RemoveInputCallback(DDRInput(self))
+    heldButtonsPerPlayer = {}
   end,
   SongChosenMessageCommand=function(self) setenv("DList",1) self:playcommand("Off") end;
   SongUnchosenMessageCommand=function(self)
