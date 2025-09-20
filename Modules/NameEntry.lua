@@ -81,12 +81,14 @@ for i, character in ipairs(SPECIAL_CHARACTERS) do
 end
 
 local ENTER_KEY_POS = {}
+local BACKSAPCE_KEY_POS = {}
 local ALLOWED_CHARACTERS_LOOKUP = {}
 for keyY, row in ipairs(KEY_CHARACTER_MAP) do
 	for keyX, character in ipairs(row) do
     if character == 'Enter' then
-      ENTER_KEY_POS.X = keyX
-      ENTER_KEY_POS.Y = keyY
+      ENTER_KEY_POS.X, ENTER_KEY_POS.Y = keyX, keyY
+    elseif character == '←' then
+      BACKSAPCE_KEY_POS.X, BACKSAPCE_KEY_POS.Y = keyX, keyY
     end
 		if not SPECIAL_CHARACTERS_LOOKUP[character] then
 			ALLOWED_CHARACTERS_LOOKUP[character:lower()] = character
@@ -537,9 +539,9 @@ local function CreateNameEntryFrame()
             Def.BitmapText{
               Name='RecentNamesHeader',
               Font='_avenirnext lt pro bold/20px',
-              Text='RECENT DANCER NAMES:',
+              Text='OR SELECT A RECENT DANCER NAME:',
               InitCommand=function(_self2)
-                _self2:align(0.5, 1):xy(GRID_COLS * GRID_CELL_WIDTH / 2, -2)
+                _self2:align(0.5, 1):xy(GRID_COLS * GRID_CELL_WIDTH / 2, -2):strokecolor(Color.Black)
               end
             }
           }
@@ -739,8 +741,13 @@ end
 
 function NameEntry:SelectEnterKey()
   self:AssertReady('SelectEnterKey')
-  self.SelectionX = ENTER_KEY_POS.X
-  self.SelectionY = ENTER_KEY_POS.Y
+  self.SelectionX, self.SelectionY = ENTER_KEY_POS.X, ENTER_KEY_POS.Y 
+  self:UpdateSelectionBox()
+end
+
+function NameEntry:SelectBackspaceKey()
+  self:AssertReady('SelectBackspaceKey')
+  self.SelectionX, self.SelectionY = BACKSAPCE_KEY_POS.X, BACKSAPCE_KEY_POS.Y 
   self:UpdateSelectionBox()
 end
 
@@ -794,9 +801,10 @@ end
 
 function NameEntry:NameBackspace()
   self:AssertReady('NameBackspace')
-  if string.len(self.PlayerName) <= 0 then return end
-  self.PlayerName = string.sub(self.PlayerName, 1, -2)
-  self.NameTextActor:settext(self.PlayerName)
+  if string.len(self.PlayerName) > 0 then
+    self.PlayerName = string.sub(self.PlayerName, 1, -2)
+    self.NameTextActor:settext(self.PlayerName)
+  end
   SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
 end
 
@@ -996,6 +1004,9 @@ function NameEntry:InputHandler(event)
     
       if buttonLower == 'backspace' and (pressType == PRESS_FIRST or pressType == PRESS_REPEAT)  then
         self:NameBackspace()
+        if self.SelectionY > GRID_ROWS then
+          self:SelectBackspaceKey()
+        end
       elseif pressType == PRESS_FIRST then
         local char = DeviceButtonToChar(button, true)
         if not char then return end
