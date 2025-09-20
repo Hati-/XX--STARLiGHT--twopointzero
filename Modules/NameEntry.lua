@@ -539,9 +539,9 @@ local function CreateNameEntryFrame()
             Def.BitmapText{
               Name='RecentNamesHeader',
               Font='_avenirnext lt pro bold/20px',
-              Text='RECENT DANCER NAMES:',
+              Text='OR SELECT A RECENT DANCER NAME:',
               InitCommand=function(_self2)
-                _self2:align(0.5, 1):xy(GRID_COLS * GRID_CELL_WIDTH / 2, -2)
+                _self2:align(0.5, 1):xy(GRID_COLS * GRID_CELL_WIDTH / 2, -2):strokecolor(Color.Black)
               end
             }
           }
