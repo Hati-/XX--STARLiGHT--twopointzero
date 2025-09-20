@@ -350,7 +350,8 @@ function UpdateDanceStageFromSelection()
 end
 
 function DoShowSongBackground()
-  return PotentialModSong() or (HasVideo() and VoverS() and not VideoStage())
+  -- return PotentialModSong() or (HasVideo() and VoverS() and not VideoStage())
+  return PotentialModSong() or (HasVideo() and VoverS())
 end
 
 --[[
