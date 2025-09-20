@@ -37,6 +37,7 @@ return Def.ActorFrame{
       local Artist = s:GetChild("Info"):GetChild("Artist")
       local SongLength = s:GetChild("Info"):GetChild("SongLength")
       local SongLengthSymbol = s:GetChild("Info"):GetChild("SongLengthSymbol")
+      local HasVideoIndicator = s:GetChild("Info"):GetChild("HasVideoIndicator")
       if not mw then return end
       if song then
           Jacket:Load(jk.GetSongGraphicPath(song,"Jacket"))
@@ -47,6 +48,12 @@ return Def.ActorFrame{
           local minutes = math.floor(seconds / 60)
           SongLength:settextf('%01d:%02d', minutes, seconds - minutes * 60)
           SongLengthSymbol:x(SongLength:GetX() - SongLength:GetWidth()*SongLength:GetZoomX())
+          if HasVideo() then
+            HasVideoIndicator:visible(true)
+            HasVideoIndicator:x(SongLengthSymbol:GetX() - SongLengthSymbol:GetWidth()*SongLengthSymbol:GetZoomX())
+          else
+            HasVideoIndicator:visible(false)
+          end
       end
       Jacket:scaletofit(-120,-120,120,120)
   end,
@@ -116,6 +123,12 @@ return Def.ActorFrame{
       Font='Common Normal',
       Text='♪',
       InitCommand=function(s) s:halign(1):zoom(1.1):xy(520, 5) end,
+    },
+    Def.BitmapText{
+      Name='HasVideoIndicator',
+      Font='_avenirnext lt pro bold/20px',
+      Text='[VIDEO] ',
+      InitCommand=function(s) s:halign(1):zoom(1):xy(495, 3) end,
     },
   },
   loadfile(THEME:GetPathB("ScreenSelectMusic","decorations/_shared/_CDTITLE.lua"))(0,50)..{
