@@ -741,32 +741,39 @@ end
 
 function NameEntry:SelectEnterKey()
   self:AssertReady('SelectEnterKey')
+  local selectionChanged = self.SelectionX ~= ENTER_KEY_POS.X or self.SelectionY ~= ENTER_KEY_POS.Y
   self.SelectionX, self.SelectionY = ENTER_KEY_POS.X, ENTER_KEY_POS.Y 
-  self:UpdateSelectionBox()
+  if selectionChanged then
+    self:UpdateSelectionBox()
+    SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
+  end
 end
 
 function NameEntry:SelectBackspaceKey()
   self:AssertReady('SelectBackspaceKey')
-  self.SelectionX, self.SelectionY = BACKSAPCE_KEY_POS.X, BACKSAPCE_KEY_POS.Y 
-  self:UpdateSelectionBox()
+  local selectionChanged = self.SelectionX ~= BACKSAPCE_KEY_POS.X or self.SelectionY ~= BACKSAPCE_KEY_POS.Y
+  self.SelectionX, self.SelectionY = BACKSAPCE_KEY_POS.X, BACKSAPCE_KEY_POS.Y
+  if selectionChanged then
+    self:UpdateSelectionBox()
+    SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
+  end
+end
+
+function NameEntry:GetPresetName(gridX, gridY)
+  local keyX, keyY = GridXYToKeyXY(gridX, gridY)
+  if gridY <= GRID_ROWS then
+    if keyX == ENTER_KEY_POS.X and keyY == ENTER_KEY_POS.Y and string.len(self.PlayerName) == 0 then
+      return self.DefaultName, true
+    end
+  else
+    local nameIndex = (keyY - KEY_ROWS - 1) * RECENT_NAMES_COLS + keyX
+    return RecentNames[nameIndex], false
+  end
 end
 
 function NameEntry:PreviewSelection()
   self:AssertReady('PreviewSelection')
-  local name
-  local keyX, keyY = GridXYToKeyXY(self.SelectionX, self.SelectionY)
-  if keyY <= KEY_ROWS then
-    local selection = KEY_CHARACTER_MAP[keyY][keyX]
-    if selection == 'Enter' then
-      if string.len(self.PlayerName) == 0 then
-        name = self.DefaultName
-      end
-    end
-  else
-    local nameIndex = (keyY - KEY_ROWS - 1) * RECENT_NAMES_COLS + keyX
-    name = RecentNames[nameIndex]
-  end
-  
+  local name = self:GetPresetName(self.SelectionX, self.SelectionY)
   if name then
     self.NameTextActor:settext(name)
   else
@@ -790,9 +797,6 @@ function NameEntry:NameAppend(char)
     self.NameTextActor:settext(self.PlayerName)
     nameChanged = true
   end
-  if string.len(self.PlayerName) == MAX_NAME_LENGTH then
-    self:SelectEnterKey()
-  end
   if nameChanged then
     SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
   end
@@ -803,12 +807,12 @@ function NameEntry:NameBackspace()
   self:AssertReady('NameBackspace')
   if string.len(self.PlayerName) > 0 then
     self.PlayerName = string.sub(self.PlayerName, 1, -2)
-    self.NameTextActor:settext(self.PlayerName)
+    SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
   end
-  SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
+  self.NameTextActor:settext(self.PlayerName)
 end
 
-function NameEntry:NameEnter(name)
+function NameEntry:NameEnter()
   self:AssertReady('NameEnter')
   local params = {
     Player = self.Player,
@@ -818,14 +822,13 @@ function NameEntry:NameEnter(name)
     IsPresetName = false,
   }
   
+  local name, isDefaultName = self:GetPresetName(self.SelectionX, self.SelectionY)
   if name then
-    params.IsRecentName = true
-  elseif string.len(self.PlayerName) == 0 then
-    params.IsDefaultName = true
-    name = self.DefaultName
-  end
-  
-  if name then
+    if isDefaultName then
+      params.IsDefaultName = true
+    else
+      params.IsRecentName = true
+    end
     params.IsPresetName = true
     params.Name = name
     self.PlayerName = name
@@ -889,6 +892,9 @@ function NameEntry:InputHandler(event)
           self:NameBackspace()
         elseif pressType == PRESS_FIRST then
           self:NameAppend(selection)
+          if string.len(self.PlayerName) >= MAX_NAME_LENGTH then
+            self:SelectEnterKey()
+          end
         end
       else
         -- Recent names
@@ -896,9 +902,7 @@ function NameEntry:InputHandler(event)
           self.EnterPressed = true
         elseif pressType == PRESS_RELEASE then
           if self.EnterPressed then
-            local nameIndex = (keyY - KEY_ROWS - 1) * RECENT_NAMES_COLS + keyX
-            local name = RecentNames[nameIndex]
-            self:NameEnter(name)
+            self:NameEnter()
           end
           self.EnterPressed = false
         end
@@ -1003,9 +1007,18 @@ function NameEntry:InputHandler(event)
       self.EnterPressed = false -- Disregard enter trigger if another key pressed while enter is held down
     
       if buttonLower == 'backspace' and (pressType == PRESS_FIRST or pressType == PRESS_REPEAT)  then
-        self:NameBackspace()
-        if self.SelectionY > GRID_ROWS then
+        local presetName = self:GetPresetName(self.SelectionX, self.SelectionY)
+        if presetName then
+          -- Play sound if we're clearing away from a preset name
+          SOUND:PlayOnce(THEME:GetPathS('Common', 'start'), true)
+        else
+          self:NameBackspace()
+        end
+        
+        if string.len(self.PlayerName) == 0 then
           self:SelectBackspaceKey()
+        else
+          self:SelectEnterKey()
         end
       elseif pressType == PRESS_FIRST then
         local char = DeviceButtonToChar(button, true)
@@ -1018,14 +1031,10 @@ function NameEntry:InputHandler(event)
           elseif ALLOWED_CHARACTERS_LOOKUP['.'] then char = '.'
           end
         end
+        if not ALLOWED_CHARACTERS_LOOKUP[char] then return end
         
-        local nameChanged = self:NameAppend(char)
-        
-        -- If name was changed then move the cursor to the Enter key so we can easily
-        -- complete the name entry if the enter key is bound to the Start GameButton.
-        if nameChanged then
-          self:SelectEnterKey()
-        end
+        self:NameAppend(char)
+        self:SelectEnterKey()
       end
     end
   end
