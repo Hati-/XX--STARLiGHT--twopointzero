@@ -22,6 +22,28 @@ local doors = Def.ActorFrame{}
 end]]
 
 return Def.ActorFrame{
+	Def.Actor{
+		BeginCommand = function(self)
+			-- Hack: Sets some preference defaults here because it's after ScreenLogo and ScreenSelectStyle which does
+			--	     GAMESTATE:Reset(), and only runs once before ScreenSelectMusic.
+			
+			-- Set speed mod to AMod 200
+			local speedFunc = 'AMod'
+			local speedValue = 200
+			for _, pn in pairs(GAMESTATE:GetEnabledPlayers()) do
+				local ps = GAMESTATE:GetPlayerState(pn)
+				local preferred = ps:GetPlayerOptions('ModsLevel_Preferred')
+				if type(preferred[speedFunc]) ~= 'function' then
+					SCREENMAN:SystemMessage('Invalid speed mod function "'..speedFunc..'", ignoring.')
+					break
+				end
+				local stage = ps:GetPlayerOptions('ModsLevel_Stage')
+				
+				preferred[speedFunc](preferred, speedValue)
+				stage[speedFunc](stage, speedValue) -- In case the metric AreStagePlayerModsForced=true
+			end
+		end,
+	},
 	doors,
 	Def.ActorFrame{
 		InitCommand=function(s) s:Center() end,
