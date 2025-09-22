@@ -1058,15 +1058,15 @@ local function CalculateTopAndBottomRecursively(self)
   local top, bottom = 0, 0
   
   if self.GetChildren then -- Is ActorFrame
-    for name, children in pairs(self:GetChildren()) do
+    for _, children in pairs(self:GetChildren()) do
       -- Entries can be arrays due to conflicting names. To make it easier for ourselves lets make everything an array.
       if #children == 0 then
         children = { children }  -- if not an array then make it an array
       end
-      for i, child in ipairs(children) do
-        local _top, _bottom = CalculateTopAndBottomRecursively(child, p)
-        top = math.min(top - offset, _top) + offset
-        bottom = math.max(bottom - offset, _bottom) + offset
+      for _, child in ipairs(children) do
+        local _top, _bottom = CalculateTopAndBottomRecursively(child)
+        top = math.min(top, _top + offset)
+        bottom = math.max(bottom, _bottom + offset)
       end
     end
   elseif self.GetHeight then -- Is Actor with height
