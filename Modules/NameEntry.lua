@@ -201,9 +201,9 @@ local function GetNumRecentNamesRows()
   return math.floor((#RecentNames / RECENT_NAMES_COLS) + 0.5)
 end
 
-local function GetNumRecentNamesCols(recentNameRow)
-  if recentNameRow then
-    if recentNameRow < GetNumRecentNamesRows() then
+local function GetNumRecentNamesCols(namesY)
+  if namesY then
+    if namesY < GetNumRecentNamesRows() then
       return RECENT_NAMES_COLS
     end
     return ((#RecentNames - 1) % RECENT_NAMES_COLS) + 1
@@ -215,13 +215,17 @@ local function GetNumRecentNamesRows()
   return math.ceil(#RecentNames / RECENT_NAMES_COLS)
 end
 
+local function IsSelectingLetterbox(gridX, gridY)
+  return gridY <= GRID_ROWS
+end
+
 local function GridXYToKeyXY(gridX, gridY)
   local maxRows = GRID_ROWS + GetNumRecentNamesRows()
 	if gridY < 1 or gridY > maxRows then
 		error('GridXYToKeyXY(x, y): y-value out of range. Got '..gridY..', but expects range [1, '..maxRows..']')
 	end
   local keyX, keyY
-  if gridY <= GRID_ROWS then
+  if IsSelectingLetterbox(gridX, gridY) then
     local keyXMap = GRID_TO_KEY_MAP[gridY]
     if gridX < 1 or gridX > #keyXMap then
       error('GridXYToKeyXY(x, y): x-value out of range. Got '..gridX..', but expects range [1, '..#keyXMap..']')
@@ -773,7 +777,7 @@ end
 
 function NameEntry:GetPresetName(gridX, gridY)
   local keyX, keyY = GridXYToKeyXY(gridX, gridY)
-  if gridY <= GRID_ROWS then
+  if IsSelectingLetterbox(gridX, gridY) then
     if keyX == ENTER_KEY_POS.X and keyY == ENTER_KEY_POS.Y and string.len(self.PlayerName) == 0 then
       return self.DefaultName, true
     end
@@ -867,9 +871,100 @@ function NameEntry:NameEnter()
   MESSAGEMAN:Broadcast('ProfileDisplayName'..ToEnumShortString(self.Player)..'Changed')
 end
 
+function NameEntry:MoveSelection(deltaX, deltaY)
+  local SelectionX, SelectionY = self.SelectionX, self.SelectionY
+  local selectionChanged = false
+      
+  if deltaX ~= 0 then
+    local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
+    keyX = keyX + deltaX
+    
+    if IsSelectingLetterbox(SelectionX, SelectionY) then
+      -- Navigating letterbox
+      if keyX < 1 then
+        SelectionY = wrap1(SelectionY - 1, GRID_ROWS)
+        SelectionX = #GRID_TO_KEY_MAP[SelectionY]
+      elseif keyX > #KEY_CHARACTER_MAP[SelectionY] then
+        SelectionY = wrap1(SelectionY + 1, GRID_ROWS)
+        SelectionX = 1
+      else
+        SelectionX = KEY_TO_GRID_MAP[keyY][keyX] + math.floor((KEY_WIDTH_MAP[keyY][keyX]-1)/2)
+      end
+    else
+      -- Navigating recent names
+      local numNamesRows = GetNumRecentNamesRows()
+      local namesY = SelectionY - GRID_ROWS
+      
+      if keyX < 1 then
+        namesY = wrap1(namesY - 1, numNamesRows)
+        keyX = GetNumRecentNamesCols(namesY)
+      elseif keyX > GetNumRecentNamesCols(namesY) then
+        if keyX > GetNumRecentNamesCols(1) then -- GetNumRecentNamesCols(1) is effective rightmost column edge
+          namesY = wrap1(namesY + 1, numNamesRows)
+          keyX = 1
+        else
+          namesY = wrap1(namesY - 1, numNamesRows)
+        end
+      end
+      SelectionY = namesY + GRID_ROWS
+      SelectionX = 1 + math.floor((keyX - 1) * RECENT_NAMES_GRID_WIDTH + (RECENT_NAMES_GRID_WIDTH-1)/2)
+    end
+    selectionChanged = true
+  end
+
+  if deltaY ~= 0 then
+    local numNamesRows = GetNumRecentNamesRows()
+    
+    -- Only switch between navigating the letterbox and recent names if the user actively tries to cross the boundary
+    if deltaY < 0 and IsSelectingLetterbox(SelectionX, SelectionY) then
+      SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
+    elseif deltaY > 0 and not IsSelectingLetterbox(SelectionX, SelectionY) and self.ShowRecentNames then
+      SelectionY = wrap1(SelectionY + deltaY - GRID_ROWS, numNamesRows) + GRID_ROWS
+    else
+      local numTotalRows = GRID_ROWS
+      if self.ShowRecentNames then
+        numTotalRows = numTotalRows + numNamesRows
+      end
+      SelectionY = wrap1(SelectionY + deltaY, numTotalRows)
+    end
+    
+    if IsSelectingLetterbox(SelectionX, SelectionY) then
+      -- Navigating letterbox
+      while SelectionX > #GRID_TO_KEY_MAP[SelectionY] do -- We use GRID_TO_KEY_MAP to get the num of columns in a row
+        SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
+      end
+    else
+      -- Navigating recent names
+      local numNamesCols = GetNumRecentNamesCols(SelectionY - GRID_ROWS)
+      if SelectionX > (numNamesCols * RECENT_NAMES_GRID_WIDTH) then
+        SelectionX = 1 + math.floor((numNamesCols - 1) * RECENT_NAMES_GRID_WIDTH + (RECENT_NAMES_GRID_WIDTH-1)/2)
+      end
+    end
+    selectionChanged = true
+  end
+
+  if selectionChanged then
+    self.EnterPressed = false -- Disregard enter trigger if selection moved
+    self.SelectionX, self.SelectionY = SelectionX, SelectionY
+    self:UpdateSelectionBox()
+    SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
+  end
+end
+
 local PRESS_FIRST = 'FirstPress'
 local PRESS_REPEAT = 'Repeat'
 local PRESS_RELEASE = 'Release'
+
+function NameEntry:HandleEnterPress(pressType)
+  if pressType == PRESS_FIRST then
+    self.EnterPressed = true
+  elseif pressType == PRESS_RELEASE then
+    if self.EnterPressed then
+      self:NameEnter()
+    end
+    self.EnterPressed = false
+  end
+end
 
 function NameEntry:InputHandler(event)
   self:AssertReady('InputHandler')
@@ -883,23 +978,15 @@ function NameEntry:InputHandler(event)
   local gameButton = event.GameButton
   if gameButton and gameButton ~= '' then
     if event.PlayerNumber ~= self.Player then return end
-    local SelectionX, SelectionY = self.SelectionX, self.SelectionY
     
     if gameButton == self.KeyEnter then
-      local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
-      if keyY <= KEY_ROWS then
+      if IsSelectingLetterbox(self.SelectionX, self.SelectionY) then
         -- Letterbox
+        local keyX, keyY = GridXYToKeyXY(self.SelectionX, self.SelectionY)
         local selection = KEY_CHARACTER_MAP[keyY][keyX]
         
         if selection == 'Enter' then
-          if pressType == PRESS_FIRST then
-            self.EnterPressed = true
-          elseif pressType == PRESS_RELEASE then
-            if self.EnterPressed then
-              self:NameEnter()
-            end
-            self.EnterPressed = false
-          end
+          self:HandleEnterPress(pressType)
         elseif selection == '←' and (pressType == PRESS_FIRST or pressType == PRESS_REPEAT) then
           self:NameBackspace()
         elseif pressType == PRESS_FIRST then
@@ -910,95 +997,14 @@ function NameEntry:InputHandler(event)
         end
       else
         -- Recent names
-        if pressType == PRESS_FIRST then
-          self.EnterPressed = true
-        elseif pressType == PRESS_RELEASE then
-          if self.EnterPressed then
-            self:NameEnter()
-          end
-          self.EnterPressed = false
-        end
+        self:HandleEnterPress(pressType)
       end
     else
       if not (pressType == PRESS_FIRST or pressType == PRESS_REPEAT) then return end
-      local selectionChanged = false
-      local deltaX, deltaY = 0, 0
-      if     gameButton == self.KeyLeft  then deltaX = -1
-      elseif gameButton == self.KeyRight then deltaX =  1
-      elseif gameButton == self.KeyUp    then deltaY = -1 
-      elseif gameButton == self.KeyDown  then deltaY =  1
-      end
-      
-      if deltaX ~= 0 then
-        local keyX, keyY = GridXYToKeyXY(SelectionX, SelectionY)
-        keyX = keyX + deltaX
-        
-        if keyY <= KEY_ROWS then
-          -- Navigating letterbox
-          if keyX < 1 then
-            SelectionY = wrap1(SelectionY - 1, GRID_ROWS)
-            SelectionX = #GRID_TO_KEY_MAP[SelectionY]
-          elseif keyX > #KEY_CHARACTER_MAP[SelectionY] then
-            SelectionY = wrap1(SelectionY + 1, GRID_ROWS)
-            SelectionX = 1
-          else
-            SelectionX = KEY_TO_GRID_MAP[keyY][keyX] + math.floor((KEY_WIDTH_MAP[keyY][keyX]-1)/2)
-          end
-        else
-          -- Navigating recent names
-          local nameRows = GetNumRecentNamesRows()
-          if keyX < 1 then
-            SelectionY = wrap1(SelectionY - GRID_ROWS - 1, nameRows) + GRID_ROWS
-            keyX = GetNumRecentNamesCols(SelectionY - GRID_ROWS)
-          elseif keyX > GetNumRecentNamesCols(SelectionY - GRID_ROWS) then
-            if keyX > GetNumRecentNamesCols(1) then
-              SelectionY = wrap1(SelectionY - GRID_ROWS + 1, nameRows) + GRID_ROWS
-              keyX = 1
-            else
-              SelectionY = wrap1(SelectionY - GRID_ROWS - 1, nameRows) + GRID_ROWS
-            end
-          end
-          SelectionX = 1 + math.floor((keyX - 1) * RECENT_NAMES_GRID_WIDTH + (RECENT_NAMES_GRID_WIDTH-1)/2)
-        end
-        selectionChanged = true
-      end
-      
-      if deltaY ~= 0 then
-        local numNamesRow = GetNumRecentNamesRows()
-        
-        -- Only switch between navigating within letterbox or recent names if the user tries to cross the boundary
-        if SelectionY <= GRID_ROWS and deltaY < 0 then
-          SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
-        elseif SelectionY > GRID_ROWS and deltaY > 0 and self.ShowRecentNames then
-          SelectionY = wrap1(SelectionY + deltaY - GRID_ROWS, numNamesRow) + GRID_ROWS
-        else
-          local numTotalRows = GRID_ROWS
-          if self.ShowRecentNames then
-            numTotalRows = numTotalRows + numNamesRow
-          end
-          SelectionY = wrap1(SelectionY + deltaY, numTotalRows)
-        end
-        
-        if SelectionY <= GRID_ROWS then
-          -- Navigating letterbox
-          while SelectionX > #GRID_TO_KEY_MAP[SelectionY] do -- We use GRID_TO_KEY_MAP to get num of grid columns per row
-            SelectionY = wrap1(SelectionY + deltaY, GRID_ROWS)
-          end
-        else
-          -- Navigating recent names
-          local namesCols = GetNumRecentNamesCols(SelectionY - GRID_ROWS)
-          if SelectionX > namesCols * RECENT_NAMES_GRID_WIDTH then
-            SelectionX = 1 + math.floor((namesCols - 1) * RECENT_NAMES_GRID_WIDTH + (RECENT_NAMES_GRID_WIDTH-1)/2)
-          end
-        end
-        selectionChanged = true
-      end
-      
-      if selectionChanged then
-        self.EnterPressed = false -- Disregard enter trigger if selection moved
-        self.SelectionX, self.SelectionY = SelectionX, SelectionY
-        self:UpdateSelectionBox()
-        SOUND:PlayOnce(THEME:GetPathS('ScreenOptions', 'change'), true)
+      if     gameButton == self.KeyLeft  then self:MoveSelection(-1,  0)
+      elseif gameButton == self.KeyRight then self:MoveSelection( 1,  0)
+      elseif gameButton == self.KeyUp    then self:MoveSelection( 0, -1)
+      elseif gameButton == self.KeyDown  then self:MoveSelection( 0,  1)
       end
     end
   elseif self.AllowKeyboard and ToEnumShortString(event.DeviceInput.device) == 'Key' then
@@ -1007,14 +1013,7 @@ function NameEntry:InputHandler(event)
     
     -- In case the enter key isn't bound to a GameButton
     if buttonLower == 'enter' then
-      if pressType == PRESS_FIRST then
-        self.EnterPressed = true
-      elseif pressType == PRESS_RELEASE then
-        if self.EnterPressed then
-          self:NameEnter()
-        end
-        self.EnterPressed = false
-      end
+      self:HandleEnterPress(pressType)
     else
       self.EnterPressed = false -- Disregard enter trigger if another key pressed while enter is held down
     
