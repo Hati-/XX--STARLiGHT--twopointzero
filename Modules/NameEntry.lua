@@ -624,6 +624,17 @@ SetConstructor(NameEntry, function(opts)
     end
   }
   t[#t+1] = CreateNameEntryFrame()
+  t[#t+1] = Def.Actor{
+    InitCommand=function(self)
+      -- Due to the execution order of InitCommands, this should be the last one called for NameEntry;
+      -- ActorFrames will always load their children (and execute their InitCommands) in definition order before loading
+      -- itself (and execute its own InitCommand). This happens recursively for each nested ActorFrame. We use this
+      -- behavior to know when all NameEntry actors are done initializing and have setup their position and size. See:
+      -- https://github.com/stepmania/stepmania/blob/d55acb1ba26f1c5b5e3048d6d6c0bd116625216f/src/ActorFrame.cpp#L92
+      self = self:GetParent()
+      self.InitDone = true
+    end
+  }
   return t
 end)
 
@@ -653,6 +664,7 @@ function NameEntry:Init(opts)
       self[k] = v
     end
   end
+  self.InitDone = false
   self.IsReady = false
   self:Reset()
   self:CheckReady()
@@ -1067,10 +1079,13 @@ local function CalculateTopAndBottomRecursively(self)
 end
 
 -- Dirty hacky solution, but it works for now to let upstream center the NameEntry.
--- XXX: This will most likely fail if called this during InitCommand as NameEntry is not yet fully initialized!
---      Should we perhaps detect if it's called during InitCommand and warn about it?
 function NameEntry:CalculateTopAndBottom()
   self:AssertReady('CalculateTopAndBottom')
+  if not self.InitDone then
+    -- Sanity check; If we try to calculate the top and bottom before all actors have initialized then we wont be able
+    -- to find all the actors with their intended position and size and cause the calculation to be incomplete.
+    error('NameEntry:CalculateTopAndBottom(): Tried to execute before all NameEntry InitCommands has been called!')
+  end
   local top, bottom
   if self.CachedTopAndBottom then
     -- XXX: This will be wrong if upstream changes actors within the NameEntry frame. Lets hope they know what they're
