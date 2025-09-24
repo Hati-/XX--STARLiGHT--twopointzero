@@ -215,9 +215,9 @@ local function GetMiniIndex(Mini)
 end
 
 local function GetNumOptionsListItems(menu)
-    local listOptions = THEME:GetMetric('ScreenOptionsMaster', menu)
+    local listCommandsString = THEME:GetMetric('ScreenOptionsMaster', menu)
     -- First command is always number of items
-    return tonumber(string.match(listOptions, '^([^;]+)'))
+    return tonumber(string.match(listCommandsString, '^([^;]+)'))
 end
 
 local GetOptionListItemsCache = {}
