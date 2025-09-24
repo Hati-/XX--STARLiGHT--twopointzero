@@ -98,6 +98,7 @@ local function HandleInput_MusicWheelA(event)
   
   local useVerticalScrollHandler = (button == ButtonSongUp or button == ButtonSongDown)
   if not (useVerticalScrollHandler or button == ButtonSongLeft or button == ButtonSongRight) then return end
+  if IsButtonPressed(player, 'Select') then return end
 
   local isUpPressed = false
   local isDownPressed = false
@@ -164,10 +165,6 @@ local function InputHandler(event)
     -- works if we release Select just after the FirstPress. Doing this in an InputCallback makes it more responsive.
     if MusicWheel and IsButtonPressed(player, 'Select') and button == 'MenuUp' and pressType == PRESS_FIRST then
       MusicWheel:SetOpenSection('')
-      
-      if wheelType == 'A' then
-        MusicWheel_ChangeMusicY(1) -- Move one step down to cancel out the default MenuUp action
-      end
     end
   end
   
